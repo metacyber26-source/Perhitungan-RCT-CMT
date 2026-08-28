@@ -16,8 +16,6 @@
       --excel-header-bg: #7ea6e0;
       --excel-avg-bg: #00e600;
       --excel-status-bg: #8ce600;
-      --badge-qw: #ef4444;
-      --badge-q1: #10b981;
     }
 
     * {
@@ -39,7 +37,7 @@
 
     .app-container {
       width: 100%;
-      max-width: 412px; /* Presisi Layar Samsung Galaxy A16 */
+      max-width: 412px;
       background: var(--bg-card);
       border-radius: 20px;
       padding: 16px;
@@ -159,7 +157,6 @@
       color: #cbd5e1;
     }
 
-    /* Tabel Sesuai Layout Gambar Excel */
     .table-container {
       width: 100%;
       overflow-x: auto;
@@ -228,7 +225,6 @@
     <h1>Kalkulator RCT & CMT</h1>
   </div>
 
-  <!-- Drop-Down Mode Utama -->
   <div class="mode-selector-wrapper">
     <label for="viewMode">Pilihan Tampilan</label>
     <select id="viewMode" class="mode-select" onchange="switchView(this.value)">
@@ -265,7 +261,11 @@
           <input type="number" id="rct_d4" class="form-control" value="0.4" step="0.1" oninput="syncAndRecalculate()">
         </div>
       </div>
-      <div class="grid-2" style="margin-top: 8px;">
+      <div class="grid-3" style="margin-top: 8px;">
+        <div class="form-group">
+          <label>FAKTOR (F2)</label>
+          <input type="number" id="rct_f2" class="form-control" value="0.4" step="0.01" oninput="syncAndRecalculate()">
+        </div>
         <div class="form-group">
           <label>TEMP</label>
           <input type="text" id="rct_f3" class="form-control" value="" oninput="syncAndRecalculate()">
@@ -424,7 +424,7 @@
   <!-- ==================== VIEW 3: UPLOAD DATA RCT ==================== -->
   <div id="view-upload-rct" class="view-section">
     <div class="card">
-      <div class="card-title" id="title_upload_rct">RCT JR:</div>
+      <div class="card-title" id="title_upload_rct">RCT  JR:</div>
       <div class="grid-2" style="margin-bottom: 8px;">
         <div class="form-group">
           <label>TEMP</label>
@@ -499,7 +499,7 @@
   <!-- ==================== VIEW 4: UPLOAD DATA CMT ==================== -->
   <div id="view-upload-cmt" class="view-section">
     <div class="card">
-      <div class="card-title" id="title_upload_cmt">CMT JR:</div>
+      <div class="card-title" id="title_upload_cmt">CMT  JR:</div>
       <div class="table-container">
         <table class="excel-table">
           <thead>
@@ -624,7 +624,7 @@
   function syncAndRecalculate() {
     const d2 = document.getElementById('rct_d2').value;
     const d3 = document.getElementById('rct_d3').value;
-    const d4 = document.getElementById('rct_d4').value;
+    const d4 = document.getElementById('rct_d4').value; // JR
     const f3 = document.getElementById('rct_f3').value;
     const f4 = document.getElementById('rct_f4').value;
 
@@ -635,7 +635,7 @@
     document.getElementById('up_rct_n3').value = f3;
     document.getElementById('up_rct_n4').value = f4;
 
-    // Update judul Upload sesuai request
+    // Ambil nilai JR dari D4 untuk judul tampilan Upload
     document.getElementById('title_upload_rct').innerText = "RCT  JR:" + d4;
     document.getElementById('title_upload_cmt').innerText = "CMT  JR:" + d4;
 
@@ -645,7 +645,7 @@
   function recalculate() {
     const d2 = document.getElementById('rct_d2').value;
     const d3 = document.getElementById('rct_d3').value;
-    const f2 = parseVal('rct_d4') || 0.4;
+    const f2 = parseVal('rct_f2') || 0.4; // Faktor pengurang dari Cell F2
 
     const AL4 = LOOKUP_AL4[d3] || 10.2;
     const AL5 = AL4 - 0.05;
@@ -703,7 +703,7 @@
     setTxt('out_d23', D23); setTxt('out_e23', E23); setTxt('out_f23', F23);
     setTxt('out_d24', D24); setTxt('out_e24', E24); setTxt('out_f24', F24);
 
-    // --- 3. UPLOAD RCT LOGIC ---
+    // --- 3. UPLOAD RCT LOGIC (Memakai f2 dari Cell F2) ---
     const AD12 = D11 - AL4;
     const AD13 = D11 > AL4 ? f2 : 0;
     const AD14 = AD12 * AD13;
@@ -743,7 +743,7 @@
     setTxt('out_l13', L13); setTxt('out_m13', M13); setTxt('out_n13', N13);
     setTxt('out_l14', L14); setTxt('out_m14', M14); setTxt('out_n14', N14);
 
-    // --- 4. UPLOAD CMT LOGIC ---
+    // --- 4. UPLOAD CMT LOGIC (Memakai f2 dari Cell F2) ---
     const AD21 = calcAverage([cmt_d17 - AR20, cmt_d19 - AR20, cmt_d20 - AR20]);
     const AD22 = isNaN(AD21) ? 0 : (AD21 < AS20 ? 0 : AD21 - AS20);
     const AD23 = AD22 * f2;
