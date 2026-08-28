@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Aplikasi Perhitungan RCT & CMT</title>
+  <title>Perhitungan RCT & CMT</title>
   <style>
     :root {
       --bg-primary: #0f172a;
       --bg-card: #1e293b;
       --bg-input: #334155;
       --accent: #38bdf8;
-      --accent-hover: #0284c7;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --border-color: #475569;
+      --excel-header-bg: #7ea6e0;
+      --excel-avg-bg: #00e600;
+      --excel-status-bg: #8ce600;
       --badge-qw: #ef4444;
       --badge-q1: #10b981;
     }
@@ -35,14 +37,13 @@
       padding: 12px;
     }
 
-    /* Form faktor khusus Samsung Galaxy A16 */
     .app-container {
       width: 100%;
-      max-width: 412px;
+      max-width: 412px; /* Presisi Layar Samsung Galaxy A16 */
       background: var(--bg-card);
       border-radius: 20px;
       padding: 16px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       flex-direction: column;
@@ -52,24 +53,16 @@
     .app-header {
       text-align: center;
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
 
     .app-header h1 {
       font-size: 1.1rem;
       font-weight: 700;
-      letter-spacing: 0.5px;
       color: var(--accent);
       text-transform: uppercase;
     }
 
-    .app-header p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* Select Dropdown Mode Utama */
     .mode-selector-wrapper {
       background: var(--bg-input);
       border-radius: 12px;
@@ -102,7 +95,6 @@
       color: var(--text-main);
     }
 
-    /* General Form Components */
     .view-section {
       display: none;
       flex-direction: column;
@@ -121,14 +113,11 @@
     }
 
     .card-title {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--accent);
       margin-bottom: 10px;
       text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .grid-2 {
@@ -162,140 +151,108 @@
       color: var(--text-main);
       font-size: 0.85rem;
       outline: none;
-      transition: all 0.2s ease;
       width: 100%;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
     }
 
     .form-control[readonly] {
       background: rgba(51, 65, 85, 0.4);
       color: #cbd5e1;
-      cursor: not-allowed;
     }
 
-    /* Data Table Styling */
+    /* Tabel Sesuai Layout Gambar Excel */
     .table-container {
+      width: 100%;
       overflow-x: auto;
     }
 
-    table {
+    table.excel-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8rem;
+      color: #000;
+      background-color: #fff;
+      font-weight: bold;
     }
 
-    th {
-      background: var(--bg-input);
-      color: var(--accent);
-      padding: 8px 6px;
+    table.excel-table th, table.excel-table td {
+      border: 2px solid #000;
       text-align: center;
-      font-weight: 600;
-      border: 1px solid var(--border-color);
-    }
-
-    td {
-      padding: 6px 4px;
-      border: 1px solid var(--border-color);
-      text-align: center;
-    }
-
-    td input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: var(--text-main);
-      text-align: center;
+      vertical-align: middle;
+      padding: 4px;
       font-size: 0.85rem;
+    }
+
+    table.excel-table th.header-type {
+      background-color: var(--excel-header-bg);
+      font-size: 1.1rem;
+    }
+
+    table.excel-table th.header-col {
+      background-color: #fff;
+      font-size: 1rem;
+    }
+
+    table.excel-table td.cell-avg {
+      background-color: var(--excel-avg-bg);
+      font-size: 0.95rem;
+    }
+
+    table.excel-table td.cell-status {
+      background-color: var(--excel-status-bg);
+      font-size: 0.95rem;
+    }
+
+    table.excel-table input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: #000;
       outline: none;
     }
 
-    td input:focus {
-      background: var(--bg-input);
-      border-radius: 4px;
-    }
-
-    /* Computed Summary Cards */
-    .summary-box {
-      background: rgba(56, 189, 248, 0.05);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
-    }
-
-    .summary-val {
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-
-    .badge {
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      display: inline-block;
-    }
-
-    .badge-qw { background: var(--badge-qw); color: white; }
-    .badge-q1 { background: var(--badge-q1); color: white; }
-
-    /* Footer Note */
     .footer-info {
       text-align: center;
       font-size: 0.65rem;
       color: var(--text-muted);
       margin-top: auto;
-      padding-top: 8px;
     }
   </style>
 </head>
 <body>
 
 <div class="app-container">
-  <!-- Header -->
   <div class="app-header">
     <h1>Kalkulator RCT & CMT</h1>
-    <p>Presisi & Standar Kualitas</p>
   </div>
 
-  <!-- Drop-Down Tampilan Utama -->
+  <!-- Drop-Down Mode Utama -->
   <div class="mode-selector-wrapper">
-    <label for="viewMode">Pilih Mode Tampilan</label>
+    <label for="viewMode">Pilihan Tampilan</label>
     <select id="viewMode" class="mode-select" onchange="switchView(this.value)">
-      <option value="input-rct">Input Data RCT</option>
-      <option value="input-cmt">Input Data CMT</option>
-      <option value="upload-rct">Upload Data RCT</option>
-      <option value="upload-cmt">Upload Data CMT</option>
+      <option value="input-rct">Input data RCT</option>
+      <option value="input-cmt">Input data CMT</option>
+      <option value="upload-rct">Upload data RCT</option>
+      <option value="upload-cmt">Upload data CMT</option>
     </select>
   </div>
 
   <!-- ==================== VIEW 1: INPUT DATA RCT ==================== -->
   <div id="view-input-rct" class="view-section active">
     <div class="card">
-      <div class="card-title">Parameter Header RCT</div>
+      <div class="card-title">Parameter RCT</div>
       <div class="grid-3">
         <div class="form-group">
-          <label>Grade (D2)</label>
+          <label>GRADE</label>
           <select id="rct_d2" class="form-control" onchange="syncAndRecalculate()">
             <option value="CME">CME</option>
             <option value="CMF">CMF</option>
           </select>
         </div>
         <div class="form-group">
-          <label>GSM (D3)</label>
+          <label>GSM</label>
           <select id="rct_d3" class="form-control" onchange="syncAndRecalculate()">
             <option value="110">110</option>
             <option value="125">125</option>
@@ -304,87 +261,80 @@
           </select>
         </div>
         <div class="form-group">
-          <label>JR (D4)</label>
+          <label>JR</label>
           <input type="number" id="rct_d4" class="form-control" value="0.4" step="0.1" oninput="syncAndRecalculate()">
         </div>
       </div>
       <div class="grid-2" style="margin-top: 8px;">
         <div class="form-group">
-          <label>Temp (F3)</label>
-          <input type="text" id="rct_f3" class="form-control" value="" placeholder="-" oninput="syncAndRecalculate()">
+          <label>TEMP</label>
+          <input type="text" id="rct_f3" class="form-control" value="" oninput="syncAndRecalculate()">
         </div>
         <div class="form-group">
-          <label>RH (F4)</label>
-          <input type="text" id="rct_f4" class="form-control" value="" placeholder="-" oninput="syncAndRecalculate()">
+          <label>RH</label>
+          <input type="text" id="rct_f4" class="form-control" value="" oninput="syncAndRecalculate()">
         </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Input Matrix RCT (B5:F10)</div>
       <div class="table-container">
-        <table>
+        <table class="excel-table">
           <thead>
             <tr>
-              <th>Posisi</th>
-              <th>No</th>
-              <th>TS (D)</th>
-              <th>MS (E)</th>
-              <th>DS (F)</th>
+              <th colspan="2" class="header-type">RCT</th>
+              <th class="header-col">TS</th>
+              <th class="header-col">MS</th>
+              <th class="header-col">DS</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td rowspan="2">TOP LUAR</td>
-              <td>1.0</td>
-              <td><input type="number" id="rct_d7" step="any" oninput="recalculate()"></td>
+              <td rowspan="2">TOP<br><br>LUAR</td>
+              <td>1</td>
+              <td rowspan="2"><input type="number" id="rct_d7" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="rct_e7" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_f7" step="any" oninput="recalculate()"></td>
+              <td rowspan="2"><input type="number" id="rct_f7" step="any" oninput="recalculate()"></td>
             </tr>
             <tr>
-              <td>2.0</td>
-              <td><input type="number" id="rct_d8" step="any" oninput="recalculate()"></td>
+              <td>2</td>
               <td><input type="number" id="rct_e8" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_f8" step="any" oninput="recalculate()"></td>
             </tr>
             <tr>
-              <td rowspan="2">BOT LUAR</td>
-              <td>3.0</td>
+              <td rowspan="2">BOTT<br>OM<br>LUAR</td>
+              <td>3</td>
               <td><input type="number" id="rct_d9" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="rct_e9" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="rct_f9" step="any" oninput="recalculate()"></td>
             </tr>
             <tr>
-              <td>4.0</td>
+              <td>4</td>
               <td><input type="number" id="rct_d10" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="rct_e10" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="rct_f10" step="any" oninput="recalculate()"></td>
             </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
+              <td class="cell-avg" id="out_d11">-</td>
+              <td class="cell-avg" id="out_e11">-</td>
+              <td class="cell-avg" id="out_f11">-</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="cell-avg" id="out_d12">-</td>
+            </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
+              <td class="cell-status" id="out_d13">-</td>
+              <td class="cell-status" id="out_e13">-</td>
+              <td class="cell-status" id="out_f13">-</td>
+            </tr>
+            <tr>
+              <td class="cell-status" id="out_d14">-</td>
+              <td class="cell-status" id="out_e14">-</td>
+              <td class="cell-status" id="out_f14">-</td>
+            </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-    <div class="summary-box">
-      <div class="summary-row">
-        <span>Average (D11:F11):</span>
-        <span class="summary-val"><span id="out_d11">-</span> / <span id="out_e11">-</span> / <span id="out_f11">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Total Average RCT (D12):</span>
-        <span class="summary-val" id="out_d12" style="color:var(--accent);">-</span>
-      </div>
-      <div class="summary-row">
-        <span>Status (D13:F13):</span>
-        <span class="summary-val"><span id="out_d13">-</span> / <span id="out_e13">-</span> / <span id="out_f13">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Quality Code (D14:F14):</span>
-        <div>
-          <span id="badge_d14" class="badge">-</span>
-          <span id="badge_e14" class="badge">-</span>
-          <span id="badge_f14" class="badge">-</span>
-        </div>
       </div>
     </div>
   </div>
@@ -392,10 +342,10 @@
   <!-- ==================== VIEW 2: INPUT DATA CMT ==================== -->
   <div id="view-input-cmt" class="view-section">
     <div class="card">
-      <div class="card-title">Parameter Header CMT</div>
+      <div class="card-title">Parameter CMT</div>
       <div class="grid-3">
         <div class="form-group">
-          <label>Grade</label>
+          <label>GRADE</label>
           <input type="text" id="cmt_d2_show" class="form-control" readonly>
         </div>
         <div class="form-group">
@@ -410,70 +360,63 @@
     </div>
 
     <div class="card">
-      <div class="card-title">Input Matrix CMT (B16:F20)</div>
       <div class="table-container">
-        <table>
+        <table class="excel-table">
           <thead>
             <tr>
-              <th>Posisi</th>
-              <th>No</th>
-              <th>TS (D)</th>
-              <th>MS (E)</th>
-              <th>DS (F)</th>
+              <th colspan="2" class="header-type">CMT</th>
+              <th class="header-col">TS</th>
+              <th class="header-col">MS</th>
+              <th class="header-col">DS</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td rowspan="2">TOP LUAR</td>
-              <td>1.0</td>
-              <td><input type="number" id="cmt_d17" step="any" oninput="recalculate()"></td>
+              <td rowspan="2">TOP<br><br>LUAR</td>
+              <td>1</td>
+              <td rowspan="2"><input type="number" id="cmt_d17" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="cmt_e17" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_f17" step="any" oninput="recalculate()"></td>
+              <td rowspan="2"><input type="number" id="cmt_f17" step="any" oninput="recalculate()"></td>
             </tr>
             <tr>
-              <td>2.0</td>
-              <td><input type="number" id="cmt_d18" step="any" oninput="recalculate()"></td>
+              <td>2</td>
               <td><input type="number" id="cmt_e18" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_f18" step="any" oninput="recalculate()"></td>
             </tr>
             <tr>
-              <td rowspan="2">BOT LUAR</td>
-              <td>3.0</td>
+              <td rowspan="2">BOTT<br>OM<br>LUAR</td>
+              <td>3</td>
               <td><input type="number" id="cmt_d19" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="cmt_e19" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="cmt_f19" step="any" oninput="recalculate()"></td>
             </tr>
             <tr>
-              <td>4.0</td>
+              <td>4</td>
               <td><input type="number" id="cmt_d20" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="cmt_e20" step="any" oninput="recalculate()"></td>
               <td><input type="number" id="cmt_f20" step="any" oninput="recalculate()"></td>
             </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
+              <td class="cell-avg" id="out_d21">-</td>
+              <td class="cell-avg" id="out_e21">-</td>
+              <td class="cell-avg" id="out_f21">-</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="cell-avg" id="out_d22">-</td>
+            </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
+              <td class="cell-status" id="out_d23">-</td>
+              <td class="cell-status" id="out_e23">-</td>
+              <td class="cell-status" id="out_f23">-</td>
+            </tr>
+            <tr>
+              <td class="cell-status" id="out_d24">-</td>
+              <td class="cell-status" id="out_e24">-</td>
+              <td class="cell-status" id="out_f24">-</td>
+            </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-    <div class="summary-box">
-      <div class="summary-row">
-        <span>Average (D21:F21):</span>
-        <span class="summary-val"><span id="out_d21">-</span> / <span id="out_e21">-</span> / <span id="out_f21">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Total Average CMT (D22):</span>
-        <span class="summary-val" id="out_d22" style="color:var(--accent);">-</span>
-      </div>
-      <div class="summary-row">
-        <span>Status (D23:F23):</span>
-        <span class="summary-val"><span id="out_d23">-</span> / <span id="out_e23">-</span> / <span id="out_f23">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Quality Code (D24:F24):</span>
-        <div>
-          <span id="badge_d24" class="badge">-</span>
-          <span id="badge_e24" class="badge">-</span>
-          <span id="badge_f24" class="badge">-</span>
-        </div>
       </div>
     </div>
   </div>
@@ -481,77 +424,74 @@
   <!-- ==================== VIEW 3: UPLOAD DATA RCT ==================== -->
   <div id="view-upload-rct" class="view-section">
     <div class="card">
-      <div class="card-title">Calculated Upload RCT (J3:N14)</div>
+      <div class="card-title" id="title_upload_rct">RCT JR:</div>
       <div class="grid-2" style="margin-bottom: 8px;">
         <div class="form-group">
-          <label>TEMP (N3 = F3)</label>
+          <label>TEMP</label>
           <input type="text" id="up_rct_n3" class="form-control" readonly>
         </div>
         <div class="form-group">
-          <label>RH (N4 = F4)</label>
+          <label>RH</label>
           <input type="text" id="up_rct_n4" class="form-control" readonly>
         </div>
       </div>
       <div class="table-container">
-        <table>
+        <table class="excel-table">
           <thead>
             <tr>
-              <th>Posisi</th>
-              <th>TS (L)</th>
-              <th>MS (M)</th>
-              <th>DS (N)</th>
+              <th colspan="2" class="header-type">RCT</th>
+              <th class="header-col">TS</th>
+              <th class="header-col">MS</th>
+              <th class="header-col">DS</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>TOP 1.0</td>
-              <td><input type="text" id="up_rct_l7" readonly></td>
+              <td rowspan="2">TOP<br><br>LUAR</td>
+              <td>1</td>
+              <td rowspan="2"><input type="text" id="up_rct_l7" readonly></td>
               <td><input type="text" id="up_rct_m7" readonly></td>
-              <td><input type="text" id="up_rct_n7" readonly></td>
+              <td rowspan="2"><input type="text" id="up_rct_n7" readonly></td>
             </tr>
             <tr>
-              <td>TOP 2.0</td>
-              <td><input type="text" id="up_rct_l8" readonly></td>
+              <td>2</td>
               <td><input type="text" id="up_rct_m8" readonly></td>
-              <td><input type="text" id="up_rct_n8" readonly></td>
             </tr>
             <tr>
-              <td>BOT 3.0</td>
+              <td rowspan="2">BOTT<br>OM<br>LUAR</td>
+              <td>3</td>
               <td><input type="text" id="up_rct_l9" readonly></td>
               <td><input type="text" id="up_rct_m9" readonly></td>
               <td><input type="text" id="up_rct_n9" readonly></td>
             </tr>
             <tr>
-              <td>BOT 4.0</td>
+              <td>4</td>
               <td><input type="text" id="up_rct_l10" readonly></td>
               <td><input type="text" id="up_rct_m10" readonly></td>
               <td><input type="text" id="up_rct_n10" readonly></td>
             </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
+              <td class="cell-avg" id="out_l11">-</td>
+              <td class="cell-avg" id="out_m11">-</td>
+              <td class="cell-avg" id="out_n11">-</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="cell-avg" id="out_l12">-</td>
+            </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
+              <td class="cell-status" id="out_l13">-</td>
+              <td class="cell-status" id="out_m13">-</td>
+              <td class="cell-status" id="out_n13">-</td>
+            </tr>
+            <tr>
+              <td class="cell-status" id="out_l14">-</td>
+              <td class="cell-status" id="out_m14">-</td>
+              <td class="cell-status" id="out_n14">-</td>
+            </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-    <div class="summary-box">
-      <div class="summary-row">
-        <span>Average RCT Upload (L11:N11):</span>
-        <span class="summary-val"><span id="out_l11">-</span> / <span id="out_m11">-</span> / <span id="out_n11">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Total Avg Upload (L12):</span>
-        <span class="summary-val" id="out_l12" style="color:var(--accent);">-</span>
-      </div>
-      <div class="summary-row">
-        <span>Status (L13:N13):</span>
-        <span class="summary-val"><span id="out_l13">-</span> / <span id="out_m13">-</span> / <span id="out_n13">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Quality Code (L14:N14):</span>
-        <div>
-          <span id="badge_l14" class="badge">-</span>
-          <span id="badge_m14" class="badge">-</span>
-          <span id="badge_n14" class="badge">-</span>
-        </div>
       </div>
     </div>
   </div>
@@ -559,78 +499,74 @@
   <!-- ==================== VIEW 4: UPLOAD DATA CMT ==================== -->
   <div id="view-upload-cmt" class="view-section">
     <div class="card">
-      <div class="card-title">Calculated Upload CMT (J16:N24)</div>
+      <div class="card-title" id="title_upload_cmt">CMT JR:</div>
       <div class="table-container">
-        <table>
+        <table class="excel-table">
           <thead>
             <tr>
-              <th>Posisi</th>
-              <th>TS (L)</th>
-              <th>MS (M)</th>
-              <th>DS (N)</th>
+              <th colspan="2" class="header-type">CMT</th>
+              <th class="header-col">TS</th>
+              <th class="header-col">MS</th>
+              <th class="header-col">DS</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>TOP 1.0</td>
-              <td><input type="text" id="up_cmt_l17" readonly></td>
+              <td rowspan="2">TOP<br><br>LUAR</td>
+              <td>1</td>
+              <td rowspan="2"><input type="text" id="up_cmt_l17" readonly></td>
               <td><input type="text" id="up_cmt_m17" readonly></td>
-              <td><input type="text" id="up_cmt_n17" readonly></td>
+              <td rowspan="2"><input type="text" id="up_cmt_n17" readonly></td>
             </tr>
             <tr>
-              <td>TOP 2.0</td>
-              <td><input type="text" id="up_cmt_l18" readonly></td>
+              <td>2</td>
               <td><input type="text" id="up_cmt_m18" readonly></td>
-              <td><input type="text" id="up_cmt_n18" readonly></td>
             </tr>
             <tr>
-              <td>BOT 3.0</td>
+              <td rowspan="2">BOTT<br>OM<br>LUAR</td>
+              <td>3</td>
               <td><input type="text" id="up_cmt_l19" readonly></td>
               <td><input type="text" id="up_cmt_m19" readonly></td>
               <td><input type="text" id="up_cmt_n19" readonly></td>
             </tr>
             <tr>
-              <td>BOT 4.0</td>
+              <td>4</td>
               <td><input type="text" id="up_cmt_l20" readonly></td>
               <td><input type="text" id="up_cmt_m20" readonly></td>
               <td><input type="text" id="up_cmt_n20" readonly></td>
+            </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
+              <td class="cell-avg" id="out_l21">-</td>
+              <td class="cell-avg" id="out_m21">-</td>
+              <td class="cell-avg" id="out_n21">-</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="cell-avg" id="out_l22">-</td>
+            </tr>
+            <tr>
+              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
+              <td class="cell-status" id="out_l23">-</td>
+              <td class="cell-status" id="out_m23">-</td>
+              <td class="cell-status" id="out_n23">-</td>
+            </tr>
+            <tr>
+              <td class="cell-status" id="out_l24">-</td>
+              <td class="cell-status" id="out_m24">-</td>
+              <td class="cell-status" id="out_n24">-</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-
-    <div class="summary-box">
-      <div class="summary-row">
-        <span>Average CMT Upload (L21:N21):</span>
-        <span class="summary-val"><span id="out_l21">-</span> / <span id="out_m21">-</span> / <span id="out_n21">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Total Avg Upload (L22):</span>
-        <span class="summary-val" id="out_l22" style="color:var(--accent);">-</span>
-      </div>
-      <div class="summary-row">
-        <span>Status (L23:N23):</span>
-        <span class="summary-val"><span id="out_l23">-</span> / <span id="out_m23">-</span> / <span id="out_n23">-</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Quality Code (L24:N24):</span>
-        <div>
-          <span id="badge_l24" class="badge">-</span>
-          <span id="badge_m24" class="badge">-</span>
-          <span id="badge_n24" class="badge">-</span>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="footer-info">
-    Engine Perhitungan Otomatis • Persamaan Excel Asli
+    Aplikasi Perhitungan RCT & CMT
   </div>
 </div>
 
 <script>
-  // Tabel Lookup Excel Asli
   const LOOKUP_AL4 = {
     "110": 10.2,
     "125": 12.5,
@@ -663,9 +599,9 @@
     const el = document.getElementById(id);
     if (!el) return;
     if (typeof val === 'number') {
-      el.innerText = isNaN(val) ? '-' : val.toFixed(digits);
+      el.innerText = isNaN(val) ? '#DIV/0!' : val.toFixed(digits);
     } else {
-      el.innerText = val || '-';
+      el.innerText = val || '';
     }
   }
 
@@ -677,15 +613,6 @@
     } else {
       el.value = val || '';
     }
-  }
-
-  function updateBadge(id, text) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.innerText = text || '-';
-    el.className = 'badge';
-    if (text === 'QW') el.classList.add('badge-qw');
-    else if (text === 'Q1') el.classList.add('badge-q1');
   }
 
   function calcAverage(arr) {
@@ -708,14 +635,17 @@
     document.getElementById('up_rct_n3').value = f3;
     document.getElementById('up_rct_n4').value = f4;
 
+    // Update judul Upload sesuai request
+    document.getElementById('title_upload_rct').innerText = "RCT  JR:" + d4;
+    document.getElementById('title_upload_cmt').innerText = "CMT  JR:" + d4;
+
     recalculate();
   }
 
   function recalculate() {
-    // Parameter Standar dari Formula
     const d2 = document.getElementById('rct_d2').value;
     const d3 = document.getElementById('rct_d3').value;
-    const f2 = parseVal('rct_d4') || 0.4; // F2 di spreadsheet menyimpan nilai 0.4
+    const f2 = parseVal('rct_d4') || 0.4;
 
     const AL4 = LOOKUP_AL4[d3] || 10.2;
     const AL5 = AL4 - 0.05;
@@ -728,12 +658,12 @@
     const AS20 = AR20;
 
     // --- 1. INPUT RCT ---
-    const d7 = parseVal('rct_d7'), d8 = parseVal('rct_d8'), d9 = parseVal('rct_d9'), d10 = parseVal('rct_d10');
+    const d7 = parseVal('rct_d7'), d8 = d7, d9 = parseVal('rct_d9'), d10 = parseVal('rct_d10');
     const e7 = parseVal('rct_e7'), e8 = parseVal('rct_e8'), e9 = parseVal('rct_e9'), e10 = parseVal('rct_e10');
-    const f7 = parseVal('rct_f7'), f8 = parseVal('rct_f8'), f9 = parseVal('rct_f9'), f10 = parseVal('rct_f10');
+    const f7 = parseVal('rct_f7'), f8 = f7, f9 = parseVal('rct_f9'), f10 = parseVal('rct_f10');
 
     const D11 = calcAverage([d7, d8, d9, d10]);
-    const E11 = calcAverage([calcAverage([e7, e8]), e9, e10]); // Sesuai Z7, Z9, Z10 logic
+    const E11 = calcAverage([calcAverage([e7, e8]), e9, e10]);
     const F11 = calcAverage([f7, f8, f9, f10]);
     const D12 = calcAverage([D11, E11, F11]);
 
@@ -748,12 +678,12 @@
     setTxt('out_d11', D11); setTxt('out_e11', E11); setTxt('out_f11', F11);
     setTxt('out_d12', D12);
     setTxt('out_d13', D13); setTxt('out_e13', E13); setTxt('out_f13', F13);
-    updateBadge('badge_d14', D14); updateBadge('badge_e14', E14); updateBadge('badge_f14', F14);
+    setTxt('out_d14', D14); setTxt('out_e14', E14); setTxt('out_f14', F14);
 
     // --- 2. INPUT CMT ---
-    const cmt_d17 = parseVal('cmt_d17'), cmt_d18 = parseVal('cmt_d18'), cmt_d19 = parseVal('cmt_d19'), cmt_d20 = parseVal('cmt_d20');
+    const cmt_d17 = parseVal('cmt_d17'), cmt_d18 = cmt_d17, cmt_d19 = parseVal('cmt_d19'), cmt_d20 = parseVal('cmt_d20');
     const cmt_e17 = parseVal('cmt_e17'), cmt_e18 = parseVal('cmt_e18'), cmt_e19 = parseVal('cmt_e19'), cmt_e20 = parseVal('cmt_e20');
-    const cmt_f17 = parseVal('cmt_f17'), cmt_f18 = parseVal('cmt_f18'), cmt_f19 = parseVal('cmt_f19'), cmt_f20 = parseVal('cmt_f20');
+    const cmt_f17 = parseVal('cmt_f17'), cmt_f18 = cmt_f17, cmt_f19 = parseVal('cmt_f19'), cmt_f20 = parseVal('cmt_f20');
 
     const D21 = calcAverage([cmt_d17, cmt_d18, cmt_d19, cmt_d20]);
     const E21 = calcAverage([calcAverage([cmt_e17, cmt_e18]), cmt_e19, cmt_e20]);
@@ -771,7 +701,7 @@
     setTxt('out_d21', D21); setTxt('out_e21', E21); setTxt('out_f21', F21);
     setTxt('out_d22', D22);
     setTxt('out_d23', D23); setTxt('out_e23', E23); setTxt('out_f23', F23);
-    updateBadge('badge_d24', D24); updateBadge('badge_e24', E24); updateBadge('badge_f24', F24);
+    setTxt('out_d24', D24); setTxt('out_e24', E24); setTxt('out_f24', F24);
 
     // --- 3. UPLOAD RCT LOGIC ---
     const AD12 = D11 - AL4;
@@ -791,7 +721,7 @@
     const AF7 = f7 - AF14, AF9 = f9 - AF14, AF10 = f10 - AF14;
 
     setVal('up_rct_l7', AD7); setVal('up_rct_m7', AE7); setVal('up_rct_n7', AF7);
-    setVal('up_rct_l8', NaN); setVal('up_rct_m8', AE8); setVal('up_rct_n8', NaN);
+    setVal('up_rct_m8', AE8);
     setVal('up_rct_l9', AD9); setVal('up_rct_m9', AE9); setVal('up_rct_n9', AF9);
     setVal('up_rct_l10', AD10); setVal('up_rct_m10', AE10); setVal('up_rct_n10', AF10);
 
@@ -811,7 +741,7 @@
     setTxt('out_l11', L11); setTxt('out_m11', M11); setTxt('out_n11', N11);
     setTxt('out_l12', L12);
     setTxt('out_l13', L13); setTxt('out_m13', M13); setTxt('out_n13', N13);
-    updateBadge('badge_l14', L14); updateBadge('badge_m14', M14); updateBadge('badge_n14', N14);
+    setTxt('out_l14', L14); setTxt('out_m14', M14); setTxt('out_n14', N14);
 
     // --- 4. UPLOAD CMT LOGIC ---
     const AD21 = calcAverage([cmt_d17 - AR20, cmt_d19 - AR20, cmt_d20 - AR20]);
@@ -833,7 +763,7 @@
     const N17 = cmt_f17 - (AR20 + AF23), N19 = cmt_f19 - (AR20 + AF23), N20 = cmt_f20 - (AR20 + AF23);
 
     setVal('up_cmt_l17', L17); setVal('up_cmt_m17', M17); setVal('up_cmt_n17', N17);
-    setVal('up_cmt_l18', NaN); setVal('up_cmt_m18', M18); setVal('up_cmt_n18', NaN);
+    setVal('up_cmt_m18', M18);
     setVal('up_cmt_l19', L19); setVal('up_cmt_m19', M19); setVal('up_cmt_n19', N19);
     setVal('up_cmt_l20', L20); setVal('up_cmt_m20', M20); setVal('up_cmt_n20', N20);
 
@@ -853,10 +783,9 @@
     setTxt('out_l21', L21); setTxt('out_m21', M21); setTxt('out_n21', N21);
     setTxt('out_l22', L22);
     setTxt('out_l23', L23); setTxt('out_m23', M23); setTxt('out_n23', N23);
-    updateBadge('badge_l24', L24); updateBadge('badge_m24', M24); updateBadge('badge_n24', N24);
+    setTxt('out_l24', L24); setTxt('out_m24', M24); setTxt('out_n24', N24);
   }
 
-  // Inisialisasi awal
   window.onload = function() {
     syncAndRecalculate();
   };
