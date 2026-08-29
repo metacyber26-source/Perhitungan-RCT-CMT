@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Perhitungan RCT & CMT</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Library html2canvas untuk mengambil gambar screenshot dari tampilan -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.min.js" integrity="sha512-BNaRQnYJYiPSqox49ca3j6o82O7h29c9K0/65x+y1fQ9p72jZ76q7y+B66hY7A2y542+0h6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <style>
     :root {
@@ -21,7 +21,8 @@
       --excel-status-bg: #8ce600;
       --danger-bg: #ef4444;
       --danger-text: #dc2626;
-      --wa-btn-bg: #25d366;
+      --wa-bg: #22c55e;
+      --wa-bg-hover: #16a34a;
     }
 
     * {
@@ -130,12 +131,12 @@
     }
 
     .btn-wa {
-      background: var(--wa-btn-bg);
+      width: 100%;
+      background: var(--wa-bg);
       color: white;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 12px;
-      width: 100%;
       font-weight: 800;
       font-size: 1rem;
       cursor: pointer;
@@ -143,13 +144,12 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 12px;
-      box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.3);
-      transition: opacity 0.2s;
+      transition: background 0.2s;
+      margin-top: 10px;
     }
 
-    .btn-wa:active {
-      opacity: 0.85;
+    .btn-wa:hover {
+      background: var(--wa-bg-hover);
     }
 
     .view-section {
@@ -317,6 +317,7 @@
     <button type="button" class="btn-reset" onclick="clearAllInputs()" title="Reset Isian Data">Reset</button>
   </div>
 
+  <!-- ==================== VIEW 1: INPUT DATA RCT ==================== -->
   <div id="view-input-rct" class="view-section active">
     <div class="card">
       <div class="card-title">Parameter RCT</div>
@@ -420,6 +421,7 @@
     </div>
   </div>
 
+  <!-- ==================== VIEW 2: INPUT DATA CMT ==================== -->
   <div id="view-input-cmt" class="view-section">
     <div class="card">
       <div class="card-title">Parameter CMT</div>
@@ -501,8 +503,9 @@
     </div>
   </div>
 
+  <!-- ==================== VIEW 3: UPLOAD DATA RCT ==================== -->
   <div id="view-upload-rct" class="view-section">
-    <div class="card" id="capture-upload-rct">
+    <div class="card" id="card-upload-rct">
       <div class="card-title" id="title_upload_rct">RCT  JR:</div>
       <div class="grid-2" style="margin-bottom: 10px;">
         <div class="form-group">
@@ -573,13 +576,15 @@
         </table>
       </div>
     </div>
-    <button type="button" class="btn-wa" onclick="sendToWhatsApp('capture-upload-rct', 'Upload Data RCT')">
+    <!-- Tombol Kirim Gambar WA RCT -->
+    <button type="button" class="btn-wa" onclick="sendToWhatsApp('rct')">
       📷 Kirim Gambar RCT ke WA
     </button>
   </div>
 
+  <!-- ==================== VIEW 4: UPLOAD DATA CMT ==================== -->
   <div id="view-upload-cmt" class="view-section">
-    <div class="card" id="capture-upload-cmt">
+    <div class="card" id="card-upload-cmt">
       <div class="card-title" id="title_upload_cmt">CMT  JR:</div>
       <div class="table-container">
         <table class="excel-table">
@@ -640,7 +645,8 @@
         </table>
       </div>
     </div>
-    <button type="button" class="btn-wa" onclick="sendToWhatsApp('capture-upload-cmt', 'Upload Data CMT')">
+    <!-- Tombol Kirim Gambar WA CMT -->
+    <button type="button" class="btn-wa" onclick="sendToWhatsApp('cmt')">
       📷 Kirim Gambar CMT ke WA
     </button>
   </div>
@@ -922,55 +928,55 @@
     renderStatusCell('out_n24', resN21.subStatus, false, resN21.isRedBg);
   }
 
-  // ==================== FUNGSI KIRIM GAMBAR KE WA ====================
-  async function sendToWhatsApp(elementId, titleName) {
-    const targetElement = document.getElementById(elementId);
-    if (!targetElement) return;
+  /**
+   * Mengambil gambar screenshot dari card/tabel upload RCT/CMT
+   * dan mengunduhnya serta membuka WhatsApp Web/App.
+   */
+  function sendToWhatsApp(type) {
+    const cardId = type === 'rct' ? 'card-upload-rct' : 'card-upload-cmt';
+    const cardElem = document.getElementById(cardId);
+    const titleText = type === 'rct' 
+      ? document.getElementById('title_upload_rct').innerText 
+      : document.getElementById('title_upload_cmt').innerText;
 
-    try {
-      // Capture elemen sebagai kanvas
-      const canvas = await html2canvas(targetElement, {
-        scale: 2,
-        backgroundColor: '#1e293b'
-      });
+    if (!cardElem) return;
 
-      // Konversi kanvas ke blob gambar
-      canvas.toBlob(async (blob) => {
-        const file = new File([blob], `${titleName.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
+    // Menangkap elemen menjadi gambar canvas
+    html2canvas(cardElem, {
+      scale: 2, // Kualitas gambar lebih tinggi
+      useCORS: true,
+      backgroundColor: '#1e293b'
+    }).then(canvas => {
+      // 1. Buat tautan download gambar screenshot
+      const imageUri = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = imageUri;
+      downloadLink.download = `Hasil_Upload_${type.toUpperCase()}_${Date.now()}.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
 
-        // Jika browser HP mendukung Web Share API untuk Berbagi File secara langsung
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              files: [file],
-              title: titleName,
-              text: `Laporan Hasil ${titleName}`
-            });
-          } catch (err) {
-            if (err.name !== 'AbortError') {
-              fallbackWaShare(canvas, titleName);
-            }
-          }
-        } else {
-          // Fallback: Download file gambar otomatis + Buka WhatsApp Web
-          fallbackWaShare(canvas, titleName);
-        }
-      }, 'image/png');
-    } catch (e) {
-      alert('Gagal mengambil gambar tampilan. Silakan coba lagi.');
-    }
-  }
+      // 2. Buat teks pesan deskripsi ringkas untuk WA
+      let captionText = `*Hasil Upload Data ${type.toUpperCase()}*\n`;
+      captionText += `📌 ${titleText}\n`;
 
-  function fallbackWaShare(canvas, titleName) {
-    // 1. Download Gambar secara otomatis
-    const link = document.createElement('a');
-    link.download = `${titleName.replace(/\s+/g, '_')}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+      if (type === 'rct') {
+        const avg = document.getElementById('out_l12').innerText;
+        captionText += `📊 Rata-Rata Total: ${avg}\n`;
+      } else {
+        const avg = document.getElementById('out_l22').innerText;
+        captionText += `📊 Rata-Rata Total: ${avg}\n`;
+      }
+      captionText += `\n*(Gambar Screenshot telah diunduh otomatis, silakan lampirkan gambar tersebut saat mengirim)*`;
 
-    // 2. Buka WA dengan pesan singkat
-    const textMsg = encodeURIComponent(`Berikut laporan ${titleName} (Gambar telah terunduh di perangkat Anda, silakan lampirkan gambar tersebut).`);
-    window.open(`https://api.whatsapp.com/send?text=${textMsg}`, '_blank');
+      // 3. Buka WhatsApp
+      const encodedMessage = encodeURIComponent(captionText);
+      const waUrl = `https://api.whatsapp.com/send?text=${encodedMessage}`;
+      window.open(waUrl, '_blank');
+    }).catch(err => {
+      console.error('Gagal membuat screenshot:', err);
+      alert('Terjadi kesalahan saat membuat screenshot gambar.');
+    });
   }
 
   window.onload = function() {
