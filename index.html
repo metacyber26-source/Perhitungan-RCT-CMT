@@ -47,13 +47,13 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
     .app-header {
       text-align: center;
       border-bottom: 2px solid var(--border-color);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
 
     .app-header h1 {
@@ -64,19 +64,26 @@
       letter-spacing: 0.5px;
     }
 
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
     .mode-selector-wrapper {
+      flex: 1;
       background: var(--bg-input);
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 8px 12px;
       border: 1.5px solid var(--border-color);
     }
 
     .mode-selector-wrapper label {
       display: block;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: #94a3b8;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       font-weight: 700;
     }
 
@@ -85,7 +92,7 @@
       background: transparent;
       color: var(--text-main);
       border: none;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       outline: none;
       cursor: pointer;
@@ -95,6 +102,27 @@
       background-color: var(--bg-card);
       color: var(--text-main);
       font-size: 1.1rem;
+    }
+
+    .btn-reset {
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0 16px;
+      height: 100%;
+      min-height: 54px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .btn-reset:active {
+      background: #b91c1c;
     }
 
     .view-section {
@@ -219,7 +247,7 @@
       font-weight: 800;
       color: #000;
       outline: none;
-      padding: 4px 0;
+      padding: 6px 0;
     }
 
     /* Kelas khusus untuk nilai melebihi batas (Merah) */
@@ -249,14 +277,17 @@
     <h1>Kalkulator RCT & CMT</h1>
   </div>
 
-  <div class="mode-selector-wrapper">
-    <label for="viewMode">Pilihan Tampilan</label>
-    <select id="viewMode" class="mode-select" onchange="switchView(this.value)">
-      <option value="input-rct">Input data RCT</option>
-      <option value="input-cmt">Input data CMT</option>
-      <option value="upload-rct">Upload data RCT</option>
-      <option value="upload-cmt">Upload data CMT</option>
-    </select>
+  <div class="action-bar">
+    <div class="mode-selector-wrapper">
+      <label for="viewMode">Pilihan Tampilan</label>
+      <select id="viewMode" class="mode-select" onchange="switchView(this.value)">
+        <option value="input-rct">Input data RCT</option>
+        <option value="input-cmt">Input data CMT</option>
+        <option value="upload-rct">Upload data RCT</option>
+        <option value="upload-cmt">Upload data CMT</option>
+      </select>
+    </div>
+    <button type="button" class="btn-reset" onclick="clearAllInputs()" title="Reset Isian Data">Reset</button>
   </div>
 
   <!-- ==================== VIEW 1: INPUT DATA RCT ==================== -->
@@ -282,21 +313,21 @@
         </div>
         <div class="form-group">
           <label>JR</label>
-          <input type="number" id="rct_d4" class="form-control" value="0.4" step="0.1" oninput="syncAndRecalculate()">
+          <input type="number" id="rct_d4" class="form-control" value="" placeholder="0.4" step="0.1" inputmode="decimal" onfocus="this.select()" oninput="syncAndRecalculate()">
         </div>
       </div>
       <div class="grid-3" style="margin-top: 10px;">
         <div class="form-group">
           <label>FAKTOR (F2)</label>
-          <input type="number" id="rct_f2" class="form-control" value="0.4" step="0.01" oninput="syncAndRecalculate()">
+          <input type="number" id="rct_f2" class="form-control" value="0.4" step="0.01" inputmode="decimal" onfocus="this.select()" oninput="syncAndRecalculate()">
         </div>
         <div class="form-group">
           <label>TEMP</label>
-          <input type="text" id="rct_f3" class="form-control" value="" oninput="syncAndRecalculate()">
+          <input type="text" id="rct_f3" class="form-control" value="" onfocus="this.select()" oninput="syncAndRecalculate()">
         </div>
         <div class="form-group">
           <label>RH</label>
-          <input type="text" id="rct_f4" class="form-control" value="" oninput="syncAndRecalculate()">
+          <input type="text" id="rct_f4" class="form-control" value="" onfocus="this.select()" oninput="syncAndRecalculate()">
         </div>
       </div>
     </div>
@@ -316,26 +347,26 @@
             <tr>
               <td rowspan="2">TOP<br><br>LUAR</td>
               <td>1</td>
-              <td rowspan="2"><input type="number" id="rct_d7" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_e7" step="any" oninput="recalculate()"></td>
-              <td rowspan="2"><input type="number" id="rct_f7" step="any" oninput="recalculate()"></td>
+              <td rowspan="2"><input type="number" id="rct_d7" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_e7" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td rowspan="2"><input type="number" id="rct_f7" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td>2</td>
-              <td><input type="number" id="rct_e8" step="any" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_e8" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td rowspan="2">BOTT<br>OM<br>LUAR</td>
               <td>3</td>
-              <td><input type="number" id="rct_d9" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_e9" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_f9" step="any" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_d9" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_e9" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_f9" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td>4</td>
-              <td><input type="number" id="rct_d10" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_e10" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_f10" step="any" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_d10" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_e10" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="rct_f10" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
@@ -398,26 +429,26 @@
             <tr>
               <td rowspan="2">TOP<br><br>LUAR</td>
               <td>1</td>
-              <td rowspan="2"><input type="number" id="cmt_d17" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_e17" step="any" oninput="recalculate()"></td>
-              <td rowspan="2"><input type="number" id="cmt_f17" step="any" oninput="recalculate()"></td>
+              <td rowspan="2"><input type="number" id="cmt_d17" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_e17" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td rowspan="2"><input type="number" id="cmt_f17" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td>2</td>
-              <td><input type="number" id="cmt_e18" step="any" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_e18" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td rowspan="2">BOTT<br>OM<br>LUAR</td>
               <td>3</td>
-              <td><input type="number" id="cmt_d19" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_e19" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_f19" step="any" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_d19" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_e19" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_f19" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td>4</td>
-              <td><input type="number" id="cmt_d20" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_e20" step="any" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_f20" step="any" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_d20" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_e20" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
+              <td><input type="number" id="cmt_f20" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
             </tr>
             <tr>
               <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
@@ -612,6 +643,18 @@
     document.getElementById('view-' + viewId).classList.add('active');
   }
 
+  function clearAllInputs() {
+    const inputs = document.querySelectorAll('input:not([readonly])');
+    inputs.forEach(input => {
+      if (input.id === 'rct_f2') {
+        input.value = '0.4';
+      } else {
+        input.value = '';
+      }
+    });
+    syncAndRecalculate();
+  }
+
   function parseVal(id) {
     const el = document.getElementById(id);
     if (!el) return NaN;
@@ -624,7 +667,6 @@
     if (!el) return;
     el.innerText = text || '';
     
-    // Reset kelas warna
     el.classList.remove('text-red', 'bg-red-qw');
     
     if (isRedBg) {
@@ -677,14 +719,14 @@
 
     // Nilai Referensi RCT
     const AL4 = LOOKUP_AL4[d3] || 10.2;
-    const AL3 = AL4 - 0.05; // Nilai AL3 (Batas Bawah)
-    const AO3 = AL4 + 0.8;  // Nilai AO3 (Batas Atas)
+    const AL3 = AL4 - 0.05;
+    const AO3 = AL4 + 0.8;
 
     // Nilai Referensi CMT
     const al17_key = d2 + " " + d3;
     const cmt_data = LOOKUP_CMT_STD[al17_key] || { std: 13.2, sum: 23.4 };
     const AR20 = cmt_data.std;
-    const AS20 = AR20;     // Nilai AS20
+    const AS20 = AR20;
 
     // ==================== 1. INPUT RCT ====================
     const d7 = parseVal('rct_d7'), d8 = d7, d9 = parseVal('rct_d9'), d10 = parseVal('rct_d10');
@@ -696,7 +738,6 @@
     const F11 = calcAverage([f7, f8, f9, f10]);
     const D12 = calcAverage([D11, E11, F11]);
 
-    // Evaluasi RCT (Kondisi AL3 & AO3)
     const evalRCT = (val) => {
       if (isNaN(val)) return { status: '', subStatus: '', isRedText: false, isRedBg: false };
       if (val < AL3) {
@@ -725,7 +766,6 @@
     renderStatusCell('out_e14', resE11.subStatus, false, resE11.isRedBg);
     renderStatusCell('out_f14', resF11.subStatus, false, resF11.isRedBg);
 
-
     // ==================== 2. INPUT CMT ====================
     const cmt_d17 = parseVal('cmt_d17'), cmt_d18 = cmt_d17, cmt_d19 = parseVal('cmt_d19'), cmt_d20 = parseVal('cmt_d20');
     const cmt_e17 = parseVal('cmt_e17'), cmt_e18 = parseVal('cmt_e18'), cmt_e19 = parseVal('cmt_e19'), cmt_e20 = parseVal('cmt_e20');
@@ -736,7 +776,6 @@
     const F21 = calcAverage([cmt_f17, cmt_f18, cmt_f19, cmt_f20]);
     const D22 = calcAverage([D21, E21, F21]);
 
-    // Evaluasi CMT (Kondisi AS20)
     const evalCMT = (val) => {
       if (isNaN(val)) return { status: '', subStatus: '', isRedText: false, isRedBg: false };
       if (val < AS20) {
@@ -762,7 +801,6 @@
     renderStatusCell('out_d24', resD21.subStatus, false, resD21.isRedBg);
     renderStatusCell('out_e24', resE21.subStatus, false, resE21.isRedBg);
     renderStatusCell('out_f24', resF21.subStatus, false, resF21.isRedBg);
-
 
     // ==================== 3. UPLOAD RCT LOGIC ====================
     const AD12 = D11 - AL4;
@@ -807,7 +845,6 @@
     renderStatusCell('out_l14', resL11.subStatus, false, resL11.isRedBg);
     renderStatusCell('out_m14', resM11.subStatus, false, resM11.isRedBg);
     renderStatusCell('out_n14', resN11.subStatus, false, resN11.isRedBg);
-
 
     // ==================== 4. UPLOAD CMT LOGIC ====================
     const AD21 = calcAverage([cmt_d17 - AR20, cmt_d19 - AR20, cmt_d20 - AR20]);
