@@ -11,11 +11,13 @@
       --bg-input: #334155;
       --accent: #38bdf8;
       --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --text-muted: #cbd5e1;
       --border-color: #475569;
       --excel-header-bg: #7ea6e0;
       --excel-avg-bg: #00e600;
       --excel-status-bg: #8ce600;
+      --danger-bg: #ef4444;
+      --danger-text: #dc2626;
     }
 
     * {
@@ -32,49 +34,50 @@
       display: flex;
       justify-content: center;
       min-height: 100vh;
-      padding: 12px;
+      padding: 10px;
     }
 
     .app-container {
       width: 100%;
-      max-width: 412px;
+      max-width: 440px;
       background: var(--bg-card);
       border-radius: 20px;
-      padding: 16px;
+      padding: 18px;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
     }
 
     .app-header {
       text-align: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 12px;
     }
 
     .app-header h1 {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.4rem;
+      font-weight: 800;
       color: var(--accent);
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .mode-selector-wrapper {
       background: var(--bg-input);
       border-radius: 12px;
-      padding: 8px 12px;
-      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-color);
     }
 
     .mode-selector-wrapper label {
       display: block;
-      font-size: 0.7rem;
-      color: var(--text-muted);
+      font-size: 0.9rem;
+      color: #94a3b8;
       text-transform: uppercase;
-      margin-bottom: 4px;
-      font-weight: 600;
+      margin-bottom: 6px;
+      font-weight: 700;
     }
 
     .mode-select {
@@ -82,8 +85,8 @@
       background: transparent;
       color: var(--text-main);
       border: none;
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 1.15rem;
+      font-weight: 700;
       outline: none;
       cursor: pointer;
     }
@@ -91,12 +94,13 @@
     .mode-select option {
       background-color: var(--bg-card);
       color: var(--text-main);
+      font-size: 1.1rem;
     }
 
     .view-section {
       display: none;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .view-section.active {
@@ -104,57 +108,60 @@
     }
 
     .card {
-      background: rgba(15, 23, 42, 0.6);
-      border-radius: 12px;
-      padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .card-title {
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-weight: 800;
       color: var(--accent);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       text-transform: uppercase;
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 12px;
     }
 
     .grid-3 {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
+      gap: 10px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     .form-group label {
-      font-size: 0.7rem;
+      font-size: 0.85rem;
+      font-weight: 700;
       color: var(--text-muted);
     }
 
     .form-control {
       background: var(--bg-input);
-      border: 1px solid var(--border-color);
+      border: 1.5px solid var(--border-color);
       border-radius: 8px;
-      padding: 8px 10px;
+      padding: 10px;
       color: var(--text-main);
-      font-size: 0.85rem;
+      font-size: 1.1rem;
+      font-weight: 700;
       outline: none;
       width: 100%;
+      text-align: center;
     }
 
     .form-control[readonly] {
-      background: rgba(51, 65, 85, 0.4);
-      color: #cbd5e1;
+      background: rgba(51, 65, 85, 0.5);
+      color: #f1f5f9;
     }
 
     .table-container {
@@ -174,28 +181,32 @@
       border: 2px solid #000;
       text-align: center;
       vertical-align: middle;
-      padding: 4px;
-      font-size: 0.85rem;
+      padding: 6px 4px;
+      font-size: 1.1rem;
     }
 
     table.excel-table th.header-type {
       background-color: var(--excel-header-bg);
-      font-size: 1.1rem;
+      font-size: 1.25rem;
+      font-weight: 800;
     }
 
     table.excel-table th.header-col {
       background-color: #fff;
-      font-size: 1rem;
+      font-size: 1.15rem;
+      font-weight: 800;
     }
 
     table.excel-table td.cell-avg {
       background-color: var(--excel-avg-bg);
-      font-size: 0.95rem;
+      font-size: 1.15rem;
+      font-weight: 800;
     }
 
     table.excel-table td.cell-status {
       background-color: var(--excel-status-bg);
-      font-size: 0.95rem;
+      font-size: 1.15rem;
+      font-weight: 800;
     }
 
     table.excel-table input {
@@ -204,17 +215,30 @@
       border: none;
       background: transparent;
       text-align: center;
-      font-size: 0.9rem;
-      font-weight: bold;
+      font-size: 1.15rem;
+      font-weight: 800;
       color: #000;
       outline: none;
+      padding: 4px 0;
+    }
+
+    /* Kelas khusus untuk nilai melebihi batas (Merah) */
+    .text-red {
+      color: var(--danger-text) !important;
+    }
+
+    /* Kelas khusus untuk status QW (Blok Merah) */
+    .bg-red-qw {
+      background-color: var(--danger-bg) !important;
+      color: #ffffff !important;
     }
 
     .footer-info {
       text-align: center;
-      font-size: 0.65rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       margin-top: auto;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -261,7 +285,7 @@
           <input type="number" id="rct_d4" class="form-control" value="0.4" step="0.1" oninput="syncAndRecalculate()">
         </div>
       </div>
-      <div class="grid-3" style="margin-top: 8px;">
+      <div class="grid-3" style="margin-top: 10px;">
         <div class="form-group">
           <label>FAKTOR (F2)</label>
           <input type="number" id="rct_f2" class="form-control" value="0.4" step="0.01" oninput="syncAndRecalculate()">
@@ -425,7 +449,7 @@
   <div id="view-upload-rct" class="view-section">
     <div class="card">
       <div class="card-title" id="title_upload_rct">RCT  JR:</div>
-      <div class="grid-2" style="margin-bottom: 8px;">
+      <div class="grid-2" style="margin-bottom: 10px;">
         <div class="form-group">
           <label>TEMP</label>
           <input type="text" id="up_rct_n3" class="form-control" readonly>
@@ -595,13 +619,18 @@
     return isNaN(v) ? NaN : v;
   }
 
-  function setTxt(id, val, digits = 2) {
+  function renderStatusCell(id, text, isRedText, isRedBg) {
     const el = document.getElementById(id);
     if (!el) return;
-    if (typeof val === 'number') {
-      el.innerText = isNaN(val) ? '#DIV/0!' : val.toFixed(digits);
-    } else {
-      el.innerText = val || '';
+    el.innerText = text || '';
+    
+    // Reset kelas warna
+    el.classList.remove('text-red', 'bg-red-qw');
+    
+    if (isRedBg) {
+      el.classList.add('bg-red-qw');
+    } else if (isRedText) {
+      el.classList.add('text-red');
     }
   }
 
@@ -624,7 +653,7 @@
   function syncAndRecalculate() {
     const d2 = document.getElementById('rct_d2').value;
     const d3 = document.getElementById('rct_d3').value;
-    const d4 = document.getElementById('rct_d4').value; // JR
+    const d4 = document.getElementById('rct_d4').value;
     const f3 = document.getElementById('rct_f3').value;
     const f4 = document.getElementById('rct_f4').value;
 
@@ -635,7 +664,6 @@
     document.getElementById('up_rct_n3').value = f3;
     document.getElementById('up_rct_n4').value = f4;
 
-    // Ambil nilai JR dari D4 untuk judul tampilan Upload
     document.getElementById('title_upload_rct').innerText = "RCT  JR:" + d4;
     document.getElementById('title_upload_cmt').innerText = "CMT  JR:" + d4;
 
@@ -645,19 +673,20 @@
   function recalculate() {
     const d2 = document.getElementById('rct_d2').value;
     const d3 = document.getElementById('rct_d3').value;
-    const f2 = parseVal('rct_f2') || 0.4; // Faktor pengurang dari Cell F2
+    const f2 = parseVal('rct_f2') || 0.4;
 
+    // Nilai Referensi RCT
     const AL4 = LOOKUP_AL4[d3] || 10.2;
-    const AL5 = AL4 - 0.05;
-    const AO4 = AL4 + 0.8;
+    const AL3 = AL4 - 0.05; // Nilai AL3 (Batas Bawah)
+    const AO3 = AL4 + 0.8;  // Nilai AO3 (Batas Atas)
 
+    // Nilai Referensi CMT
     const al17_key = d2 + " " + d3;
     const cmt_data = LOOKUP_CMT_STD[al17_key] || { std: 13.2, sum: 23.4 };
     const AR20 = cmt_data.std;
-    const AT20 = cmt_data.sum;
-    const AS20 = AR20;
+    const AS20 = AR20;     // Nilai AS20
 
-    // --- 1. INPUT RCT ---
+    // ==================== 1. INPUT RCT ====================
     const d7 = parseVal('rct_d7'), d8 = d7, d9 = parseVal('rct_d9'), d10 = parseVal('rct_d10');
     const e7 = parseVal('rct_e7'), e8 = parseVal('rct_e8'), e9 = parseVal('rct_e9'), e10 = parseVal('rct_e10');
     const f7 = parseVal('rct_f7'), f8 = f7, f9 = parseVal('rct_f9'), f10 = parseVal('rct_f10');
@@ -667,20 +696,37 @@
     const F11 = calcAverage([f7, f8, f9, f10]);
     const D12 = calcAverage([D11, E11, F11]);
 
-    const D13 = isNaN(D11) ? '' : (D11 < AL5 ? 'RCL' : (D11 > AO4 ? 'RCH' : ''));
-    const E13 = isNaN(E11) ? '' : (E11 < AL5 ? 'RCL' : (E11 > AO4 ? 'RCH' : ''));
-    const F13 = isNaN(F11) ? '' : (F11 < AL5 ? 'RCL' : (F11 > AO4 ? 'RCH' : ''));
+    // Evaluasi RCT (Kondisi AL3 & AO3)
+    const evalRCT = (val) => {
+      if (isNaN(val)) return { status: '', subStatus: '', isRedText: false, isRedBg: false };
+      if (val < AL3) {
+        return { status: 'RCL', subStatus: 'QW', isRedText: true, isRedBg: true };
+      } else if (val > AO3) {
+        return { status: 'RCH', subStatus: 'Q1', isRedText: true, isRedBg: false };
+      } else {
+        return { status: '', subStatus: 'Q1', isRedText: false, isRedBg: false };
+      }
+    };
 
-    const D14 = D13 === 'RCL' ? 'QW' : 'Q1';
-    const E14 = E13 === 'RCL' ? 'QW' : 'Q1';
-    const F14 = F13 === 'RCL' ? 'QW' : 'Q1';
+    const resD11 = evalRCT(D11);
+    const resE11 = evalRCT(E11);
+    const resF11 = evalRCT(F11);
 
-    setTxt('out_d11', D11); setTxt('out_e11', E11); setTxt('out_f11', F11);
-    setTxt('out_d12', D12);
-    setTxt('out_d13', D13); setTxt('out_e13', E13); setTxt('out_f13', F13);
-    setTxt('out_d14', D14); setTxt('out_e14', E14); setTxt('out_f14', F14);
+    renderStatusCell('out_d11', isNaN(D11) ? '-' : D11.toFixed(2), resD11.isRedText, false);
+    renderStatusCell('out_e11', isNaN(E11) ? '-' : E11.toFixed(2), resE11.isRedText, false);
+    renderStatusCell('out_f11', isNaN(F11) ? '-' : F11.toFixed(2), resF11.isRedText, false);
+    renderStatusCell('out_d12', isNaN(D12) ? '-' : D12.toFixed(2), false, false);
 
-    // --- 2. INPUT CMT ---
+    renderStatusCell('out_d13', resD11.status, resD11.isRedText, false);
+    renderStatusCell('out_e13', resE11.status, resE11.isRedText, false);
+    renderStatusCell('out_f13', resF11.status, resF11.isRedText, false);
+
+    renderStatusCell('out_d14', resD11.subStatus, false, resD11.isRedBg);
+    renderStatusCell('out_e14', resE11.subStatus, false, resE11.isRedBg);
+    renderStatusCell('out_f14', resF11.subStatus, false, resF11.isRedBg);
+
+
+    // ==================== 2. INPUT CMT ====================
     const cmt_d17 = parseVal('cmt_d17'), cmt_d18 = cmt_d17, cmt_d19 = parseVal('cmt_d19'), cmt_d20 = parseVal('cmt_d20');
     const cmt_e17 = parseVal('cmt_e17'), cmt_e18 = parseVal('cmt_e18'), cmt_e19 = parseVal('cmt_e19'), cmt_e20 = parseVal('cmt_e20');
     const cmt_f17 = parseVal('cmt_f17'), cmt_f18 = cmt_f17, cmt_f19 = parseVal('cmt_f19'), cmt_f20 = parseVal('cmt_f20');
@@ -690,20 +736,35 @@
     const F21 = calcAverage([cmt_f17, cmt_f18, cmt_f19, cmt_f20]);
     const D22 = calcAverage([D21, E21, F21]);
 
-    const D23 = isNaN(D21) ? '' : (D21 < AT20 ? 'CCL' : '');
-    const E23 = isNaN(E21) ? '' : (E21 < AT20 ? 'CCL' : '');
-    const F23 = isNaN(F21) ? '' : (F21 < AT20 ? 'CCL' : '');
+    // Evaluasi CMT (Kondisi AS20)
+    const evalCMT = (val) => {
+      if (isNaN(val)) return { status: '', subStatus: '', isRedText: false, isRedBg: false };
+      if (val < AS20) {
+        return { status: 'CCL', subStatus: 'QW', isRedText: true, isRedBg: true };
+      } else {
+        return { status: '', subStatus: 'Q1', isRedText: false, isRedBg: false };
+      }
+    };
 
-    const D24 = D23 === 'CCL' ? 'QW' : 'Q1';
-    const E24 = E23 === 'CCL' ? 'QW' : 'Q1';
-    const F24 = F23 === 'CCL' ? 'QW' : 'Q1';
+    const resD21 = evalCMT(D21);
+    const resE21 = evalCMT(E21);
+    const resF21 = evalCMT(F21);
 
-    setTxt('out_d21', D21); setTxt('out_e21', E21); setTxt('out_f21', F21);
-    setTxt('out_d22', D22);
-    setTxt('out_d23', D23); setTxt('out_e23', E23); setTxt('out_f23', F23);
-    setTxt('out_d24', D24); setTxt('out_e24', E24); setTxt('out_f24', F24);
+    renderStatusCell('out_d21', isNaN(D21) ? '-' : D21.toFixed(2), resD21.isRedText, false);
+    renderStatusCell('out_e21', isNaN(E21) ? '-' : E21.toFixed(2), resE21.isRedText, false);
+    renderStatusCell('out_f21', isNaN(F21) ? '-' : F21.toFixed(2), resF21.isRedText, false);
+    renderStatusCell('out_d22', isNaN(D22) ? '-' : D22.toFixed(2), false, false);
 
-    // --- 3. UPLOAD RCT LOGIC (Memakai f2 dari Cell F2) ---
+    renderStatusCell('out_d23', resD21.status, resD21.isRedText, false);
+    renderStatusCell('out_e23', resE21.status, resE21.isRedText, false);
+    renderStatusCell('out_f23', resF21.status, resF21.isRedText, false);
+
+    renderStatusCell('out_d24', resD21.subStatus, false, resD21.isRedBg);
+    renderStatusCell('out_e24', resE21.subStatus, false, resE21.isRedBg);
+    renderStatusCell('out_f24', resF21.subStatus, false, resF21.isRedBg);
+
+
+    // ==================== 3. UPLOAD RCT LOGIC ====================
     const AD12 = D11 - AL4;
     const AD13 = D11 > AL4 ? f2 : 0;
     const AD14 = AD12 * AD13;
@@ -730,20 +791,25 @@
     const N11 = calcAverage([AF7, AF9, AF10]);
     const L12 = calcAverage([L11, M11, N11]);
 
-    const L13 = isNaN(L11) ? '' : (L11 < AL5 ? 'RCL' : (L11 > AO4 ? 'RCH' : ''));
-    const M13 = isNaN(M11) ? '' : (M11 < AL5 ? 'RCL' : (M11 > AO4 ? 'RCH' : ''));
-    const N13 = isNaN(N11) ? '' : (N11 < AL5 ? 'RCL' : (N11 > AO4 ? 'RCH' : ''));
+    const resL11 = evalRCT(L11);
+    const resM11 = evalRCT(M11);
+    const resN11 = evalRCT(N11);
 
-    const L14 = L13 === 'RCL' ? 'QW' : 'Q1';
-    const M14 = M13 === 'RCL' ? 'QW' : 'Q1';
-    const N14 = N13 === 'RCL' ? 'QW' : 'Q1';
+    renderStatusCell('out_l11', isNaN(L11) ? '-' : L11.toFixed(2), resL11.isRedText, false);
+    renderStatusCell('out_m11', isNaN(M11) ? '-' : M11.toFixed(2), resM11.isRedText, false);
+    renderStatusCell('out_n11', isNaN(N11) ? '-' : N11.toFixed(2), resN11.isRedText, false);
+    renderStatusCell('out_l12', isNaN(L12) ? '-' : L12.toFixed(2), false, false);
 
-    setTxt('out_l11', L11); setTxt('out_m11', M11); setTxt('out_n11', N11);
-    setTxt('out_l12', L12);
-    setTxt('out_l13', L13); setTxt('out_m13', M13); setTxt('out_n13', N13);
-    setTxt('out_l14', L14); setTxt('out_m14', M14); setTxt('out_n14', N14);
+    renderStatusCell('out_l13', resL11.status, resL11.isRedText, false);
+    renderStatusCell('out_m13', resM11.status, resM11.isRedText, false);
+    renderStatusCell('out_n13', resN11.status, resN11.isRedText, false);
 
-    // --- 4. UPLOAD CMT LOGIC (Memakai f2 dari Cell F2) ---
+    renderStatusCell('out_l14', resL11.subStatus, false, resL11.isRedBg);
+    renderStatusCell('out_m14', resM11.subStatus, false, resM11.isRedBg);
+    renderStatusCell('out_n14', resN11.subStatus, false, resN11.isRedBg);
+
+
+    // ==================== 4. UPLOAD CMT LOGIC ====================
     const AD21 = calcAverage([cmt_d17 - AR20, cmt_d19 - AR20, cmt_d20 - AR20]);
     const AD22 = isNaN(AD21) ? 0 : (AD21 < AS20 ? 0 : AD21 - AS20);
     const AD23 = AD22 * f2;
@@ -772,18 +838,22 @@
     const N21 = calcAverage([N17, N19, N20]);
     const L22 = calcAverage([L21, M21, N21]);
 
-    const L23 = isNaN(L21) ? '' : (L21 < AS20 ? 'CCL' : '');
-    const M23 = isNaN(M21) ? '' : (M21 < AS20 ? 'CCL' : '');
-    const N23 = isNaN(N21) ? '' : (N21 < AS20 ? 'CCL' : '');
+    const resL21 = evalCMT(L21);
+    const resM21 = evalCMT(M21);
+    const resN21 = evalCMT(N21);
 
-    const L24 = L23 === 'CCL' ? 'QW' : 'Q1';
-    const M24 = M23 === 'CCL' ? 'QW' : 'Q1';
-    const N24 = N23 === 'CCL' ? 'QW' : 'Q1';
+    renderStatusCell('out_l21', isNaN(L21) ? '-' : L21.toFixed(2), resL21.isRedText, false);
+    renderStatusCell('out_m21', isNaN(M21) ? '-' : M21.toFixed(2), resM21.isRedText, false);
+    renderStatusCell('out_n21', isNaN(N21) ? '-' : N21.toFixed(2), resN21.isRedText, false);
+    renderStatusCell('out_l22', isNaN(L22) ? '-' : L22.toFixed(2), false, false);
 
-    setTxt('out_l21', L21); setTxt('out_m21', M21); setTxt('out_n21', N21);
-    setTxt('out_l22', L22);
-    setTxt('out_l23', L23); setTxt('out_m23', M23); setTxt('out_n23', N23);
-    setTxt('out_l24', L24); setTxt('out_m24', M24); setTxt('out_n24', N24);
+    renderStatusCell('out_l23', resL21.status, resL21.isRedText, false);
+    renderStatusCell('out_m23', resM21.status, resM21.isRedText, false);
+    renderStatusCell('out_n23', resN21.status, resN21.isRedText, false);
+
+    renderStatusCell('out_l24', resL21.subStatus, false, resL21.isRedBg);
+    renderStatusCell('out_m24', resM21.subStatus, false, resM21.isRedBg);
+    renderStatusCell('out_n24', resN21.subStatus, false, resN21.isRedBg);
   }
 
   window.onload = function() {
