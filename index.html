@@ -130,28 +130,25 @@
 
     .btn-wa {
       background-color: var(--wa-color);
-      color: #ffffff;
+      color: white;
       border: none;
-      border-radius: 8px;
-      padding: 8px 12px;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1rem;
       font-weight: 800;
-      font-size: 0.85rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.2s;
     }
 
     .btn-wa:active {
       background-color: var(--wa-hover);
-    }
-
-    .card-header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
     }
 
     .view-section {
@@ -175,6 +172,7 @@
       font-size: 1.15rem;
       font-weight: 800;
       color: var(--accent);
+      margin-bottom: 12px;
       text-transform: uppercase;
     }
 
@@ -278,10 +276,12 @@
       padding: 6px 0;
     }
 
+    /* Kelas khusus untuk nilai melebihi batas (Merah) */
     .text-red {
       color: var(--danger-text) !important;
     }
 
+    /* Kelas khusus untuk status QW (Blok Merah) */
     .bg-red-qw {
       background-color: var(--danger-bg) !important;
       color: #ffffff !important;
@@ -318,7 +318,7 @@
 
   <div id="view-input-rct" class="view-section active">
     <div class="card">
-      <div class="card-title" style="margin-bottom: 12px;">Parameter RCT</div>
+      <div class="card-title">Parameter RCT</div>
       <div class="grid-3">
         <div class="form-group">
           <label>GRADE</label>
@@ -421,7 +421,7 @@
 
   <div id="view-input-cmt" class="view-section">
     <div class="card">
-      <div class="card-title" style="margin-bottom: 12px;">Parameter CMT</div>
+      <div class="card-title">Parameter CMT</div>
       <div class="grid-3">
         <div class="form-group">
           <label>GRADE</label>
@@ -502,12 +502,7 @@
 
   <div id="view-upload-rct" class="view-section">
     <div class="card" id="card-upload-rct">
-      <div class="card-header-bar">
-        <div class="card-title" id="title_upload_rct">RCT  JR:</div>
-        <button type="button" class="btn-wa" onclick="shareToWhatsApp('card-upload-rct', 'Upload_Data_RCT')">
-          🟢 Kirim WA
-        </button>
-      </div>
+      <div class="card-title" id="title_upload_rct">RCT  JR:</div>
       <div class="grid-2" style="margin-bottom: 10px;">
         <div class="form-group">
           <label>TEMP</label>
@@ -577,16 +572,14 @@
         </table>
       </div>
     </div>
+    <button type="button" class="btn-wa" onclick="sendToWhatsApp('card-upload-rct', 'Upload Data RCT')">
+      📷 Kirim Gambar ke WA
+    </button>
   </div>
 
   <div id="view-upload-cmt" class="view-section">
     <div class="card" id="card-upload-cmt">
-      <div class="card-header-bar">
-        <div class="card-title" id="title_upload_cmt">CMT  JR:</div>
-        <button type="button" class="btn-wa" onclick="shareToWhatsApp('card-upload-cmt', 'Upload_Data_CMT')">
-          🟢 Kirim WA
-        </button>
-      </div>
+      <div class="card-title" id="title_upload_cmt">CMT  JR:</div>
       <div class="table-container">
         <table class="excel-table">
           <thead>
@@ -646,6 +639,9 @@
         </table>
       </div>
     </div>
+    <button type="button" class="btn-wa" onclick="sendToWhatsApp('card-upload-cmt', 'Upload Data CMT')">
+      📷 Kirim Gambar ke WA
+    </button>
   </div>
 
   <div class="footer-info">
@@ -749,16 +745,18 @@
     const d3 = document.getElementById('rct_d3').value;
     const f2 = parseVal('rct_f2') || 0.4;
 
+    // Nilai Referensi RCT
     const AL4 = LOOKUP_AL4[d3] || 10.2;
     const AL3 = AL4 - 0.05;
     const AO3 = AL4 + 0.8;
 
+    // Nilai Referensi CMT
     const al17_key = d2 + " " + d3;
     const cmt_data = LOOKUP_CMT_STD[al17_key] || { std: 13.2, sum: 23.4 };
     const AR20 = cmt_data.std;
     const AS20 = AR20;
 
-    // 1. INPUT RCT
+    // ==================== 1. INPUT RCT ====================
     const d7 = parseVal('rct_d7'), d8 = d7, d9 = parseVal('rct_d9'), d10 = parseVal('rct_d10');
     const e7 = parseVal('rct_e7'), e8 = parseVal('rct_e8'), e9 = parseVal('rct_e9'), e10 = parseVal('rct_e10');
     const f7 = parseVal('rct_f7'), f8 = f7, f9 = parseVal('rct_f9'), f10 = parseVal('rct_f10');
@@ -790,13 +788,13 @@
 
     renderStatusCell('out_d13', resD11.status, resD11.isRedText, false);
     renderStatusCell('out_e13', resE11.status, resE11.isRedText, false);
-    renderStatusCell('out_f13', resF11.status, resF11.isRedText, false);
+    renderStatusCell('out_f13', resF13 = resF11.status, resF11.isRedText, false);
 
     renderStatusCell('out_d14', resD11.subStatus, false, resD11.isRedBg);
     renderStatusCell('out_e14', resE11.subStatus, false, resE11.isRedBg);
     renderStatusCell('out_f14', resF11.subStatus, false, resF11.isRedBg);
 
-    // 2. INPUT CMT
+    // ==================== 2. INPUT CMT ====================
     const cmt_d17 = parseVal('cmt_d17'), cmt_d18 = cmt_d17, cmt_d19 = parseVal('cmt_d19'), cmt_d20 = parseVal('cmt_d20');
     const cmt_e17 = parseVal('cmt_e17'), cmt_e18 = parseVal('cmt_e18'), cmt_e19 = parseVal('cmt_e19'), cmt_e20 = parseVal('cmt_e20');
     const cmt_f17 = parseVal('cmt_f17'), cmt_f18 = cmt_f17, cmt_f19 = parseVal('cmt_f19'), cmt_f20 = parseVal('cmt_f20');
@@ -832,7 +830,7 @@
     renderStatusCell('out_e24', resE21.subStatus, false, resE21.isRedBg);
     renderStatusCell('out_f24', resF21.subStatus, false, resF21.isRedBg);
 
-    // 3. UPLOAD RCT LOGIC
+    // ==================== 3. UPLOAD RCT LOGIC ====================
     const AD12 = D11 - AL4;
     const AD13 = D11 > AL4 ? f2 : 0;
     const AD14 = AD12 * AD13;
@@ -876,7 +874,7 @@
     renderStatusCell('out_m14', resM11.subStatus, false, resM11.isRedBg);
     renderStatusCell('out_n14', resN11.subStatus, false, resN11.isRedBg);
 
-    // 4. UPLOAD CMT LOGIC
+    // ==================== 4. UPLOAD CMT LOGIC ====================
     const AD21 = calcAverage([cmt_d17 - AR20, cmt_d19 - AR20, cmt_d20 - AR20]);
     const AD22 = isNaN(AD21) ? 0 : (AD21 < AS20 ? 0 : AD21 - AS20);
     const AD23 = AD22 * f2;
@@ -923,48 +921,51 @@
     renderStatusCell('out_n24', resN21.subStatus, false, resN21.isRedBg);
   }
 
-  // Fungsi untuk konversi elemen menjadi gambar dan mengirim ke WA
-  async function shareToWhatsApp(elementId, fileNamePrefix) {
-    const targetElement = document.getElementById(elementId);
-    if (!targetElement) return;
-
-    // Sembunyikan tombol WA sejenak agar tidak tertangkap di dalam screenshot
-    const btn = targetElement.querySelector('.btn-wa');
-    if (btn) btn.style.display = 'none';
+  // Fungsi konversi HTML ke Gambar & Bagikan ke WhatsApp
+  async function sendToWhatsApp(elementId, titleText) {
+    const cardEl = document.getElementById(elementId);
+    if (!cardEl) return;
 
     try {
-      const canvas = await html2canvas(targetElement, {
+      const canvas = await html2canvas(cardEl, {
         scale: 2,
         backgroundColor: '#1e293b'
       });
 
-      if (btn) btn.style.display = 'flex';
-
       canvas.toBlob(async (blob) => {
-        if (!blob) return;
+        if (!blob) {
+          alert("Gagal memproses gambar.");
+          return;
+        }
 
-        const file = new File([blob], `${fileNamePrefix}.png`, { type: 'image/png' });
+        const file = new File([blob], `${titleText}.png`, { type: 'image/png' });
 
-        // Cek jika browser mendukung Web Share API untuk Berbagi File (HP Android/iOS)
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            title: fileNamePrefix,
-            text: `Hasil Data ${fileNamePrefix.replace(/_/g, ' ')}`,
-            files: [file]
-          });
+        // Cek jika browser mendukung fitur bawaan berbagi file (Web Share API)
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: titleText,
+              text: `Berikut laporan ${titleText}`
+            });
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              alert("Gagal membagikan gambar: " + err.message);
+            }
+          }
         } else {
-          // Fallback untuk Desktop: Unduh otomatis gambar
+          // Fallback untuk browser yang tidak mendukung Web Share API
           const link = document.createElement('a');
-          link.download = `${fileNamePrefix}.png`;
+          link.download = `${titleText}.png`;
           link.href = canvas.toDataURL('image/png');
           link.click();
-          alert('Gambar telah terunduh. Anda dapat melampirkannya langsung ke WhatsApp Web.');
+          
+          alert("Gambar berhasil diunduh. Silakan tempel/lampirkan gambar tersebut ke WhatsApp.");
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Berikut hasil laporan ' + titleText + ':')}`, '_blank');
         }
       }, 'image/png');
-
-    } catch (err) {
-      if (btn) btn.style.display = 'flex';
-      console.error(err);
+    } catch (e) {
+      alert("Terjadi kesalahan saat mengambil gambar: " + e.message);
     }
   }
 
