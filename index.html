@@ -1,311 +1,61 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KALKULATOR RCT & CMT</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-3">
+function sendToWhatsApp() {
+  const modeSelect = document.getElementById('modeView');
+  const modeText = modeSelect.options[modeSelect.selectedIndex].text;
+  const type = modeSelect.value.includes('rct') ? 'RCT' : 'CMT';
 
-  <div class="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-2xl">
-    
-    <!-- Header Title -->
-    <div class="text-center mb-4">
-      <h1 class="text-2xl font-extrabold text-sky-400 tracking-wide">KALKULATOR RCT & CMT</h1>
-    </div>
+  // Parameter Header
+  const grade = document.getElementById('grade').value;
+  const jr = document.getElementById('jr').value || '-';
+  const temp = document.getElementById('temp').value || '-';
+  const gsm = document.getElementById('gsm').value;
+  const rh = document.getElementById('rh').value || '-';
+  const tool = document.getElementById('tool').value;
+  const faktor = document.getElementById('faktor').value;
+  const minVal = document.getElementById('minValue').value;
 
-    <!-- Mode Selector & Reset -->
-    <div class="bg-slate-800/80 p-3 rounded-xl mb-4 border border-slate-700 flex items-center justify-between gap-3">
-      <div class="flex-1">
-        <label class="block text-xs text-amber-400 font-bold mb-1">PILIHAN TAMPILAN</label>
-        <select id="modeView" onchange="handleModeChange()" class="w-full bg-slate-900 text-white text-base font-bold p-2.5 rounded-lg border border-slate-600 focus:outline-none focus:border-sky-500">
-          <option value="input_rct">Input Data RCT</option>
-          <option value="input_cmt">Input Data CMT</option>
-          <option value="report_rct">Laporan Data RCT</option>
-          <option value="report_cmt">Laporan Data CMT</option>
-        </select>
-      </div>
-      <button onclick="resetForm()" class="mt-5 bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-lg text-base shadow-md transition-all">
-        Reset
-      </button>
-    </div>
+  // Nilai Data Tabel
+  const isReport = modeSelect.value.startsWith('report_');
+  
+  const ts1 = document.getElementById('ts1').value || '-';
+  const ms1 = document.getElementById('ms1').value || '-';
+  const ms2 = document.getElementById('ms2').value || '-';
+  const ds1 = document.getElementById('ds1').value || '-';
 
-    <!-- Parameter Section -->
-    <div class="bg-slate-800/50 p-3.5 rounded-xl mb-4 border border-slate-700">
-      <h2 id="paramTitle" class="text-sm font-extrabold text-amber-400 mb-2.5 tracking-wider">PARAMETER RCT</h2>
-      <div class="grid grid-cols-3 gap-2.5">
-        
-        <!-- Tool, Grade, GSM -->
-        <div>
-          <label class="block text-xs text-slate-300 font-medium mb-1">TOOL</label>
-          <select id="tool" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold">
-            <option value="L&W">L&W</option>
-            <option value="PNSHAR">PNSHAR</option>
-          </select>
-        </div>
+  const ts3 = document.getElementById('ts3').value || '-';
+  const ms3 = document.getElementById('ms3').value || '-';
+  const ds2 = document.getElementById('ds2').value || '-';
 
-        <div>
-          <label class="block text-xs text-slate-300 font-medium mb-1">GRADE</label>
-          <select id="grade" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold">
-            <option value="CME">CME</option>
-            <option value="CMF">CMF</option>
-          </select>
-        </div>
+  const ts4 = document.getElementById('ts4').value || '-';
+  const ms4 = document.getElementById('ms4').value || '-';
+  const ds3 = document.getElementById('ds3').value || '-';
 
-        <div>
-          <label class="block text-xs text-slate-300 font-medium mb-1">GSM</label>
-          <select id="gsm" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold">
-            <option value="125">125</option>
-            <option value="150">150</option>
-          </select>
-        </div>
+  // Hasil Perhitungan
+  const avgTS = document.getElementById('avgTS').innerText;
+  const avgMS = document.getElementById('avgMS').innerText;
+  const avgDS = document.getElementById('avgDS').innerText;
+  const grandAVG = document.getElementById('grandAVG').innerText;
 
-        <!-- Inputan JR Baru -->
-        <div>
-          <label class="block text-xs text-amber-300 font-bold mb-1">JR (ROLL)</label>
-          <input type="number" id="jr" value="810" class="w-full bg-slate-900 text-amber-400 text-base p-2 rounded-lg border border-amber-500/50 font-extrabold text-center">
-        </div>
+  // Format Pesan Tabel untuk WhatsApp
+  const message = `=========================\n` +
+    `     *${modeText.toUpperCase()}*\n` +
+    `=========================\n` +
+    `*GRADE :* ${grade}\n` +
+    `*JR    :* ${jr}   | *TEMP :* ${temp}°C\n` +
+    `*GSM   :* ${gsm}   | *RH   :* ${rh}%\n` +
+    `*TOOL  :* ${tool} | *F2 :* ${faktor}% | *MIN :* ${minVal}\n` +
+    `-----------------------------------------\n` +
+    `| *${type.padEnd(5)}* | *TS*   | *MS*   | *DS*   |\n` +
+    `-----------------------------------------\n` +
+    `| TOP 1 | ${ts1.padEnd(6)} | ${ms1.padEnd(6)} | ${ds1.padEnd(6)} |\n` +
+    `| TOP 2 | "      | ${ms2.padEnd(6)} | "      |\n` +
+    `| BOT 3 | ${ts3.padEnd(6)} | ${ms3.padEnd(6)} | ${ds2.padEnd(6)} |\n` +
+    `| BOT 4 | ${ts4.padEnd(6)} | ${ms4.padEnd(6)} | ${ds3.padEnd(6)} |\n` +
+    `-----------------------------------------\n` +
+    `| *AVE*  | *${avgTS.padEnd(5)}* | *${avgMS.padEnd(5)}* | *${avgDS.padEnd(5)}* |\n` +
+    `| *GRAND AVE :* *${grandAVG}*\n` +
+    `-----------------------------------------\n` +
+    `| *STATUS:* | Q1 | Q1 | Q1 |\n` +
+    `=========================`;
 
-        <div>
-          <label class="block text-xs text-slate-300 font-medium mb-1">FAKTOR F2 (%)</label>
-          <input type="number" id="faktor" value="40" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold text-center">
-        </div>
-
-        <div>
-          <label class="block text-xs text-slate-300 font-medium mb-1">MIN VALUE</label>
-          <input type="number" id="minValue" value="11.6" step="0.1" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold text-center">
-        </div>
-
-        <div class="col-span-3">
-          <label class="block text-xs text-slate-300 font-medium mb-1">TEMP / RH</label>
-          <div class="flex gap-2">
-            <input type="number" id="temp" value="21.8" step="0.1" class="w-1/2 bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 text-center font-bold">
-            <input type="number" id="rh" value="50" class="w-1/2 bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 text-center font-bold">
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Table Data -->
-    <div class="overflow-x-auto bg-white rounded-xl text-black p-2 mb-4 shadow-lg">
-      <table class="w-full border-collapse text-center text-sm font-bold">
-        <thead>
-          <tr class="bg-blue-200 text-base">
-            <th id="thType" class="border border-slate-400 p-2 text-blue-900">RCT</th>
-            <th class="border border-slate-400 p-2">TS</th>
-            <th class="border border-slate-400 p-2">MS</th>
-            <th class="border border-slate-400 p-2">DS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-xs font-extrabold">TOP LUAR<br>1 & 2</td>
-            <td rowspan="2" class="border border-slate-400 p-1">
-              <input type="number" id="ts1" data-col="0" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ms1" data-col="1" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-            <td rowspan="2" class="border border-slate-400 p-1">
-              <input type="number" id="ds1" data-col="2" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-          </tr>
-          <tr>
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ms2" data-col="1" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-          </tr>
-          <tr>
-            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-xs font-extrabold">BOTTOM LUAR<br>3 & 4</td>
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ts3" data-col="0" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ms3" data-col="1" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ds2" data-col="2" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-          </tr>
-          <tr>
-            <!-- Cell TS4 sekarang dibuka untuk inputan -->
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ts4" data-col="0" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ms4" data-col="1" data-row="3" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-            <td class="border border-slate-400 p-1">
-              <input type="number" id="ds3" data-col="2" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
-            </td>
-          </tr>
-
-          <!-- Average Row -->
-          <tr class="bg-emerald-500 text-black font-black text-base">
-            <td class="border border-slate-400 p-2.5 text-left">AVE</td>
-            <td id="avgTS" class="border border-slate-400 p-2.5 text-lg">-</td>
-            <td id="avgMS" class="border border-slate-400 p-2.5 text-lg">-</td>
-            <td id="avgDS" class="border border-slate-400 p-2.5 text-lg">-</td>
-          </tr>
-          <tr class="bg-emerald-400 text-black font-black text-xl">
-            <td colspan="4" id="grandAVG" class="border border-slate-400 p-3 text-center">-</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- WhatsApp Action Button -->
-    <button onclick="sendToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-lg py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
-      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-      </svg>
-      Kirim Ke WA
-    </button>
-
-  </div>
-
-  <script>
-    function getTransformedValue(id, isReport) {
-      const val = parseFloat(document.getElementById(id).value);
-      if (isNaN(val)) return null;
-
-      if (isReport) {
-        const minVal = parseFloat(document.getElementById('minValue').value) || 0;
-        const faktorPct = (parseFloat(document.getElementById('faktor').value) || 0) / 100;
-        return val - ((val - minVal) * faktorPct);
-      }
-      return val;
-    }
-
-    function handleModeChange() {
-      const mode = document.getElementById('modeView').value;
-      const isReport = mode.startsWith('report_');
-
-      // Mengunci seluruh cell input tabel jika di mode Laporan
-      const cellInputs = document.querySelectorAll('.cell-input');
-      cellInputs.forEach(input => {
-        input.readOnly = isReport;
-        if (isReport) {
-          input.classList.add('bg-slate-100', 'text-slate-600', 'cursor-not-allowed');
-        } else {
-          input.classList.remove('bg-slate-100', 'text-slate-600', 'cursor-not-allowed');
-        }
-      });
-
-      calculateAll();
-    }
-
-    function calculateAll() {
-      const mode = document.getElementById('modeView').value;
-      const isReport = mode.startsWith('report_');
-      const type = mode.includes('rct') ? 'RCT' : 'CMT';
-
-      document.getElementById('paramTitle').innerText = `PARAMETER ${type}`;
-      document.getElementById('thType').innerText = type;
-
-      // 1. TS Avg (ts1, ts3, ts4)
-      const tsVals = ['ts1', 'ts3', 'ts4'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
-      const avgTS = tsVals.length ? (tsVals.reduce((a, b) => a + b, 0) / tsVals.length) : 0;
-
-      // 2. DS Avg (ds1, ds2, ds3)
-      const dsVals = ['ds1', 'ds2', 'ds3'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
-      const avgDS = dsVals.length ? (dsVals.reduce((a, b) => a + b, 0) / dsVals.length) : 0;
-
-      // 3. MS Avg (m1 & m2 di-average dulu, lalu digabung m3 & m4)
-      const m1 = getTransformedValue('ms1', isReport);
-      const m2 = getTransformedValue('ms2', isReport);
-      const m3 = getTransformedValue('ms3', isReport);
-      const m4 = getTransformedValue('ms4', isReport);
-
-      let msComponents = [];
-      if (m1 !== null && m2 !== null) msComponents.push((m1 + m2) / 2);
-      else if (m1 !== null) msComponents.push(m1);
-      else if (m2 !== null) msComponents.push(m2);
-
-      if (m3 !== null) msComponents.push(m3);
-      if (m4 !== null) msComponents.push(m4);
-
-      const avgMS = msComponents.length ? (msComponents.reduce((a, b) => a + b, 0) / msComponents.length) : 0;
-
-      // Render Display
-      document.getElementById('avgTS').innerText = avgTS ? avgTS.toFixed(2) : '-';
-      document.getElementById('avgMS').innerText = avgMS ? avgMS.toFixed(2) : '-';
-      document.getElementById('avgDS').innerText = avgDS ? avgDS.toFixed(2) : '-';
-
-      const grand = (avgTS + avgMS + avgDS) / 3;
-      document.getElementById('grandAVG').innerText = grand ? grand.toFixed(2) : '-';
-    }
-
-    // Navigasi Tombol Enter / Berikut ke Bawah (Vertikal)
-    function handleEnterNavigation(event) {
-      if (event.key === 'Enter' || event.keyCode === 13) {
-        event.preventDefault();
-        const currentInput = event.target;
-        const col = parseInt(currentInput.getAttribute('data-col'));
-        const row = parseInt(currentInput.getAttribute('data-row'));
-
-        // Cari input berikutnya pada kolom yang sama (row + 1)
-        let nextInput = document.querySelector(`input[data-col="${col}"][data-row="${row + 1}"]`);
-        
-        // Jika sudah di paling bawah kolom, pindah ke kolom sebelah kanan baris teratas
-        if (!nextInput) {
-          nextInput = document.querySelector(`input[data-col="${col + 1}"][data-row="0"]`);
-        }
-
-        if (nextInput) {
-          nextInput.focus();
-          nextInput.select();
-        }
-      }
-    }
-
-    function sendToWhatsApp() {
-      const modeSelect = document.getElementById('modeView');
-      const modeText = modeSelect.options[modeSelect.selectedIndex].text;
-      
-      const tool = document.getElementById('tool').value;
-      const grade = document.getElementById('grade').value;
-      const gsm = document.getElementById('gsm').value;
-      const jr = document.getElementById('jr').value;
-      const faktor = document.getElementById('faktor').value;
-      const minVal = document.getElementById('minValue').value;
-      const temp = document.getElementById('temp').value;
-      const rh = document.getElementById('rh').value;
-
-      const avgTS = document.getElementById('avgTS').innerText;
-      const avgMS = document.getElementById('avgMS').innerText;
-      const avgDS = document.getElementById('avgDS').innerText;
-      const grandAVG = document.getElementById('grandAVG').innerText;
-
-      const message = `*${modeText.toUpperCase()}*\n` +
-        `----------------------------------------\n` +
-        `• Tool: ${tool}\n` +
-        `• Grade: ${grade} | GSM: ${gsm}\n` +
-        `• JR: ${jr}\n` +
-        `• Temp: ${temp}°C | RH: ${rh}%\n` +
-        `• Faktor F2: ${faktor}% | Min: ${minVal}\n` +
-        `----------------------------------------\n` +
-        `*HASIL RATA-RATA:*\n` +
-        `• TS Avg: *${avgTS}*\n` +
-        `• MS Avg: *${avgMS}*\n` +
-        `• DS Avg: *${avgDS}*\n` +
-        `• *TOTAL AVERAGE: ${grandAVG}*\n` +
-        `----------------------------------------`;
-
-      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-    }
-
-    function resetForm() {
-      document.querySelectorAll('input[type="number"]').forEach(input => {
-        if (!['faktor', 'minValue', 'temp', 'rh', 'jr'].includes(input.id)) input.value = '';
-      });
-      calculateAll();
-    }
-
-    // Inisialisasi awal saat halaman dimuat
-    window.onload = handleModeChange;
-  </script>
-</body>
-</html>
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
