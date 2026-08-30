@@ -6,54 +6,56 @@
   <title>KALKULATOR RCT & CMT</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-3">
 
-  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+  <div class="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-2xl">
     
     <!-- Header Title -->
     <div class="text-center mb-4">
-      <h1 class="text-xl font-bold text-sky-400 tracking-wide">KALKULATOR RCT & CMT</h1>
+      <h1 class="text-2xl font-extrabold text-sky-400 tracking-wide">KALKULATOR RCT & CMT</h1>
     </div>
 
     <!-- Mode Selector & Reset -->
-    <div class="bg-slate-800/60 p-3 rounded-xl mb-4 border border-slate-700/50 flex items-center justify-between gap-2">
+    <div class="bg-slate-800/80 p-3 rounded-xl mb-4 border border-slate-700 flex items-center justify-between gap-3">
       <div class="flex-1">
-        <label class="block text-[10px] text-amber-400 font-semibold mb-1">PILIHAN TAMPILAN</label>
-        <select id="modeView" onchange="calculateAll()" class="w-full bg-slate-900 text-white text-sm font-semibold p-2 rounded-lg border border-slate-700 focus:outline-none">
-          <option value="input">Input Data RCT</option>
-          <option value="upload">Laporan RCT-CMT</option>
+        <label class="block text-xs text-amber-400 font-bold mb-1">PILIHAN TAMPILAN</label>
+        <select id="modeView" onchange="calculateAll()" class="w-full bg-slate-900 text-white text-base font-bold p-2.5 rounded-lg border border-slate-600 focus:outline-none focus:border-sky-500">
+          <option value="input_rct">Input Data RCT</option>
+          <option value="input_cmt">Input Data CMT</option>
+          <option value="report_rct">Laporan Data RCT</option>
+          <option value="report_cmt">Laporan Data CMT</option>
         </select>
       </div>
-      <button onclick="resetForm()" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-sm">
+      <button onclick="resetForm()" class="mt-5 bg-red-600 hover:bg-red-700 text-white font-extrabold px-4 py-2.5 rounded-lg text-base shadow-md transition-all">
         Reset
       </button>
     </div>
 
     <!-- Parameter Section -->
-    <div class="bg-slate-800/40 p-3 rounded-xl mb-4 border border-slate-700/40">
-      <h2 class="text-xs font-bold text-amber-500 mb-2 tracking-wider">PARAMETER RCT</h2>
-      <div class="grid grid-cols-3 gap-2">
+    <div class="bg-slate-800/50 p-3.5 rounded-xl mb-4 border border-slate-700">
+      <h2 id="paramTitle" class="text-sm font-extrabold text-amber-400 mb-2.5 tracking-wider">PARAMETER RCT</h2>
+      <div class="grid grid-cols-3 gap-2.5">
         
         <!-- Pilihan Tool -->
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">TOOL</label>
-          <select id="tool" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold">
+          <label class="block text-xs text-slate-300 font-medium mb-1">TOOL</label>
+          <select id="tool" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold">
             <option value="L&W">L&W</option>
             <option value="PNSHAR">PNSHAR</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">GRADE</label>
-          <select id="grade" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold">
+          <label class="block text-xs text-slate-300 font-medium mb-1">GRADE</label>
+          <select id="grade" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold">
             <option value="CME">CME</option>
             <option value="CMF">CMF</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">GSM</label>
-          <select id="gsm" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold">
+          <label class="block text-xs text-slate-300 font-medium mb-1">GSM</label>
+          <select id="gsm" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold">
             <option value="125">125</option>
             <option value="150">150</option>
           </select>
@@ -61,32 +63,32 @@
 
         <!-- Faktor (F2) dalam % -->
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">FAKTOR F2 (%)</label>
-          <input type="number" id="faktor" value="40" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold text-center">
+          <label class="block text-xs text-slate-300 font-medium mb-1">FAKTOR F2 (%)</label>
+          <input type="number" id="faktor" value="40" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold text-center">
         </div>
 
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">MIN RCT</label>
-          <input type="number" id="minRct" value="11.6" step="0.1" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold text-center">
+          <label class="block text-xs text-slate-300 font-medium mb-1">MIN VALUE</label>
+          <input type="number" id="minValue" value="11.6" step="0.1" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-base p-2 rounded-lg border border-slate-700 font-bold text-center">
         </div>
 
         <div>
-          <label class="block text-[10px] text-slate-400 mb-1">TEMP / RH</label>
+          <label class="block text-xs text-slate-300 font-medium mb-1">TEMP / RH</label>
           <div class="flex gap-1">
-            <input type="number" id="temp" value="22.1" class="w-1/2 bg-slate-900 text-white text-[10px] p-1 rounded border border-slate-700 text-center">
-            <input type="number" id="rh" value="49" class="w-1/2 bg-slate-900 text-white text-[10px] p-1 rounded border border-slate-700 text-center">
+            <input type="number" id="temp" value="22.1" class="w-1/2 bg-slate-900 text-white text-sm p-1.5 rounded-lg border border-slate-700 text-center font-bold">
+            <input type="number" id="rh" value="49" class="w-1/2 bg-slate-900 text-white text-sm p-1.5 rounded-lg border border-slate-700 text-center font-bold">
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- Table Input Data -->
-    <div class="overflow-x-auto bg-white rounded-xl text-black p-2">
-      <table class="w-full border-collapse text-center text-xs font-bold">
+    <!-- Table Data (Teks & Input Sel Diperbesar) -->
+    <div class="overflow-x-auto bg-white rounded-xl text-black p-2 mb-4 shadow-lg">
+      <table class="w-full border-collapse text-center text-sm font-bold">
         <thead>
-          <tr class="bg-blue-200">
-            <th class="border border-slate-400 p-2">RCT</th>
+          <tr class="bg-blue-200 text-base">
+            <th id="thType" class="border border-slate-400 p-2 text-blue-900">RCT</th>
             <th class="border border-slate-400 p-2">TS</th>
             <th class="border border-slate-400 p-2">MS</th>
             <th class="border border-slate-400 p-2">DS</th>
@@ -94,74 +96,107 @@
         </thead>
         <tbody>
           <tr>
-            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-[10px]">TOP LUAR<br>1 & 2</td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ts1" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ms1" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
-            <td rowspan="2" class="border border-slate-400 p-1"><input type="number" id="ds1" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-xs font-extrabold">TOP LUAR<br>1 & 2</td>
+            <!-- TS Data 1 & 2 Merged -->
+            <td rowspan="2" class="border border-slate-400 p-1">
+              <input type="number" id="ts1" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
+            <td class="border border-slate-400 p-1">
+              <input type="number" id="ms1" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
+            <!-- DS Data 1 & 2 Merged -->
+            <td rowspan="2" class="border border-slate-400 p-1">
+              <input type="number" id="ds1" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
           </tr>
           <tr>
-            <td class="border border-slate-400 p-1"><input type="number" id="ts2" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ms2" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td class="border border-slate-400 p-1">
+              <input type="number" id="ms2" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
           </tr>
           <tr>
-            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-[10px]">BOTTOM LUAR<br>3 & 4</td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ts3" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ms3" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ds2" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-xs font-extrabold">BOTTOM LUAR<br>3 & 4</td>
+            <td class="border border-slate-400 p-1">
+              <input type="number" id="ts3" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
+            <td class="border border-slate-400 p-1">
+              <input type="number" id="ms3" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
+            <td class="border border-slate-400 p-1">
+              <input type="number" id="ds2" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
           </tr>
           <tr>
-            <td class="border border-slate-400 p-1">-</td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ms4" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
-            <td class="border border-slate-400 p-1"><input type="number" id="ds3" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td class="border border-slate-400 p-1 bg-slate-100">-</td>
+            <td class="border border-slate-400 p-1">
+              <input type="number" id="ms4" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
+            <td class="border border-slate-400 p-1">
+              <input type="number" id="ds3" oninput="calculateAll()" class="w-full text-center text-base font-bold border-none focus:outline-none bg-transparent" placeholder="-">
+            </td>
           </tr>
 
-          <!-- Average Row -->
-          <tr class="bg-green-500 text-black font-extrabold text-sm">
-            <td class="border border-slate-400 p-2 text-left">AVERAGE</td>
-            <td id="avgTS" class="border border-slate-400 p-2">-</td>
-            <td id="avgMS" class="border border-slate-400 p-2">-</td>
-            <td id="avgDS" class="border border-slate-400 p-2">-</td>
+          <!-- Average Row (Ukuran Angka Diperbesar) -->
+          <tr class="bg-emerald-500 text-black font-black text-base">
+            <td class="border border-slate-400 p-2.5 text-left">AVERAGE</td>
+            <td id="avgTS" class="border border-slate-400 p-2.5 text-lg">-</td>
+            <td id="avgMS" class="border border-slate-400 p-2.5 text-lg">-</td>
+            <td id="avgDS" class="border border-slate-400 p-2.5 text-lg">-</td>
           </tr>
-          <tr class="bg-green-400 text-black font-extrabold text-sm">
-            <td colspan="4" id="grandAVG" class="border border-slate-400 p-2 text-center">-</td>
+          <tr class="bg-emerald-400 text-black font-black text-xl">
+            <td colspan="4" id="grandAVG" class="border border-slate-400 p-3 text-center">-</td>
           </tr>
         </tbody>
       </table>
     </div>
 
+    <!-- Action Button Send to WhatsApp -->
+    <button onclick="sendToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-lg py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+      <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+      </svg>
+      Kirim Ke WA
+    </button>
+
   </div>
 
-  <!-- Script Logika Perhitungan -->
+  <!-- Script Logic -->
   <script>
-    function getTransformedValue(id, isUpload) {
+    function getTransformedValue(id, isReport) {
       const val = parseFloat(document.getElementById(id).value);
       if (isNaN(val)) return null;
 
-      if (!isUpload) return val;
-
-      const minRct = parseFloat(document.getElementById('minRct').value) || 0;
-      const faktorPct = (parseFloat(document.getElementById('faktor').value) || 0) / 100;
-
-      // Rumus Pengolahan: Data - ((Data - MinRCT) * % Faktor)
-      return val - ((val - minRct) * faktorPct);
+      // Logika Laporan: Data diolah dengan selisih % Faktor
+      if (isReport) {
+        const minVal = parseFloat(document.getElementById('minValue').value) || 0;
+        const faktorPct = (parseFloat(document.getElementById('faktor').value) || 0) / 100;
+        return val - ((val - minVal) * faktorPct);
+      }
+      return val;
     }
 
     function calculateAll() {
-      const isUpload = document.getElementById('modeView').value === 'upload';
+      const mode = document.getElementById('modeView').value;
+      const isReport = mode.startsWith('report_');
+      const type = mode.includes('rct') ? 'RCT' : 'CMT';
 
-      // 1. TS (Rata-rata 3 data)
-      const tsVals = ['ts1', 'ts2', 'ts3'].map(id => getTransformedValue(id, isUpload)).filter(v => v !== null);
+      // Update Label UI
+      document.getElementById('paramTitle').innerText = `PARAMETER ${type}`;
+      document.getElementById('thType').innerText = type;
+
+      // 1. TS (Rata-rata Data TS 1 & TS 3)
+      const tsVals = ['ts1', 'ts3'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
       const avgTS = tsVals.length ? (tsVals.reduce((a, b) => a + b, 0) / tsVals.length) : 0;
 
-      // 2. DS (Rata-rata 3 data)
-      const dsVals = ['ds1', 'ds2', 'ds3'].map(id => getTransformedValue(id, isUpload)).filter(v => v !== null);
+      // 2. DS (Rata-rata Data DS 1, DS 2, DS 3)
+      const dsVals = ['ds1', 'ds2', 'ds3'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
       const avgDS = dsVals.length ? (dsVals.reduce((a, b) => a + b, 0) / dsVals.length) : 0;
 
       // 3. MS (Data 1 & 2 di-average dulu, lalu di-average dengan Data 3 & Data 4)
-      const m1 = getTransformedValue('ms1', isUpload);
-      const m2 = getTransformedValue('ms2', isUpload);
-      const m3 = getTransformedValue('ms3', isUpload);
-      const m4 = getTransformedValue('ms4', isUpload);
+      const m1 = getTransformedValue('ms1', isReport);
+      const m2 = getTransformedValue('ms2', isReport);
+      const m3 = getTransformedValue('ms3', isReport);
+      const m4 = getTransformedValue('ms4', isReport);
 
       let msComponents = [];
       if (m1 !== null && m2 !== null) msComponents.push((m1 + m2) / 2);
@@ -182,9 +217,44 @@
       document.getElementById('grandAVG').innerText = grand ? grand.toFixed(2) : '-';
     }
 
+    function sendToWhatsApp() {
+      const modeSelect = document.getElementById('modeView');
+      const modeText = modeSelect.options[modeSelect.selectedIndex].text;
+      
+      const tool = document.getElementById('tool').value;
+      const grade = document.getElementById('grade').value;
+      const gsm = document.getElementById('gsm').value;
+      const faktor = document.getElementById('faktor').value;
+      const minVal = document.getElementById('minValue').value;
+      const temp = document.getElementById('temp').value;
+      const rh = document.getElementById('rh').value;
+
+      const avgTS = document.getElementById('avgTS').innerText;
+      const avgMS = document.getElementById('avgMS').innerText;
+      const avgDS = document.getElementById('avgDS').innerText;
+      const grandAVG = document.getElementById('grandAVG').innerText;
+
+      const message = `*${modeText.toUpperCase()}*\n` +
+        `----------------------------------------\n` +
+        `• Tool: ${tool}\n` +
+        `• Grade: ${grade} | GSM: ${gsm}\n` +
+        `• Faktor F2: ${faktor}% | Min: ${minVal}\n` +
+        `• Temp: ${temp}°C | RH: ${rh}%\n` +
+        `----------------------------------------\n` +
+        `*HASIL RATA-RATA:*\n` +
+        `• TS Avg: *${avgTS}*\n` +
+        `• MS Avg: *${avgMS}*\n` +
+        `• DS Avg: *${avgDS}*\n` +
+        `• *TOTAL AVERAGE: ${grandAVG}*\n` +
+        `----------------------------------------`;
+
+      const encodedMsg = encodeURIComponent(message);
+      window.open(`https://wa.me/?text=${encodedMsg}`, '_blank');
+    }
+
     function resetForm() {
       document.querySelectorAll('input[type="number"]').forEach(input => {
-        if (!['faktor', 'minRct', 'temp', 'rh'].includes(input.id)) input.value = '';
+        if (!['faktor', 'minValue', 'temp', 'rh'].includes(input.id)) input.value = '';
       });
       calculateAll();
     }
