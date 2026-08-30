@@ -2,1096 +2,192 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Perhitungan RCT & CMT - Nusantara Edition</title>
-  
-  <!-- html2canvas untuk Screenshot & Render Gambar -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-  <style>
-    :root {
-      --bg-primary: #0b1329;
-      --bg-card: rgba(30, 41, 59, 0.9);
-      --bg-input: #1e293b;
-      --accent-blue: #38bdf8;
-      --accent-gold: #f59e0b;
-      --accent-gold-hover: #d97706;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-color: #334155;
-      --excel-header-bg: #7ea6e0;
-      --excel-avg-bg: #00e600;
-      --excel-status-bg: #8ce600;
-      --danger-bg: #ef4444;
-      --danger-text: #dc2626;
-      --wa-color: #25d366;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background-color: var(--bg-primary);
-      background-image: radial-gradient(rgba(245, 158, 11, 0.06) 1px, transparent 1px),
-                        radial-gradient(rgba(56, 189, 248, 0.06) 1px, var(--bg-primary) 1px);
-      background-size: 36px 36px;
-      background-position: 0 0, 18px 18px;
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 12px;
-    }
-
-    .app-container {
-      width: 100%;
-      max-width: 480px;
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: 18px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .app-header {
-      text-align: center;
-      border-bottom: 2px dashed var(--border-color);
-      padding-bottom: 10px;
-      position: relative;
-    }
-
-    .app-header::before {
-      content: "❖ ◈ ❖";
-      display: block;
-      font-size: 0.8rem;
-      letter-spacing: 6px;
-      color: var(--accent-gold);
-      margin-bottom: 4px;
-    }
-
-    .app-header h1 {
-      font-size: 1.3rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, #38bdf8 0%, #f59e0b 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .action-bar {
-      display: flex;
-      gap: 10px;
-      align-items: stretch;
-    }
-
-    .mode-selector-wrapper {
-      flex: 1;
-      background: var(--bg-input);
-      border-radius: 14px;
-      padding: 6px 12px;
-      border: 1.5px solid var(--border-color);
-      transition: border-color 0.3s;
-    }
-
-    .mode-selector-wrapper:focus-within {
-      border-color: var(--accent-gold);
-    }
-
-    .mode-selector-wrapper label {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--accent-gold);
-      text-transform: uppercase;
-      margin-bottom: 2px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    .mode-select {
-      width: 100%;
-      background: transparent;
-      color: var(--text-main);
-      border: none;
-      font-size: 0.95rem;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .mode-select option {
-      background-color: #1e293b;
-      color: var(--text-main);
-    }
-
-    .btn-reset {
-      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      padding: 0 16px;
-      font-weight: 800;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-
-    .btn-reset:active {
-      transform: scale(0.95);
-    }
-
-    .view-section {
-      display: none;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .view-section.active {
-      display: flex;
-    }
-
-    .card {
-      background: rgba(15, 23, 42, 0.8);
-      border-radius: 16px;
-      padding: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--accent-gold);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .form-group label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .form-control {
-      background: var(--bg-input);
-      border: 1.5px solid var(--border-color);
-      border-radius: 8px;
-      padding: 8px;
-      color: var(--text-main);
-      font-size: 0.95rem;
-      font-weight: 700;
-      outline: none;
-      width: 100%;
-      text-align: center;
-      transition: border-color 0.2s;
-    }
-
-    .form-control:focus {
-      border-color: var(--accent-blue);
-    }
-
-    .form-control[readonly] {
-      background: rgba(30, 41, 59, 0.5);
-      color: #94a3b8;
-    }
-
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-      border-radius: 8px;
-      background-color: #ffffff;
-      padding: 2px;
-    }
-
-    table.excel-table {
-      width: 100%;
-      border-collapse: collapse;
-      color: #000;
-      background-color: #fff;
-      font-weight: bold;
-    }
-
-    table.excel-table th, table.excel-table td {
-      border: 1.5px solid #000;
-      text-align: center;
-      vertical-align: middle;
-      padding: 4px 2px;
-      font-size: 0.95rem;
-      height: 34px;
-    }
-
-    table.excel-table th.header-type {
-      background-color: var(--excel-header-bg);
-      font-size: 1.05rem;
-      font-weight: 800;
-    }
-
-    table.excel-table th.header-col {
-      background-color: #fff;
-      font-size: 0.95rem;
-      font-weight: 800;
-    }
-
-    table.excel-table td.cell-label {
-      background-color: #ffffff;
-      font-size: 0.85rem;
-      line-height: 1.1;
-      font-weight: 800;
-    }
-
-    table.excel-table td.cell-avg {
-      background-color: var(--excel-avg-bg);
-      font-size: 1rem;
-      font-weight: 800;
-    }
-
-    table.excel-table td.cell-status {
-      background-color: var(--excel-status-bg);
-      font-size: 1rem;
-      font-weight: 800;
-    }
-
-    table.excel-table input {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: transparent;
-      text-align: center;
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #000;
-      outline: none;
-      padding: 0;
-    }
-
-    .text-red {
-      color: var(--danger-text) !important;
-    }
-
-    .bg-red-qw {
-      background-color: var(--danger-bg) !important;
-      color: #ffffff !important;
-    }
-
-    .btn-wa-send {
-      width: 100%;
-      margin-top: 10px;
-      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-      color: #ffffff;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
-      transition: all 0.2s ease-in-out;
-    }
-
-    .btn-wa-send:hover {
-      background: linear-gradient(135deg, #20bd5a 0%, #0e7368 100%);
-      transform: translateY(-1px);
-    }
-
-    .btn-wa-send:active {
-      transform: translateY(1px);
-    }
-
-    .btn-wa-send svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-    }
-
-    .footer-info {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: auto;
-      font-weight: 600;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .footer-info span.nusantara-tag {
-      color: var(--accent-gold);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    #loading-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(11, 19, 41, 0.85);
-      backdrop-filter: blur(8px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 9999;
-      gap: 12px;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(245, 158, 11, 0.2);
-      border-left-color: var(--accent-gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KALKULATOR RCT & CMT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
 
-<div id="loading-overlay">
-  <div class="spinner"></div>
-  <div style="color: var(--accent-gold); font-weight: 700; font-size: 0.9rem;">Memproses Gambar WhatsApp...</div>
-</div>
-
-<div class="app-container">
-  <div class="app-header">
-    <h1>Kalkulator RCT & CMT</h1>
-  </div>
-
-  <div class="action-bar">
-    <div class="mode-selector-wrapper">
-      <label for="viewMode">Pilihan Tampilan</label>
-      <select id="viewMode" class="mode-select" onchange="switchView(this.value)">
-        <option value="input-rct">Input data RCT</option>
-        <option value="input-cmt">Input data CMT</option>
-        <option value="upload-rct">Upload data RCT</option>
-        <option value="upload-cmt">Upload data CMT</option>
-      </select>
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+    
+    <!-- Header Title -->
+    <div class="text-center mb-4">
+      <h1 class="text-xl font-bold text-sky-400 tracking-wide">KALKULATOR RCT & CMT</h1>
     </div>
-    <button type="button" class="btn-reset" onclick="clearAllInputs()" title="Reset Isian Data">Reset</button>
-  </div>
 
-  <!-- VIEW 1: INPUT DATA RCT -->
-  <div id="view-input-rct" class="view-section active">
-    <div class="card">
-      <div class="card-title">Parameter RCT</div>
-      <div class="grid-3">
-        <div class="form-group">
-          <label>GRADE</label>
-          <select id="rct_d2" class="form-control" onchange="syncAndRecalculate()">
-            <option value="CME">CME</option>
-            <option value="CMF" selected>CMF</option>
+    <!-- Mode Selector & Reset -->
+    <div class="bg-slate-800/60 p-3 rounded-xl mb-4 border border-slate-700/50 flex items-center justify-between gap-2">
+      <div class="flex-1">
+        <label class="block text-[10px] text-amber-400 font-semibold mb-1">PILIHAN TAMPILAN</label>
+        <select id="modeView" onchange="calculateAll()" class="w-full bg-slate-900 text-white text-sm font-semibold p-2 rounded-lg border border-slate-700 focus:outline-none">
+          <option value="input">Input Data RCT</option>
+          <option value="upload">Laporan RCT-CMT</option>
+        </select>
+      </div>
+      <button onclick="resetForm()" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-sm">
+        Reset
+      </button>
+    </div>
+
+    <!-- Parameter Section -->
+    <div class="bg-slate-800/40 p-3 rounded-xl mb-4 border border-slate-700/40">
+      <h2 class="text-xs font-bold text-amber-500 mb-2 tracking-wider">PARAMETER RCT</h2>
+      <div class="grid grid-cols-3 gap-2">
+        
+        <!-- Pilihan Tool -->
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">TOOL</label>
+          <select id="tool" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold">
+            <option value="L&W">L&W</option>
+            <option value="PNSHAR">PNSHAR</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>GSM</label>
-          <select id="rct_d3" class="form-control" onchange="syncAndRecalculate()">
-            <option value="110">110</option>
-            <option value="125" selected>125</option>
-            <option value="135">135</option>
+
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">GRADE</label>
+          <select id="grade" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold">
+            <option value="CME">CME</option>
+            <option value="CMF">CMF</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">GSM</label>
+          <select id="gsm" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold">
+            <option value="125">125</option>
             <option value="150">150</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>JR</label>
-          <input type="number" id="rct_d4" class="form-control" value="" placeholder="0.4" step="0.1" inputmode="decimal" onfocus="this.select()" oninput="syncAndRecalculate()">
+
+        <!-- Faktor (F2) dalam % -->
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">FAKTOR F2 (%)</label>
+          <input type="number" id="faktor" value="40" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold text-center">
         </div>
-      </div>
-      <div class="grid-3" style="margin-top: 8px;">
-        <div class="form-group">
-          <label>FAKTOR (F2)</label>
-          <input type="number" id="rct_f2" class="form-control" value="0.4" step="0.01" inputmode="decimal" onfocus="this.select()" oninput="syncAndRecalculate()">
+
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">MIN RCT</label>
+          <input type="number" id="minRct" value="11.6" step="0.1" oninput="calculateAll()" class="w-full bg-slate-900 text-white text-xs p-2 rounded border border-slate-700 font-bold text-center">
         </div>
-        <div class="form-group">
-          <label>TEMP</label>
-          <input type="text" id="rct_f3" class="form-control" value="" placeholder="27" onfocus="this.select()" oninput="syncAndRecalculate()">
+
+        <div>
+          <label class="block text-[10px] text-slate-400 mb-1">TEMP / RH</label>
+          <div class="flex gap-1">
+            <input type="number" id="temp" value="22.1" class="w-1/2 bg-slate-900 text-white text-[10px] p-1 rounded border border-slate-700 text-center">
+            <input type="number" id="rh" value="49" class="w-1/2 bg-slate-900 text-white text-[10px] p-1 rounded border border-slate-700 text-center">
+          </div>
         </div>
-        <div class="form-group">
-          <label>RH</label>
-          <input type="text" id="rct_f4" class="form-control" value="" placeholder="65" onfocus="this.select()" oninput="syncAndRecalculate()">
-        </div>
+
       </div>
     </div>
 
-    <div class="card">
-      <div class="table-container">
-        <table class="excel-table">
-          <thead>
-            <tr>
-              <th colspan="2" class="header-type">RCT</th>
-              <th class="header-col">TS</th>
-              <th class="header-col">MS</th>
-              <th class="header-col">DS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td rowspan="2" class="cell-label">TOP<br>LUAR</td>
-              <td class="cell-label">1</td>
-              <td rowspan="2"><input type="number" id="rct_d7" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_e7" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td rowspan="2"><input type="number" id="rct_f7" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td class="cell-label">2</td>
-              <td><input type="number" id="rct_e8" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td rowspan="2" class="cell-label">BOTTOM<br>LUAR</td>
-              <td class="cell-label">3</td>
-              <td><input type="number" id="rct_d9" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_e9" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_f9" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td class="cell-label">4</td>
-              <td><input type="number" id="rct_d10" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_e10" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="rct_f10" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
-              <td class="cell-avg" id="out_d11">-</td>
-              <td class="cell-avg" id="out_e11">-</td>
-              <td class="cell-avg" id="out_f11">-</td>
-            </tr>
-            <tr>
-              <td colspan="3" class="cell-avg" id="out_d12">-</td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
-              <td class="cell-status" id="out_d13">-</td>
-              <td class="cell-status" id="out_e13">-</td>
-              <td class="cell-status" id="out_f13">-</td>
-            </tr>
-            <tr>
-              <td class="cell-status" id="out_d14">-</td>
-              <td class="cell-status" id="out_e14">-</td>
-              <td class="cell-status" id="out_f14">-</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Table Input Data -->
+    <div class="overflow-x-auto bg-white rounded-xl text-black p-2">
+      <table class="w-full border-collapse text-center text-xs font-bold">
+        <thead>
+          <tr class="bg-blue-200">
+            <th class="border border-slate-400 p-2">RCT</th>
+            <th class="border border-slate-400 p-2">TS</th>
+            <th class="border border-slate-400 p-2">MS</th>
+            <th class="border border-slate-400 p-2">DS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-[10px]">TOP LUAR<br>1 & 2</td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ts1" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ms1" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td rowspan="2" class="border border-slate-400 p-1"><input type="number" id="ds1" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+          </tr>
+          <tr>
+            <td class="border border-slate-400 p-1"><input type="number" id="ts2" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ms2" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="border border-slate-400 bg-slate-100 text-[10px]">BOTTOM LUAR<br>3 & 4</td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ts3" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ms3" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ds2" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+          </tr>
+          <tr>
+            <td class="border border-slate-400 p-1">-</td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ms4" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+            <td class="border border-slate-400 p-1"><input type="number" id="ds3" oninput="calculateAll()" class="w-full text-center border-none focus:outline-none" placeholder="-"></td>
+          </tr>
+
+          <!-- Average Row -->
+          <tr class="bg-green-500 text-black font-extrabold text-sm">
+            <td class="border border-slate-400 p-2 text-left">AVERAGE</td>
+            <td id="avgTS" class="border border-slate-400 p-2">-</td>
+            <td id="avgMS" class="border border-slate-400 p-2">-</td>
+            <td id="avgDS" class="border border-slate-400 p-2">-</td>
+          </tr>
+          <tr class="bg-green-400 text-black font-extrabold text-sm">
+            <td colspan="4" id="grandAVG" class="border border-slate-400 p-2 text-center">-</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
   </div>
 
-  <!-- VIEW 2: INPUT DATA CMT -->
-  <div id="view-input-cmt" class="view-section">
-    <div class="card">
-      <div class="card-title">Parameter CMT</div>
-      <div class="grid-3">
-        <div class="form-group">
-          <label>GRADE</label>
-          <input type="text" id="cmt_d2_show" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-          <label>GSM</label>
-          <input type="text" id="cmt_d3_show" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-          <label>JR</label>
-          <input type="text" id="cmt_d4_show" class="form-control" readonly>
-        </div>
-      </div>
-    </div>
+  <!-- Script Logika Perhitungan -->
+  <script>
+    function getTransformedValue(id, isUpload) {
+      const val = parseFloat(document.getElementById(id).value);
+      if (isNaN(val)) return null;
 
-    <div class="card">
-      <div class="table-container">
-        <table class="excel-table">
-          <thead>
-            <tr>
-              <th colspan="2" class="header-type">CMT</th>
-              <th class="header-col">TS</th>
-              <th class="header-col">MS</th>
-              <th class="header-col">DS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td rowspan="2" class="cell-label">TOP<br>LUAR</td>
-              <td class="cell-label">1</td>
-              <td rowspan="2"><input type="number" id="cmt_d17" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_e17" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td rowspan="2"><input type="number" id="cmt_f17" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td class="cell-label">2</td>
-              <td><input type="number" id="cmt_e18" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td rowspan="2" class="cell-label">BOTTOM<br>LUAR</td>
-              <td class="cell-label">3</td>
-              <td><input type="number" id="cmt_d19" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_e19" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_f19" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td class="cell-label">4</td>
-              <td><input type="number" id="cmt_d20" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_e20" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-              <td><input type="number" id="cmt_f20" step="any" inputmode="decimal" onfocus="this.select()" oninput="recalculate()"></td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
-              <td class="cell-avg" id="out_d21">-</td>
-              <td class="cell-avg" id="out_e21">-</td>
-              <td class="cell-avg" id="out_f21">-</td>
-            </tr>
-            <tr>
-              <td colspan="3" class="cell-avg" id="out_d22">-</td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
-              <td class="cell-status" id="out_d23">-</td>
-              <td class="cell-status" id="out_e23">-</td>
-              <td class="cell-status" id="out_f23">-</td>
-            </tr>
-            <tr>
-              <td class="cell-status" id="out_d24">-</td>
-              <td class="cell-status" id="out_e24">-</td>
-              <td class="cell-status" id="out_f24">-</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+      if (!isUpload) return val;
 
-  <!-- VIEW 3: UPLOAD DATA RCT -->
-  <div id="view-upload-rct" class="view-section">
-    <div class="card" id="card-upload-rct">
-      <div class="card-title" id="title_upload_rct">RCT  JR:</div>
-      <div class="grid-2" style="margin-bottom: 8px;">
-        <div class="form-group">
-          <label>TEMP</label>
-          <input type="text" id="up_rct_n3" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-          <label>RH</label>
-          <input type="text" id="up_rct_n4" class="form-control" readonly>
-        </div>
-      </div>
-      <div class="table-container">
-        <table class="excel-table">
-          <thead>
-            <tr>
-              <th colspan="2" class="header-type">RCT</th>
-              <th class="header-col">TS</th>
-              <th class="header-col">MS</th>
-              <th class="header-col">DS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td rowspan="2" class="cell-label">TOP<br>LUAR</td>
-              <td class="cell-label">1</td>
-              <td rowspan="2"><input type="text" id="up_rct_l7" readonly></td>
-              <td><input type="text" id="up_rct_m7" readonly></td>
-              <td rowspan="2"><input type="text" id="up_rct_n7" readonly></td>
-            </tr>
-            <tr>
-              <td class="cell-label">2</td>
-              <td><input type="text" id="up_rct_m8" readonly></td>
-            </tr>
-            <tr>
-              <td rowspan="2" class="cell-label">BOTTOM<br>LUAR</td>
-              <td class="cell-label">3</td>
-              <td><input type="text" id="up_rct_l9" readonly></td>
-              <td><input type="text" id="up_rct_m9" readonly></td>
-              <td><input type="text" id="up_rct_n9" readonly></td>
-            </tr>
-            <tr>
-              <td class="cell-label">4</td>
-              <td><input type="text" id="up_rct_l10" readonly></td>
-              <td><input type="text" id="up_rct_m10" readonly></td>
-              <td><input type="text" id="up_rct_n10" readonly></td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
-              <td class="cell-avg" id="out_l11">-</td>
-              <td class="cell-avg" id="out_m11">-</td>
-              <td class="cell-avg" id="out_n11">-</td>
-            </tr>
-            <tr>
-              <td colspan="3" class="cell-avg" id="out_l12">-</td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
-              <td class="cell-status" id="out_l13">-</td>
-              <td class="cell-status" id="out_m13">-</td>
-              <td class="cell-status" id="out_n13">-</td>
-            </tr>
-            <tr>
-              <td class="cell-status" id="out_l14">-</td>
-              <td class="cell-status" id="out_m14">-</td>
-              <td class="cell-status" id="out_n14">-</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
-    <button type="button" class="btn-wa-send" onclick="sendToWhatsApp('card-upload-rct', 'Upload Data RCT')">
-      <svg viewBox="0 0 24 24"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.763.459 3.486 1.333 5.003L2 22l5.127-1.343c1.464.799 3.111 1.22 4.881 1.221h.004c5.505 0 9.988-4.478 9.989-9.985 0-2.667-1.037-5.176-2.922-7.062A9.923 9.923 0 0 0 12.012 2zm0 18.281h-.003c-1.493 0-2.957-.401-4.232-1.157l-.304-.18-3.146.825.839-3.067-.198-.315a8.282 8.282 0 0 1-1.272-4.404c.001-4.568 3.718-8.283 8.288-8.283 2.213 0 4.293.863 5.858 2.43 1.565 1.566 2.427 3.647 2.426 5.862 0 4.569-3.718 8.285-8.286 8.289zm4.542-6.208c-.249-.125-1.472-.727-1.701-.81-.228-.083-.395-.125-.561.125-.166.249-.645.81-.79 1.059-.145.249-.291.27-.54.145-.249-.125-1.052-.387-2.004-1.238-.741-.661-1.241-1.478-1.386-1.727-.145-.249-.015-.384.109-.508.112-.112.249-.291.374-.436.125-.145.166-.249.249-.415.083-.166.042-.312-.021-.436-.062-.125-.561-1.351-.769-1.85-.203-.486-.41-.42-.561-.428l-.478-.008c-.166 0-.436.062-.664.312-.228.249-.872.852-.872 2.078 0 1.226.893 2.41 1.018 2.576.125.166 1.758 2.684 4.258 3.764.595.257 1.06.41 1.423.525.597.19 1.14.163 1.569.099.478-.071 1.472-.602 1.68-1.184.208-.582.208-1.08.145-1.184-.063-.104-.229-.166-.478-.291z"/></svg>
-      <span>Kirim Tampilan RCT ke WhatsApp</span>
-    </button>
-  </div>
+      const minRct = parseFloat(document.getElementById('minRct').value) || 0;
+      const faktorPct = (parseFloat(document.getElementById('faktor').value) || 0) / 100;
 
-  <!-- VIEW 4: UPLOAD DATA CMT -->
-  <div id="view-upload-cmt" class="view-section">
-    <div class="card" id="card-upload-cmt">
-      <div class="card-title" id="title_upload_cmt">CMT  JR:</div>
-      <div class="table-container">
-        <table class="excel-table">
-          <thead>
-            <tr>
-              <th colspan="2" class="header-type">CMT</th>
-              <th class="header-col">TS</th>
-              <th class="header-col">MS</th>
-              <th class="header-col">DS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td rowspan="2" class="cell-label">TOP<br>LUAR</td>
-              <td class="cell-label">1</td>
-              <td rowspan="2"><input type="text" id="up_cmt_l17" readonly></td>
-              <td><input type="text" id="up_cmt_m17" readonly></td>
-              <td rowspan="2"><input type="text" id="up_cmt_n17" readonly></td>
-            </tr>
-            <tr>
-              <td class="cell-label">2</td>
-              <td><input type="text" id="up_cmt_m18" readonly></td>
-            </tr>
-            <tr>
-              <td rowspan="2" class="cell-label">BOTTOM<br>LUAR</td>
-              <td class="cell-label">3</td>
-              <td><input type="text" id="up_cmt_l19" readonly></td>
-              <td><input type="text" id="up_cmt_m19" readonly></td>
-              <td><input type="text" id="up_cmt_n19" readonly></td>
-            </tr>
-            <tr>
-              <td class="cell-label">4</td>
-              <td><input type="text" id="up_cmt_l20" readonly></td>
-              <td><input type="text" id="up_cmt_m20" readonly></td>
-              <td><input type="text" id="up_cmt_n20" readonly></td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-avg">AVERAGE</td>
-              <td class="cell-avg" id="out_l21">-</td>
-              <td class="cell-avg" id="out_m21">-</td>
-              <td class="cell-avg" id="out_n21">-</td>
-            </tr>
-            <tr>
-              <td colspan="3" class="cell-avg" id="out_l22">-</td>
-            </tr>
-            <tr>
-              <td colspan="2" rowspan="2" class="cell-status">STATUS</td>
-              <td class="cell-status" id="out_l23">-</td>
-              <td class="cell-status" id="out_m23">-</td>
-              <td class="cell-status" id="out_n23">-</td>
-            </tr>
-            <tr>
-              <td class="cell-status" id="out_l24">-</td>
-              <td class="cell-status" id="out_m24">-</td>
-              <td class="cell-status" id="out_n24">-</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <button type="button" class="btn-wa-send" onclick="sendToWhatsApp('card-upload-cmt', 'Upload Data CMT')">
-      <svg viewBox="0 0 24 24"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.763.459 3.486 1.333 5.003L2 22l5.127-1.343c1.464.799 3.111 1.22 4.881 1.221h.004c5.505 0 9.988-4.478 9.989-9.985 0-2.667-1.037-5.176-2.922-7.062A9.923 9.923 0 0 0 12.012 2zm0 18.281h-.003c-1.493 0-2.957-.401-4.232-1.157l-.304-.18-3.146.825.839-3.067-.198-.315a8.282 8.282 0 0 1-1.272-4.404c.001-4.568 3.718-8.283 8.288-8.283 2.213 0 4.293.863 5.858 2.43 1.565 1.566 2.427 3.647 2.426 5.862 0 4.569-3.718 8.285-8.286 8.289zm4.542-6.208c-.249-.125-1.472-.727-1.701-.81-.228-.083-.395-.125-.561.125-.166.249-.645.81-.79 1.059-.145.249-.291.27-.54.145-.249-.125-1.052-.387-2.004-1.238-.741-.661-1.241-1.478-1.386-1.727-.145-.249-.015-.384.109-.508.112-.112.249-.291.374-.436.125-.145.166-.249.249-.415.083-.166.042-.312-.021-.436-.062-.125-.561-1.351-.769-1.85-.203-.486-.41-.42-.561-.428l-.478-.008c-.166 0-.436.062-.664.312-.228.249-.872.852-.872 2.078 0 1.226.893 2.41 1.018 2.576.125.166 1.758 2.684 4.258 3.764.595.257 1.06.41 1.423.525.597.19 1.14.163 1.569.099.478-.071 1.472-.602 1.68-1.184.208-.582.208-1.08.145-1.184-.063-.104-.229-.166-.478-.291z"/></svg>
-      <span>Kirim Tampilan CMT ke WhatsApp</span>
-    </button>
-  </div>
-
-  <div class="footer-info">
-    <span>Aplikasi Perhitungan RCT & CMT</span>
-    <span class="nusantara-tag">Nusantara Modern Edition</span>
-  </div>
-</div>
-
-<script>
-  const LOOKUP_AL4 = {
-    "CME 110": 10.2,
-    "CME 125": 12.5,
-    "CME 135": 13.5,
-    "CME 150": 15.0,
-    "CMF 110": 10.2,
-    "CMF 125": 11.5,
-    "CMF 135": 13.5,
-    "CMF 150": 13.9
-  };
-
-  const LOOKUP_CMT_STD = {
-    "CME 110": { std: 13.2, sum: 13.2 },
-    "CME 125": { std: 15.0, sum: 15.0 },
-    "CME 135": { std: 16.3, sum: 16.3 },
-    "CME 150": { std: 18.0, sum: 18.0 },
-    "CMF 125": { std: 14.4, sum: 14.4 },
-    "CMF 150": { std: 17.3, sum: 17.3 }
-  };
-
-  function switchView(viewId) {
-    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-    document.getElementById('view-' + viewId).classList.add('active');
-  }
-
-  function clearAllInputs() {
-    const inputs = document.querySelectorAll('input:not([readonly])');
-    inputs.forEach(input => {
-      if (input.id === 'rct_f2') {
-        input.value = '0.4';
-      } else {
-        input.value = '';
-      }
-    });
-    syncAndRecalculate();
-  }
-
-  function parseVal(id) {
-    const el = document.getElementById(id);
-    if (!el) return NaN;
-    const v = parseFloat(el.value);
-    return isNaN(v) ? NaN : v;
-  }
-
-  function renderStatusCell(id, text, isRedText, isRedBg) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.innerText = text || '';
-    
-    el.classList.remove('text-red', 'bg-red-qw');
-    
-    if (isRedBg) {
-      el.classList.add('bg-red-qw');
-    } else if (isRedText) {
-      el.classList.add('text-red');
+      // Rumus Pengolahan: Data - ((Data - MinRCT) * % Faktor)
+      return val - ((val - minRct) * faktorPct);
     }
-  }
 
-  function setVal(id, val, digits = 2) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (typeof val === 'number') {
-      el.value = isNaN(val) ? '' : val.toFixed(digits);
-    } else {
-      el.value = val || '';
+    function calculateAll() {
+      const isUpload = document.getElementById('modeView').value === 'upload';
+
+      // 1. TS (Rata-rata 3 data)
+      const tsVals = ['ts1', 'ts2', 'ts3'].map(id => getTransformedValue(id, isUpload)).filter(v => v !== null);
+      const avgTS = tsVals.length ? (tsVals.reduce((a, b) => a + b, 0) / tsVals.length) : 0;
+
+      // 2. DS (Rata-rata 3 data)
+      const dsVals = ['ds1', 'ds2', 'ds3'].map(id => getTransformedValue(id, isUpload)).filter(v => v !== null);
+      const avgDS = dsVals.length ? (dsVals.reduce((a, b) => a + b, 0) / dsVals.length) : 0;
+
+      // 3. MS (Data 1 & 2 di-average dulu, lalu di-average dengan Data 3 & Data 4)
+      const m1 = getTransformedValue('ms1', isUpload);
+      const m2 = getTransformedValue('ms2', isUpload);
+      const m3 = getTransformedValue('ms3', isUpload);
+      const m4 = getTransformedValue('ms4', isUpload);
+
+      let msComponents = [];
+      if (m1 !== null && m2 !== null) msComponents.push((m1 + m2) / 2);
+      else if (m1 !== null) msComponents.push(m1);
+      else if (m2 !== null) msComponents.push(m2);
+
+      if (m3 !== null) msComponents.push(m3);
+      if (m4 !== null) msComponents.push(m4);
+
+      const avgMS = msComponents.length ? (msComponents.reduce((a, b) => a + b, 0) / msComponents.length) : 0;
+
+      // Output Render
+      document.getElementById('avgTS').innerText = avgTS ? avgTS.toFixed(2) : '-';
+      document.getElementById('avgMS').innerText = avgMS ? avgMS.toFixed(2) : '-';
+      document.getElementById('avgDS').innerText = avgDS ? avgDS.toFixed(2) : '-';
+
+      const grand = (avgTS + avgMS + avgDS) / 3;
+      document.getElementById('grandAVG').innerText = grand ? grand.toFixed(2) : '-';
     }
-  }
 
-  function calcAverage(arr) {
-    const valid = arr.filter(v => !isNaN(v));
-    if (valid.length === 0) return NaN;
-    return valid.reduce((a, b) => a + b, 0) / valid.length;
-  }
-
-  function syncAndRecalculate() {
-    const d2 = document.getElementById('rct_d2').value;
-    const d3 = document.getElementById('rct_d3').value;
-    const d4 = document.getElementById('rct_d4').value;
-    const f3 = document.getElementById('rct_f3').value;
-    const f4 = document.getElementById('rct_f4').value;
-
-    document.getElementById('cmt_d2_show').value = d2;
-    document.getElementById('cmt_d3_show').value = d3;
-    document.getElementById('cmt_d4_show').value = d4;
-
-    document.getElementById('up_rct_n3').value = f3;
-    document.getElementById('up_rct_n4').value = f4;
-
-    document.getElementById('title_upload_rct').innerText = "RCT  JR: " + (d4 || "");
-    document.getElementById('title_upload_cmt').innerText = "CMT  JR: " + (d4 || "");
-
-    recalculate();
-  }
-
-  function recalculate() {
-    const d2 = document.getElementById('rct_d2').value;
-    const d3 = document.getElementById('rct_d3').value;
-    const f2 = parseVal('rct_f2') || 0.4;
-
-    const gradeGsmKey = d2 + " " + d3;
-    const AL4 = LOOKUP_AL4[gradeGsmKey] || 11.5;
-    const AO4 = AL4 + 0.8;
-
-    const cmt_data = LOOKUP_CMT_STD[gradeGsmKey] || { std: 14.4, sum: 14.4 };
-    const AR20 = cmt_data.std;
-    const AS20 = AR20; 
-    const AT20 = AS20;
-
-    // 1. INPUT RCT
-    const d7 = parseVal('rct_d7'), d8 = d7, d9 = parseVal('rct_d9'), d10 = parseVal('rct_d10');
-    const e7 = parseVal('rct_e7'), e8 = parseVal('rct_e8'), e9 = parseVal('rct_e9'), e10 = parseVal('rct_e10');
-    const f7 = parseVal('rct_f7'), f8 = f7, f9 = parseVal('rct_f9'), f10 = parseVal('rct_f10');
-
-    const D11 = calcAverage([d7, d8, d9, d10]);
-    const E11 = calcAverage([calcAverage([e7, e8]), e9, e10]);
-    const F11 = calcAverage([f7, f8, f9, f10]);
-    const D12 = calcAverage([D11, E11, F11]);
-
-    const evalRCT = (val) => {
-      if (isNaN(val)) return { status: '', subStatus: '', isRedText: false, isRedBg: false };
-      if (val < AL4) {
-        return { status: 'RCL', subStatus: 'QW', isRedText: true, isRedBg: true };
-      } else if (val > AO4) {
-        return { status: 'RCH', subStatus: 'Q1', isRedText: false, isRedBg: false };
-      } else {
-        return { status: '', subStatus: 'Q1', isRedText: false, isRedBg: false };
-      }
-    };
-
-    const resD11 = evalRCT(D11);
-    const resE11 = evalRCT(E11);
-    const resF11 = evalRCT(F11);
-
-    renderStatusCell('out_d11', isNaN(D11) ? '-' : D11.toFixed(2), resD11.isRedText, false);
-    renderStatusCell('out_e11', isNaN(E11) ? '-' : E11.toFixed(2), resE11.isRedText, false);
-    renderStatusCell('out_f11', isNaN(F11) ? '-' : F11.toFixed(2), resF11.isRedText, false);
-    renderStatusCell('out_d12', isNaN(D12) ? '-' : D12.toFixed(2), false, false);
-
-    renderStatusCell('out_d13', resD11.status, resD11.isRedText, false);
-    renderStatusCell('out_e13', resE11.status, resE11.isRedText, false);
-    renderStatusCell('out_f13', resF11.status, resF11.isRedText, false);
-
-    renderStatusCell('out_d14', resD11.subStatus, false, resD11.isRedBg);
-    renderStatusCell('out_e14', resE11.subStatus, false, resE11.isRedBg);
-    renderStatusCell('out_f14', resF11.subStatus, false, resF11.isRedBg);
-
-    // 2. INPUT CMT
-    const cmt_d17 = parseVal('cmt_d17'), cmt_d18 = cmt_d17, cmt_d19 = parseVal('cmt_d19'), cmt_d20 = parseVal('cmt_d20');
-    const cmt_e17 = parseVal('cmt_e17'), cmt_e18 = parseVal('cmt_e18'), cmt_e19 = parseVal('cmt_e19'), cmt_e20 = parseVal('cmt_e20');
-    const cmt_f17 = parseVal('cmt_f17'), cmt_f18 = cmt_f17, cmt_f19 = parseVal('cmt_f19'), cmt_f20 = parseVal('cmt_f20');
-
-    const D21 = calcAverage([cmt_d17, cmt_d18, cmt_d19, cmt_d20]);
-    const E21 = calcAverage([calcAverage([cmt_e17, cmt_e18]), cmt_e19, cmt_e20]);
-    const F21 = calcAverage([cmt_f17, cmt_f18, cmt_f19, cmt_f20]);
-    const D22 = calcAverage([D21, E21, F21]);
-
-    const evalCMT = (val) => {
-      if (isNaN(val)) return { status: '', subStatus: '', isRedText: false, isRedBg: false };
-      if (val < AT20) {
-        return { status: 'CCL', subStatus: 'QW', isRedText: true, isRedBg: true };
-      } else {
-        return { status: '', subStatus: 'Q1', isRedText: false, isRedBg: false };
-      }
-    };
-
-    const resD21 = evalCMT(D21);
-    const resE21 = evalCMT(E21);
-    const resF21 = evalCMT(F21);
-
-    renderStatusCell('out_d21', isNaN(D21) ? '-' : D21.toFixed(2), resD21.isRedText, false);
-    renderStatusCell('out_e21', isNaN(E21) ? '-' : E21.toFixed(2), resE21.isRedText, false);
-    renderStatusCell('out_f21', isNaN(F21) ? '-' : F21.toFixed(2), resF21.isRedText, false);
-    renderStatusCell('out_d22', isNaN(D22) ? '-' : D22.toFixed(2), false, false);
-
-    renderStatusCell('out_d23', resD21.status, resD21.isRedText, false);
-    renderStatusCell('out_e23', resE21.status, resE21.isRedText, false);
-    renderStatusCell('out_f23', resF21.status, resF21.isRedText, false);
-
-    renderStatusCell('out_d24', resD21.subStatus, false, resD21.isRedBg);
-    renderStatusCell('out_e24', resE21.subStatus, false, resE21.isRedBg);
-    renderStatusCell('out_f24', resF21.subStatus, false, resF21.isRedBg);
-
-    // 3. UPLOAD RCT LOGIC
-    const AD12 = D11 - AL4;
-    const AD13 = D11 > AL4 ? f2 : 0;
-    const AD14 = AD12 * AD13;
-
-    const AE12 = E11 - AL4;
-    const AE13 = E11 > AL4 ? f2 : 0;
-    const AE14 = AE12 * AE13;
-
-    const AF12 = F11 - AL4;
-    const AF13 = F11 > AL4 ? f2 : 0;
-    const AF14 = AF12 * AF13;
-
-    const AD7 = d7 - AD14, AD9 = d9 - AD14, AD10 = d10 - AD14;
-    const AE7 = e7 - AE14, AE8 = e8 - AE14, AE9 = e9 - AE14, AE10 = e10 - AE14;
-    const AF7 = f7 - AF14, AF9 = f9 - AF14, AF10 = f10 - AF14;
-
-    setVal('up_rct_l7', AD7); setVal('up_rct_m7', AE7); setVal('up_rct_n7', AF7);
-    setVal('up_rct_m8', AE8);
-    setVal('up_rct_l9', AD9); setVal('up_rct_m9', AE9); setVal('up_rct_n9', AF9);
-    setVal('up_rct_l10', AD10); setVal('up_rct_m10', AE10); setVal('up_rct_n10', AF10);
-
-    const L11 = calcAverage([AD7, AD9, AD10]);
-    const M11 = calcAverage([calcAverage([AE7, AE8]), AE9, AE10]);
-    const N11 = calcAverage([AF7, AF9, AF10]);
-    const L12 = calcAverage([L11, M11, N11]);
-
-    const resL11 = evalRCT(L11);
-    const resM11 = evalRCT(M11);
-    const resN11 = evalRCT(N11);
-
-    renderStatusCell('out_l11', isNaN(L11) ? '-' : L11.toFixed(2), resL11.isRedText, false);
-    renderStatusCell('out_m11', isNaN(M11) ? '-' : M11.toFixed(2), resM11.isRedText, false);
-    renderStatusCell('out_n11', isNaN(N11) ? '-' : N11.toFixed(2), resN11.isRedText, false);
-    renderStatusCell('out_l12', isNaN(L12) ? '-' : L12.toFixed(2), false, false);
-
-    renderStatusCell('out_l13', resL11.status, resL11.isRedText, false);
-    renderStatusCell('out_m13', resM11.status, resM11.isRedText, false);
-    renderStatusCell('out_n13', resN11.status, resN11.isRedText, false);
-
-    renderStatusCell('out_l14', resL11.subStatus, false, resL11.isRedBg);
-    renderStatusCell('out_m14', resM11.subStatus, false, resM11.isRedBg);
-    renderStatusCell('out_n14', resN11.subStatus, false, resN11.isRedBg);
-
-    // 4. UPLOAD CMT LOGIC
-    const AD21 = calcAverage([cmt_d17 - AR20, cmt_d19 - AR20, cmt_d20 - AR20]);
-    const AE21 = calcAverage([calcAverage([cmt_e17 - AR20, cmt_e18 - AR20]), cmt_e19 - AR20, cmt_e20 - AR20]);
-    const AF21 = calcAverage([cmt_f17 - AR20, cmt_f19 - AR20, cmt_f20 - AR20]);
-
-    const AD22 = isNaN(AD21) ? 0 : (AD21 > AS20 ? AD21 - AS20 : 0);
-    const AE22 = isNaN(AE21) ? 0 : (AE21 > AS20 ? AE21 - AS20 : 0);
-    const AF22 = isNaN(AF21) ? 0 : (AF21 > AS20 ? AF21 - AS20 : 0);
-
-    const AD23 = AD22 * f2;
-    const AE23 = AE22 * f2;
-    const AF23 = AF22 * f2;
-
-    const cmt_l17 = cmt_d17 - (AR20 + AD23);
-    const cmt_m17 = cmt_e17 - (AR20 + AE23);
-    const cmt_m18 = cmt_e18 - (AR20 + AE23);
-    const cmt_n17 = cmt_f17 - (AR20 + AF23);
-
-    const cmt_l19 = cmt_d19 - (AR20 + AD23);
-    const cmt_m19 = cmt_e19 - (AR20 + AE23);
-    const cmt_n19 = cmt_f19 - (AR20 + AF23);
-
-    const cmt_l20 = cmt_d20 - (AR20 + AD23);
-    const cmt_m20 = cmt_e20 - (AR20 + AE23);
-    const cmt_n20 = cmt_f20 - (AR20 + AF23);
-
-    setVal('up_cmt_l17', cmt_l17); setVal('up_cmt_m17', cmt_m17); setVal('up_cmt_n17', cmt_n17);
-    setVal('up_cmt_m18', cmt_m18);
-    setVal('up_cmt_l19', cmt_l19); setVal('up_cmt_m19', cmt_m19); setVal('up_cmt_n19', cmt_n19);
-    setVal('up_cmt_l20', cmt_l20); setVal('up_cmt_m20', cmt_m20); setVal('up_cmt_n20', cmt_n20);
-
-    const L21 = calcAverage([cmt_l17, cmt_l19, cmt_l20]);
-    const M21 = calcAverage([calcAverage([cmt_m17, cmt_m18]), cmt_m19, cmt_m20]);
-    const N21 = calcAverage([cmt_n17, cmt_n19, cmt_n20]);
-    const L22 = calcAverage([L21, M21, N21]);
-
-    const resL21 = evalCMT(L21);
-    const resM21 = evalCMT(M21);
-    const resN21 = evalCMT(N21);
-
-    renderStatusCell('out_l21', isNaN(L21) ? '-' : L21.toFixed(2), resL21.isRedText, false);
-    renderStatusCell('out_m21', isNaN(M21) ? '-' : M21.toFixed(2), resM21.isRedText, false);
-    renderStatusCell('out_n21', isNaN(N21) ? '-' : N21.toFixed(2), resN21.isRedText, false);
-    renderStatusCell('out_l22', isNaN(L22) ? '-' : L22.toFixed(2), false, false);
-
-    renderStatusCell('out_l23', resL21.status, resL21.isRedText, false);
-    renderStatusCell('out_m23', resM21.status, resM21.isRedText, false);
-    renderStatusCell('out_n23', resN21.status, resN21.isRedText, false);
-
-    renderStatusCell('out_l24', resL21.subStatus, false, resL21.isRedBg);
-    renderStatusCell('out_m24', resL21.subStatus, false, resM21.isRedBg);
-    renderStatusCell('out_n24', resN21.subStatus, false, resN21.isRedBg);
-  }
-
-  async function sendToWhatsApp(cardId, titleText) {
-    const cardEl = document.getElementById(cardId);
-    if (!cardEl) return;
-
-    const overlay = document.getElementById('loading-overlay');
-    overlay.style.display = 'flex';
-
-    try {
-      const canvas = await html2canvas(cardEl, {
-        scale: 2,
-        backgroundColor: '#0f172a',
-        useCORS: true
+    function resetForm() {
+      document.querySelectorAll('input[type="number"]').forEach(input => {
+        if (!['faktor', 'minRct', 'temp', 'rh'].includes(input.id)) input.value = '';
       });
-
-      canvas.toBlob(async (blob) => {
-        overlay.style.display = 'none';
-        if (!blob) {
-          alert("Gagal memproses gambar.");
-          return;
-        }
-
-        const fileName = `${titleText.replace(/\s+/g, '_')}_${Date.now()}.png`;
-        const file = new File([blob], fileName, { type: 'image/png' });
-
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              files: [file],
-              title: titleText,
-              text: `Berikut adalah Tampilan ${titleText}:`
-            });
-            return;
-          } catch (err) {}
-        }
-
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = fileName;
-        link.click();
-
-        setTimeout(() => {
-          const textMessage = encodeURIComponent(`Halo, berikut saya sertakan tangkapan layar untuk *${titleText}* (Gambar telah diunduh otomatis).`);
-          window.open(`https://api.whatsapp.com/send?text=${textMessage}`, '_blank');
-        }, 300);
-
-      }, 'image/png');
-
-    } catch (error) {
-      overlay.style.display = 'none';
-      alert("Terjadi kesalahan saat membuat gambar screenshot: " + error.message);
+      calculateAll();
     }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    syncAndRecalculate();
-  });
-</script>
-
+  </script>
 </body>
 </html>
