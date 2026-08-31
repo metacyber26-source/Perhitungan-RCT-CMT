@@ -1,61 +1,336 @@
-function sendToWhatsApp() {
-  const modeSelect = document.getElementById('modeView');
-  const modeText = modeSelect.options[modeSelect.selectedIndex].text;
-  const type = modeSelect.value.includes('rct') ? 'RCT' : 'CMT';
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KALKULATOR RCT & CMT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-2">
 
-  // Parameter Header
-  const grade = document.getElementById('grade').value;
-  const jr = document.getElementById('jr').value || '-';
-  const temp = document.getElementById('temp').value || '-';
-  const gsm = document.getElementById('gsm').value;
-  const rh = document.getElementById('rh').value || '-';
-  const tool = document.getElementById('tool').value;
-  const faktor = document.getElementById('faktor').value;
-  const minVal = document.getElementById('minValue').value;
+  <div class="w-full max-w-sm bg-[#131b2e] border border-slate-800 rounded-2xl p-4 shadow-2xl">
+    
+    <!-- Header Title -->
+    <div class="text-center mb-4 border-b border-slate-800 pb-2">
+      <h1 class="text-xl font-bold text-sky-400 tracking-wide">KALKULATOR RCT & CMT</h1>
+    </div>
 
-  // Nilai Data Tabel
-  const isReport = modeSelect.value.startsWith('report_');
-  
-  const ts1 = document.getElementById('ts1').value || '-';
-  const ms1 = document.getElementById('ms1').value || '-';
-  const ms2 = document.getElementById('ms2').value || '-';
-  const ds1 = document.getElementById('ds1').value || '-';
+    <!-- Mode Selector & Reset -->
+    <div class="bg-[#1c263b] p-3 rounded-xl mb-3 border border-slate-700/60 flex items-center justify-between gap-2">
+      <div class="flex-1">
+        <label class="block text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">Pilihan Tampilan</label>
+        <select id="modeView" onchange="handleModeChange()" class="w-full bg-[#131b2e] text-white text-sm font-bold p-2 rounded-lg border border-slate-600 focus:outline-none focus:border-sky-500">
+          <option value="input_rct">Input data RCT</option>
+          <option value="input_cmt">Input data CMT</option>
+          <option value="report_rct">Upload data RCT</option>
+          <option value="report_cmt">Upload data CMT</option>
+        </select>
+      </div>
+      <button onclick="resetForm()" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-extrabold px-3 py-2 rounded-lg text-xs shadow transition-all">
+        Reset
+      </button>
+    </div>
 
-  const ts3 = document.getElementById('ts3').value || '-';
-  const ms3 = document.getElementById('ms3').value || '-';
-  const ds2 = document.getElementById('ds2').value || '-';
+    <!-- Parameter Section -->
+    <div class="bg-[#1c263b] p-3 rounded-xl mb-3 border border-slate-700/60">
+      <h2 id="paramTitle" class="text-xs font-extrabold text-sky-400 mb-2 uppercase tracking-wider">PARAMETER RCT</h2>
+      
+      <div class="grid grid-cols-3 gap-2 mb-2">
+        <div>
+          <label class="block text-[10px] text-slate-300 font-bold mb-1">GRADE</label>
+          <select id="grade" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold">
+            <option value="CME">CME</option>
+            <option value="CMF">CMF</option>
+          </select>
+        </div>
 
-  const ts4 = document.getElementById('ts4').value || '-';
-  const ms4 = document.getElementById('ms4').value || '-';
-  const ds3 = document.getElementById('ds3').value || '-';
+        <div>
+          <label class="block text-[10px] text-slate-300 font-bold mb-1">GSM</label>
+          <select id="gsm" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold">
+            <option value="110">110</option>
+            <option value="125">125</option>
+            <option value="150">150</option>
+          </select>
+        </div>
 
-  // Hasil Perhitungan
-  const avgTS = document.getElementById('avgTS').innerText;
-  const avgMS = document.getElementById('avgMS').innerText;
-  const avgDS = document.getElementById('avgDS').innerText;
-  const grandAVG = document.getElementById('grandAVG').innerText;
+        <div>
+          <label class="block text-[10px] text-slate-300 font-bold mb-1">JR</label>
+          <input type="text" id="jr" value="763" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
+        </div>
+      </div>
 
-  // Format Pesan Tabel untuk WhatsApp
-  const message = `=========================\n` +
-    `     *${modeText.toUpperCase()}*\n` +
-    `=========================\n` +
-    `*GRADE :* ${grade}\n` +
-    `*JR    :* ${jr}   | *TEMP :* ${temp}°C\n` +
-    `*GSM   :* ${gsm}   | *RH   :* ${rh}%\n` +
-    `*TOOL  :* ${tool} | *F2 :* ${faktor}% | *MIN :* ${minVal}\n` +
-    `-----------------------------------------\n` +
-    `| *${type.padEnd(5)}* | *TS*   | *MS*   | *DS*   |\n` +
-    `-----------------------------------------\n` +
-    `| TOP 1 | ${ts1.padEnd(6)} | ${ms1.padEnd(6)} | ${ds1.padEnd(6)} |\n` +
-    `| TOP 2 | "      | ${ms2.padEnd(6)} | "      |\n` +
-    `| BOT 3 | ${ts3.padEnd(6)} | ${ms3.padEnd(6)} | ${ds2.padEnd(6)} |\n` +
-    `| BOT 4 | ${ts4.padEnd(6)} | ${ms4.padEnd(6)} | ${ds3.padEnd(6)} |\n` +
-    `-----------------------------------------\n` +
-    `| *AVE*  | *${avgTS.padEnd(5)}* | *${avgMS.padEnd(5)}* | *${avgDS.padEnd(5)}* |\n` +
-    `| *GRAND AVE :* *${grandAVG}*\n` +
-    `-----------------------------------------\n` +
-    `| *STATUS:* | Q1 | Q1 | Q1 |\n` +
-    `=========================`;
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="block text-[10px] text-slate-300 font-bold mb-1">FAKTOR (F2)</label>
+          <input type="number" id="faktor" value="0.4" step="0.1" oninput="calculateAll()" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
+        </div>
 
-  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-}
+        <div>
+          <label class="block text-[10px] text-slate-300 font-bold mb-1">TEMP</label>
+          <input type="number" id="temp" value="21.2" step="0.1" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
+        </div>
+
+        <div>
+          <label class="block text-[10px] text-slate-300 font-bold mb-1">RH</label>
+          <input type="number" id="rh" value="47" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
+        </div>
+      </div>
+      
+      <!-- Hidden Min Value for Transformation -->
+      <input type="hidden" id="minValue" value="11.6">
+    </div>
+
+    <!-- Table Data Grid (Persis Seperti Gambar) -->
+    <div class="overflow-x-auto bg-white rounded-lg text-black p-1 mb-3 shadow-lg">
+      <table class="w-full border-collapse text-center text-xs font-bold border border-black">
+        <thead>
+          <tr class="bg-[#93b3e6] text-black">
+            <th colspan="2" id="thType" class="border border-black p-1.5 w-1/4">RCT</th>
+            <th class="border border-black p-1.5 w-1/4">TS</th>
+            <th class="border border-black p-1.5 w-1/4">MS</th>
+            <th class="border border-black p-1.5 w-1/4">DS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- TOP LUAR 1 & 2 -->
+          <tr>
+            <td rowspan="2" class="border border-black bg-white text-[9px] font-black leading-tight w-12">TOP<br>LUAR</td>
+            <td class="border border-black bg-white p-1 text-[10px] w-5">1</td>
+            <!-- TS 1&2 Merged -->
+            <td rowspan="2" class="border border-black p-0">
+              <input type="number" id="ts1" data-col="0" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+            <td class="border border-black p-0">
+              <input type="number" id="ms1" data-col="1" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+            <!-- DS 1&2 Merged -->
+            <td rowspan="2" class="border border-black p-0">
+              <input type="number" id="ds1" data-col="2" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-black bg-white p-1 text-[10px]">2</td>
+            <td class="border border-black p-0">
+              <input type="number" id="ms2" data-col="1" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+          </tr>
+
+          <!-- BOTT OM LUAR 3 & 4 -->
+          <tr>
+            <td rowspan="2" class="border border-black bg-white text-[9px] font-black leading-tight">BOTT<br>OM<br>LUAR</td>
+            <td class="border border-black bg-white p-1 text-[10px]">3</td>
+            <td class="border border-black p-0">
+              <input type="number" id="ts3" data-col="0" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+            <td class="border border-black p-0">
+              <input type="number" id="ms3" data-col="1" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+            <td class="border border-black p-0">
+              <input type="number" id="ds2" data-col="2" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+          </tr>
+          <tr>
+            <td class="border border-black bg-white p-1 text-[10px]">4</td>
+            <td class="border border-black p-0">
+              <input type="number" id="ts4" data-col="0" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+            <td class="border border-black p-0">
+              <input type="number" id="ms4" data-col="1" data-row="3" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+            <td class="border border-black p-0">
+              <input type="number" id="ds3" data-col="2" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
+            </td>
+          </tr>
+
+          <!-- AVERAGE -->
+          <tr class="bg-[#12d600] text-black font-black">
+            <td colspan="2" class="border border-black p-1.5 text-left text-[11px]">AVERAGE</td>
+            <td id="avgTS" class="border border-black p-1.5 text-xs">-</td>
+            <td id="avgMS" class="border border-black p-1.5 text-xs">-</td>
+            <td id="avgDS" class="border border-black p-1.5 text-xs">-</td>
+          </tr>
+          <tr class="bg-[#12d600] text-black font-black">
+            <td colspan="5" id="grandAVG" class="border border-black p-1.5 text-center text-sm">-</td>
+          </tr>
+
+          <!-- STATUS (Dua Baris) -->
+          <tr class="bg-[#a2f200] text-black font-black">
+            <td rowspan="2" colspan="2" class="border border-black p-1 text-left text-[11px]">STATUS</td>
+            <td class="border border-black p-1 text-xs">RCL</td>
+            <td class="border border-black p-1 text-xs">RCL</td>
+            <td class="border border-black p-1 text-xs">RCL</td>
+          </tr>
+          <tr class="bg-[#a2f200] text-black font-black">
+            <td class="border border-black p-1 text-xs">QW</td>
+            <td class="border border-black p-1 text-xs">QW</td>
+            <td class="border border-black p-1 text-xs">QW</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- WhatsApp Button -->
+    <button onclick="sendToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+      <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+      </svg>
+      Kirim ke WA
+    </button>
+
+  </div>
+
+  <script>
+    function getTransformedValue(id, isReport) {
+      const val = parseFloat(document.getElementById(id).value);
+      if (isNaN(val)) return null;
+
+      if (isReport) {
+        const minVal = parseFloat(document.getElementById('minValue').value) || 0;
+        const faktor = parseFloat(document.getElementById('faktor').value) || 0;
+        return val - ((val - minVal) * faktor);
+      }
+      return val;
+    }
+
+    function handleModeChange() {
+      const mode = document.getElementById('modeView').value;
+      const isReport = mode.startsWith('report_');
+
+      const cellInputs = document.querySelectorAll('.cell-input');
+      cellInputs.forEach(input => {
+        input.readOnly = isReport;
+        if (isReport) {
+          input.classList.add('bg-slate-100', 'text-slate-700', 'cursor-not-allowed');
+        } else {
+          input.classList.remove('bg-slate-100', 'text-slate-700', 'cursor-not-allowed');
+        }
+      });
+
+      calculateAll();
+    }
+
+    function calculateAll() {
+      const mode = document.getElementById('modeView').value;
+      const isReport = mode.startsWith('report_');
+      const type = mode.includes('rct') ? 'RCT' : 'CMT';
+
+      document.getElementById('paramTitle').innerText = `PARAMETER ${type}`;
+      document.getElementById('thType').innerText = type;
+
+      // 1. TS Avg (ts1, ts3, ts4)
+      const tsVals = ['ts1', 'ts3', 'ts4'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
+      const avgTS = tsVals.length ? (tsVals.reduce((a, b) => a + b, 0) / tsVals.length) : 0;
+
+      // 2. DS Avg (ds1, ds2, ds3)
+      const dsVals = ['ds1', 'ds2', 'ds3'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
+      const avgDS = dsVals.length ? (dsVals.reduce((a, b) => a + b, 0) / dsVals.length) : 0;
+
+      // 3. MS Avg ((ms1 + ms2)/2, lalu ms3, ms4)
+      const m1 = getTransformedValue('ms1', isReport);
+      const m2 = getTransformedValue('ms2', isReport);
+      const m3 = getTransformedValue('ms3', isReport);
+      const m4 = getTransformedValue('ms4', isReport);
+
+      let msComponents = [];
+      if (m1 !== null && m2 !== null) msComponents.push((m1 + m2) / 2);
+      else if (m1 !== null) msComponents.push(m1);
+      else if (m2 !== null) msComponents.push(m2);
+
+      if (m3 !== null) msComponents.push(m3);
+      if (m4 !== null) msComponents.push(m4);
+
+      const avgMS = msComponents.length ? (msComponents.reduce((a, b) => a + b, 0) / msComponents.length) : 0;
+
+      // Render Display
+      document.getElementById('avgTS').innerText = avgTS ? avgTS.toFixed(2) : '-';
+      document.getElementById('avgMS').innerText = avgMS ? avgMS.toFixed(2) : '-';
+      document.getElementById('avgDS').innerText = avgDS ? avgDS.toFixed(2) : '-';
+
+      const grand = (avgTS + avgMS + avgDS) / 3;
+      document.getElementById('grandAVG').innerText = grand ? grand.toFixed(2) : '-';
+    }
+
+    function handleEnterNavigation(event) {
+      if (event.key === 'Enter' || event.keyCode === 13) {
+        event.preventDefault();
+        const currentInput = event.target;
+        const col = parseInt(currentInput.getAttribute('data-col'));
+        const row = parseInt(currentInput.getAttribute('data-row'));
+
+        let nextInput = document.querySelector(`input[data-col="${col}"][data-row="${row + 1}"]`);
+        if (!nextInput) {
+          nextInput = document.querySelector(`input[data-col="${col + 1}"][data-row="0"]`);
+        }
+
+        if (nextInput) {
+          nextInput.focus();
+          nextInput.select();
+        }
+      }
+    }
+
+    function sendToWhatsApp() {
+      const modeSelect = document.getElementById('modeView');
+      const modeText = modeSelect.options[modeSelect.selectedIndex].text;
+      const type = modeSelect.value.includes('rct') ? 'RCT' : 'CMT';
+
+      const grade = document.getElementById('grade').value;
+      const jr = document.getElementById('jr').value || '-';
+      const temp = document.getElementById('temp').value || '-';
+      const gsm = document.getElementById('gsm').value;
+      const rh = document.getElementById('rh').value || '-';
+      const faktor = document.getElementById('faktor').value;
+
+      const ts1 = document.getElementById('ts1').value || '-';
+      const ms1 = document.getElementById('ms1').value || '-';
+      const ms2 = document.getElementById('ms2').value || '-';
+      const ds1 = document.getElementById('ds1').value || '-';
+
+      const ts3 = document.getElementById('ts3').value || '-';
+      const ms3 = document.getElementById('ms3').value || '-';
+      const ds2 = document.getElementById('ds2').value || '-';
+
+      const ts4 = document.getElementById('ts4').value || '-';
+      const ms4 = document.getElementById('ms4').value || '-';
+      const ds3 = document.getElementById('ds3').value || '-';
+
+      const avgTS = document.getElementById('avgTS').innerText;
+      const avgMS = document.getElementById('avgMS').innerText;
+      const avgDS = document.getElementById('avgDS').innerText;
+      const grandAVG = document.getElementById('grandAVG').innerText;
+
+      const message = `=========================\n` +
+        `   *${type} JR:${jr}*\n` +
+        `=========================\n` +
+        `*GRADE :* ${grade} | *GSM :* ${gsm}\n` +
+        `*TEMP  :* ${temp}°C | *RH  :* ${rh}%\n` +
+        `*FAKTOR(F2) :* ${faktor}\n` +
+        `-----------------------------------------\n` +
+        `| *${type.padEnd(5)}* | *TS*   | *MS*   | *DS*   |\n` +
+        `-----------------------------------------\n` +
+        `| TOP 1 | ${ts1.padEnd(6)} | ${ms1.padEnd(6)} | ${ds1.padEnd(6)} |\n` +
+        `| TOP 2 | "      | ${ms2.padEnd(6)} | "      |\n` +
+        `| BOT 3 | ${ts3.padEnd(6)} | ${ms3.padEnd(6)} | ${ds2.padEnd(6)} |\n` +
+        `| BOT 4 | ${ts4.padEnd(6)} | ${ms4.padEnd(6)} | ${ds3.padEnd(6)} |\n` +
+        `-----------------------------------------\n` +
+        `| *AVE*  | *${avgTS.padEnd(5)}* | *${avgMS.padEnd(5)}* | *${avgDS.padEnd(5)}* |\n` +
+        `| *GRAND AVE :* *${grandAVG}*\n` +
+        `-----------------------------------------\n` +
+        `| *STATUS:* | RCL | RCL | RCL |\n` +
+        `|          | QW  | QW  | QW  |\n` +
+        `=========================`;
+
+      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function resetForm() {
+      document.querySelectorAll('input[type="number"]').forEach(input => {
+        if (!['faktor', 'minValue', 'temp', 'rh'].includes(input.id)) input.value = '';
+      });
+      calculateAll();
+    }
+
+    window.onload = handleModeChange;
+  </script>
+</body>
+</html>
