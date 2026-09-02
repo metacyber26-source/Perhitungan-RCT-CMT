@@ -1,467 +1,365 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Quality Control RCT - Nusantara Edition</title>
-    <style>
-        :root {
-            --bg-dark: #12100e;
-            --card-bg: #1e1a17;
-            --accent-gold: #d4af37;
-            --accent-copper: #b87333;
-            --text-light: #f5f0eb;
-            --border-color: #3d3128;
-            --header-bg: #2a221c;
-            --green-accent: #2e7d32;
-            --green-light: #4caf50;
-            --red-alert: #c62828;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 15px;
-            /* Pola Batik Megamendung/Kawung Halus SVG Background */
-            background-image: radial-gradient(var(--accent-copper) 0.5px, transparent 0.5px), radial-gradient(var(--accent-gold) 0.5px, var(--bg-dark) 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            background-opacity: 0.1;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 520px;
-            background: var(--card-bg);
-            border: 2px solid var(--accent-gold);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(212, 175, 55, 0.2);
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Banner Batik Header */
-        .header-banner {
-            background: linear-gradient(135deg, #2a221c 0%, #4a3b2c 50%, #2a221c 100%);
-            padding: 15px;
-            text-align: center;
-            border-bottom: 2px solid var(--accent-gold);
-            position: relative;
-        }
-
-        .header-banner h2 {
-            color: var(--accent-gold);
-            font-size: 1.3rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-shadow: 1px 1px 2px #000;
-        }
-
-        .header-banner p {
-            font-size: 0.75rem;
-            color: #ccc;
-            margin-top: 2px;
-        }
-
-        /* Grid Table Form */
-        .qc-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
-        .qc-table td, .qc-table th {
-            border: 1px solid var(--border-color);
-            padding: 4px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .label-cell {
-            background-color: var(--header-bg);
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 6px;
-            background-color: #2b2520;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            border-radius: 4px;
-            text-align: center;
-            font-weight: bold;
-            outline: none;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
-        }
-
-        .rct-header {
-            background-color: #3b4d61;
-            color: #fff;
-            font-weight: bold;
-        }
-
-        /* Section Highlight Colors */
-        .bg-green-main {
-            background-color: #1b4332 !important;
-            color: #2ec4b6;
-        }
-
-        .bg-green-status {
-            background-color: #2d4a22 !important;
-        }
-
-        .read-only-val {
-            background-color: #12100e;
-            color: #ffd700;
-            font-weight: bold;
-            padding: 6px;
-            border-radius: 4px;
-            border: 1px solid #3d3128;
-            display: block;
-        }
-
-        .status-val {
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .status-rcl {
-            color: #ff4d4d;
-        }
-
-        .fact-section {
-            background-color: #1b4332;
-            padding: 8px;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .fact-section label {
-            font-weight: bold;
-            color: #fff;
-            font-size: 0.9rem;
-        }
-
-        .fact-section input {
-            width: 80px;
-            background-color: #0d2818;
-            border: 1px solid var(--accent-gold);
-            color: #fff;
-            text-align: center;
-        }
-
-        /* Action Buttons */
-        .btn-container {
-            padding: 12px;
-            background-color: var(--header-bg);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .btn {
-            border: none;
-            padding: 10px 15px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .btn-wa {
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: white;
-            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-wa:hover {
-            background: linear-gradient(135deg, #20ba5a, #0e6b60);
-            transform: translateY(-1px);
-        }
-
-        /* Responsive Mobile styling */
-        @media (max-width: 480px) {
-            .container {
-                border-radius: 8px;
-            }
-            .qc-table td {
-                padding: 3px;
-            }
-            input, select {
-                font-size: 0.8rem;
-                padding: 4px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Pengujian Kualitas Paper - RCT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at top, #1a2332 0%, #0d1117 100%);
+      color: #e2e8f0;
+    }
+    .font-etnik {
+      font-family: 'Cinzel', serif;
+    }
+    .batik-pattern {
+      background-color: #111827;
+      background-image: radial-gradient(#c59b27 0.75px, transparent 0.75px), radial-gradient(#c59b27 0.75px, #111827 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      opacity: 0.95;
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-button {
+      background: linear-gradient(135deg, #bf953f 0%, #d4af37 50%, #aa771c 100%);
+      transition: all 0.3s ease;
+    }
+    .gold-button:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    }
+    .input-field {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(197, 155, 39, 0.3);
+      color: #f8fafc;
+      transition: all 0.2s ease;
+    }
+    .input-field:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+      outline: none;
+    }
+  </style>
 </head>
-<body>
+<body class="min-h-screen py-8 px-4 batik-pattern">
 
-<div class="container">
-    <div class="header-banner">
-        <h2>Quality Control RCT</h2>
-        <p>Sistem Kontrol Kualitas Produksi</p>
+  <div class="max-w-4xl mx-auto bg-slate-900/90 border border-amber-600/30 rounded-2xl shadow-2xl backdrop-blur-md overflow-hidden">
+    
+    <div class="border-b border-amber-600/30 p-6 text-center relative bg-slate-950/60">
+      <div class="absolute inset-x-0 top-0 h-1 gold-button"></div>
+      <h1 class="text-3xl font-bold font-etnik gold-gradient tracking-wide">SISTEM UJI KUALITAS RCT</h1>
+      <p class="text-xs text-amber-200/60 mt-1 uppercase tracking-widest">Nusantara Quality Control Management</p>
     </div>
 
-    <table class="qc-table">
-        <tr>
-            <td class="label-cell" style="width: 18%;">GRADE:</td>
-            <td style="width: 32%;">
-                <select id="valA" onchange="calculate()">
-                    <option value="CME">CME</option>
-                    <option value="CMF">CMF</option>
-                </select>
-            </td>
-            <td class="label-cell" style="width: 18%;">Check</td>
-            <td style="width: 32%;">
-                <select id="valCheck">
-                    <option value="RCT">RCT</option>
-                    <option value="CMT">CMT</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="label-cell">GSM:</td>
-            <td>
-                <select id="valB" onchange="calculate()">
-                    <option value="110">110</option>
-                    <option value="125">125</option>
-                    <option value="135">135</option>
-                    <option value="150">150</option>
-                </select>
-            </td>
-            <td class="label-cell">Temp</td>
-            <td><input type="number" id="valD" placeholder="Temp"></td>
-        </tr>
-        <tr>
-            <td class="label-cell">JR:</td>
-            <td><input type="text" id="valC" placeholder="No. JR"></td>
-            <td class="label-cell">RH</td>
-            <td><input type="number" id="valE" placeholder="RH"></td>
-        </tr>
-        
-        <tr>
-            <td class="rct-header" colspan="1">RCT</td>
-            <td class="rct-header">TS</td>
-            <td class="rct-header">MS</td>
-            <td class="rct-header">DS</td>
-        </tr>
+    <div class="p-6 space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-xl bg-slate-800/40 border border-amber-500/20">
+        <div>
+          <label class="block text-xs text-amber-300 font-semibold mb-1">GRADE</label>
+          <select id="grade" onchange="calculateAll()" class="w-full p-2.5 rounded-lg input-field font-medium">
+            <option value="CME">CME</option>
+            <option value="CMF">CMF</option>
+          </select>
+        </div>
 
-        <tr>
-            <td class="label-cell" rowspan="2">TOP<br>LUAR</td>
-            <td class="label-cell" style="width: 5%;">1</td>
-            <td rowspan="2"><input type="number" id="valF" oninput="calculate()" placeholder="F"></td>
-            <td><input type="number" id="valI" oninput="calculate()" placeholder="I"></td>
-            <td rowspan="2"><input type="number" id="valM" oninput="calculate()" placeholder="M"></td>
-        </tr>
-        <tr>
-            <td class="label-cell">2</td>
-            <td><input type="number" id="valJ" oninput="calculate()" placeholder="J"></td>
-        </tr>
+        <div>
+          <label class="block text-xs text-amber-300 font-semibold mb-1">GSM</label>
+          <select id="gsm" onchange="calculateAll()" class="w-full p-2.5 rounded-lg input-field font-medium">
+            <option value="110">110</option>
+            <option value="125">125</option>
+            <option value="135">135</option>
+            <option value="150">150</option>
+          </select>
+        </div>
 
-        <tr>
-            <td class="label-cell" rowspan="2">BOTT<br>OM<br>LUAR</td>
-            <td class="label-cell">3</td>
-            <td><input type="number" id="valG" oninput="calculate()" placeholder="G"></td>
-            <td><input type="number" id="valK" oninput="calculate()" placeholder="K"></td>
-            <td><input type="number" id="valN" oninput="calculate()" placeholder="N"></td>
-        </tr>
-        <tr>
-            <td class="label-cell">4</td>
-            <td><input type="number" id="valH" oninput="calculate()" placeholder="H"></td>
-            <td><input type="number" id="valL" oninput="calculate()" placeholder="L"></td>
-            <td><input type="number" id="valO" oninput="calculate()" placeholder="O"></td>
-        </tr>
+        <div>
+          <label class="block text-xs text-amber-300 font-semibold mb-1">NO. JR</label>
+          <input type="text" id="noJr" placeholder="Masukkan No. JR" class="w-full p-2.5 rounded-lg input-field font-medium">
+        </div>
 
-        <tr class="bg-green-main">
-            <td colspan="1" class="label-cell" style="background-color: #1b4332; color: #fff;">AVERAGE</td>
-            <td><span id="valP" class="read-only-val">-</span></td>
-            <td><span id="valQ" class="read-only-val">-</span></td>
-            <td><span id="valR" class="read-only-val">-</span></td>
-        </tr>
-        <tr class="bg-green-main">
-            <td colspan="4"><span id="valS" class="read-only-val">-</span></td>
-        </tr>
+        <div>
+          <label class="block text-xs text-amber-300 font-semibold mb-1">CHECK</label>
+          <select id="check" class="w-full p-2.5 rounded-lg input-field font-medium">
+            <option value="RCT">RCT</option>
+            <option value="CMT">CMT</option>
+          </select>
+        </div>
 
-        <tr>
-            <td class="label-cell bg-green-status" rowspan="2" style="color:#fff;">STATUS</td>
-            <td><span id="valT" class="status-val">-</span></td>
-            <td><span id="valU" class="status-val">-</span></td>
-            <td><span id="valV" class="status-val">-</span></td>
-        </tr>
-        <tr>
-            <td><span id="valW" class="status-val">-</span></td>
-            <td><span id="valX" class="status-val">-</span></td>
-            <td><span id="valY" class="status-val">-</span></td>
-        </tr>
+        <div>
+          <label class="block text-xs text-amber-300 font-semibold mb-1">TEMP (°C)</label>
+          <input type="number" id="temp" placeholder="Suhu" class="w-full p-2.5 rounded-lg input-field font-medium">
+        </div>
 
-        <tr>
-            <td class="label-cell">MIN</td>
-            <td colspan="3"><span id="valZ" class="read-only-val" style="color: #4caf50;">-</span></td>
-        </tr>
-    </table>
+        <div>
+          <label class="block text-xs text-amber-300 font-semibold mb-1">RH (%)</label>
+          <input type="number" id="rh" placeholder="Kelembapan" class="w-full p-2.5 rounded-lg input-field font-medium">
+        </div>
+      </div>
 
-    <div class="fact-section">
-        <label for="valFact">FACT</label>
-        <input type="number" id="valFact" value="40" oninput="calculate()">
-        <span style="color: #fff; font-weight: bold;">%</span>
+      <div class="overflow-x-auto rounded-xl border border-amber-500/30">
+        <table class="w-full text-center text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-950 text-amber-400 border-b border-amber-500/30 font-etnik">
+              <th class="p-3 border-r border-amber-500/20 w-1/6">RCT</th>
+              <th class="p-3 border-r border-amber-500/20 w-1/4">TS</th>
+              <th class="p-3 border-r border-amber-500/20 w-1/4">MS</th>
+              <th class="p-3 w-1/4">DS</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-amber-500/10">
+            <tr>
+              <td class="p-2 font-semibold bg-slate-950/40 border-r border-amber-500/20 text-slate-300">TOP - 1</td>
+              <td class="p-2 border-r border-amber-500/20">
+                <input type="number" step="0.1" id="input_F" data-order="1" onkeydown="handleEnter(event, 'input_G')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+              <td class="p-2 border-r border-amber-500/20">
+                <input type="number" step="0.1" id="input_I" data-order="4" onkeydown="handleEnter(event, 'input_J')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+              <td class="p-2" rowspan="2">
+                <input type="number" step="0.1" id="input_M" data-order="8" onkeydown="handleEnter(event, 'input_N')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200 h-20" placeholder="0.0">
+              </td>
+            </tr>
+
+            <tr>
+              <td class="p-2 font-semibold bg-slate-950/40 border-r border-amber-500/20 text-slate-300">LUAR - 2</td>
+              <td class="p-2 border-r border-amber-500/20 text-xs text-amber-500/50 italic">(Ikut F)</td>
+              <td class="p-2 border-r border-amber-500/20">
+                <input type="number" step="0.1" id="input_J" data-order="5" onkeydown="handleEnter(event, 'input_K')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+            </tr>
+
+            <tr>
+              <td class="p-2 font-semibold bg-slate-950/40 border-r border-amber-500/20 text-slate-300">BOTTOM - 3</td>
+              <td class="p-2 border-r border-amber-500/20">
+                <input type="number" step="0.1" id="input_G" data-order="2" onkeydown="handleEnter(event, 'input_H')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+              <td class="p-2 border-r border-amber-500/20">
+                <input type="number" step="0.1" id="input_K" data-order="6" onkeydown="handleEnter(event, 'input_L')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+              <td class="p-2">
+                <input type="number" step="0.1" id="input_N" data-order="9" onkeydown="handleEnter(event, 'input_O')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+            </tr>
+
+            <tr>
+              <td class="p-2 font-semibold bg-slate-950/40 border-r border-amber-500/20 text-slate-300">LUAR - 4</td>
+              <td class="p-2 border-r border-amber-500/20">
+                <input type="number" step="0.1" id="input_H" data-order="3" onkeydown="handleEnter(event, 'input_I')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+              <td class="p-2 border-r border-amber-500/20">
+                <input type="number" step="0.1" id="input_L" data-order="7" onkeydown="handleEnter(event, 'input_M')" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+              <td class="p-2">
+                <input type="number" step="0.1" id="input_O" data-order="10" onkeydown="handleEnter(event, null)" oninput="calculateAll()" class="w-full text-center p-2 rounded input-field font-bold text-amber-200" placeholder="0.0">
+              </td>
+            </tr>
+
+            <tr class="bg-emerald-950/50 border-t-2 border-emerald-500/40 font-bold">
+              <td class="p-3 border-r border-amber-500/20 text-emerald-400">AVERAGE</td>
+              <td class="p-3 border-r border-amber-500/20 text-emerald-300" id="res_P">-</td>
+              <td class="p-3 border-r border-amber-500/20 text-emerald-300" id="res_Q">-</td>
+              <td class="p-3 text-emerald-300" id="res_R">-</td>
+            </tr>
+            <tr class="bg-emerald-950/70 font-bold border-b border-amber-500/30">
+              <td class="p-2 border-r border-amber-500/20 text-emerald-400">TOTAL AVG</td>
+              <td colspan="3" class="p-3 text-emerald-200 text-base" id="res_S">-</td>
+            </tr>
+
+            <tr class="bg-slate-950/80 font-bold">
+              <td class="p-3 border-r border-amber-500/20 text-amber-400" rowspan="2">STATUS</td>
+              <td class="p-2 border-r border-amber-500/20" id="res_T">-</td>
+              <td class="p-2 border-r border-amber-500/20" id="res_U">-</td>
+              <td class="p-2" id="res_V">-</td>
+            </tr>
+            <tr class="bg-slate-950/80 font-bold">
+              <td class="p-2 border-r border-amber-500/20" id="res_W">-</td>
+              <td class="p-2 border-r border-amber-500/20" id="res_X">-</td>
+              <td class="p-2" id="res_Y">-</td>
+            </tr>
+
+            <tr class="bg-amber-950/30 font-bold border-t border-amber-500/30">
+              <td class="p-3 border-r border-amber-500/20 text-amber-300">MIN (Z)</td>
+              <td colspan="3" class="p-3 text-amber-200 text-base" id="res_Z">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between p-4 rounded-xl bg-slate-800/40 border border-amber-500/20">
+        <label class="text-xs text-amber-300 font-semibold uppercase">Konstanta FACT (%)</label>
+        <div class="flex items-center gap-2">
+          <input type="number" id="factValue" value="40" oninput="calculateAll()" class="w-24 p-2 rounded text-center input-field font-bold text-amber-300">
+          <span class="text-amber-400 font-bold">%</span>
+        </div>
+      </div>
+
+      <button onclick="shareViaWA()" class="w-full py-4 rounded-xl gold-button text-slate-950 font-bold font-etnik tracking-wider flex items-center justify-center gap-3 text-lg shadow-lg">
+        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+        </svg>
+        SHARE RCT VIA WA
+      </button>
+
     </div>
+  </div>
 
-    <div class="btn-container">
-        <button class="btn btn-wa" onclick="shareWhatsApp()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-            SHARE RCT VIA WA
-        </button>
-    </div>
-</div>
-
-<script>
-    function getZValue(a, b) {
-        if (a === 'CME' && b === '110') return 10.2;
-        if (a === 'CME' && b === '125') return 12.5;
-        if (a === 'CME' && b === '135') return 13.5;
-        if (a === 'CME' && b === '150') return 15.0;
-        if (a === 'CMF' && b === '125') return 11.5;
-        if (a === 'CMF' && b === '150') return 13.9;
-        return 0; // Default jika tidak sesuai kriteria
-    }
-
-    function calculate() {
-        const a = document.getElementById('valA').value;
-        const b = document.getElementById('valB').value;
-
-        // Hitung Z
-        const z = getZValue(a, b);
-        document.getElementById('valZ').innerText = z ? z.toFixed(1) : '-';
-
-        // Input Nilai
-        const f = parseFloat(document.getElementById('valF').value) || 0;
-        const g = parseFloat(document.getElementById('valG').value) || 0;
-        const h = parseFloat(document.getElementById('valH').value) || 0;
-
-        const i = parseFloat(document.getElementById('valI').value) || 0;
-        const j = parseFloat(document.getElementById('valJ').value) || 0;
-        const k = parseFloat(document.getElementById('valK').value) || 0;
-        const l = parseFloat(document.getElementById('valL').value) || 0;
-
-        const m = parseFloat(document.getElementById('valM').value) || 0;
-        const n = parseFloat(document.getElementById('valN').value) || 0;
-        const o = parseFloat(document.getElementById('valO').value) || 0;
-
-        // Rata-rata P (F, G, H)
-        const pArr = [f, g, h].filter(v => v > 0);
-        const p = pArr.length > 0 ? (pArr.reduce((a, b) => a + b, 0) / pArr.length) : 0;
-        document.getElementById('valP').innerText = p ? p.toFixed(2) : '-';
-
-        // Rata-rata Q ( (I & J dirata-rata dulu), K, L )
-        let ijAvg = 0;
-        const ijArr = [i, j].filter(v => v > 0);
-        if(ijArr.length > 0) ijAvg = ijArr.reduce((a, b) => a + b, 0) / ijArr.length;
-
-        const qSubArr = [];
-        if(ijAvg > 0) qSubArr.push(ijAvg);
-        if(k > 0) qSubArr.push(k);
-        if(l > 0) qSubArr.push(l);
-
-        const q = qSubArr.length > 0 ? (qSubArr.reduce((a, b) => a + b, 0) / qSubArr.length) : 0;
-        document.getElementById('valQ').innerText = q ? q.toFixed(2) : '-';
-
-        // Rata-rata R (M, N, O)
-        const rArr = [m, n, o].filter(v => v > 0);
-        const r = rArr.length > 0 ? (rArr.reduce((a, b) => a + b, 0) / rArr.length) : 0;
-        document.getElementById('valR').innerText = r ? r.toFixed(2) : '-';
-
-        // Rata-rata S (P, Q, R)
-        const sArr = [p, q, r].filter(v => v > 0);
-        const s = sArr.length > 0 ? (sArr.reduce((a, b) => a + b, 0) / sArr.length) : 0;
-        document.getElementById('valS').innerText = s ? s.toFixed(2) : '-';
-
-        // Evaluasi Logika T, U, V
-        setStatus('valT', p > 0 && p < z ? 'RCL' : '-');
-        setStatus('valU', q > 0 && q < z ? 'RCL' : '-');
-        setStatus('valV', r > 0 && r < z ? 'RCL' : '-');
-
-        // Evaluasi Logika W, X, Y
-        setStatus('valW', p > 0 ? (p < z ? 'QW' : 'Q1') : '-');
-        setStatus('valX', q > 0 ? (q < z ? 'QW' : 'Q1') : '-');
-        setStatus('valY', r > 0 ? (r < z ? 'QW' : 'Q1') : '-');
-    }
-
-    function setStatus(elementId, text) {
-        const el = document.getElementById(elementId);
-        el.innerText = text;
-        if (text === 'RCL' || text === 'QW') {
-            el.className = 'status-val status-rcl';
-        } else {
-            el.className = 'status-val';
+  <script>
+    // Penanganan Navigasi Enter/Down dari F ke O
+    function handleEnter(event, nextId) {
+      if (event.key === 'Enter' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        if (nextId) {
+          const nextElement = document.getElementById(nextId);
+          if (nextElement) {
+            nextElement.focus();
+            nextElement.select();
+          }
         }
+      }
     }
 
-    function shareWhatsApp() {
-        const grade = document.getElementById('valA').value;
-        const gsm = document.getElementById('valB').value;
-        const jr = document.getElementById('valC').value || '-';
-        const check = document.getElementById('valCheck').value;
-        const temp = document.getElementById('valD').value || '-';
-        const rh = document.getElementById('valE').value || '-';
-        
-        const p = document.getElementById('valP').innerText;
-        const q = document.getElementById('valQ').innerText;
-        const r = document.getElementById('valR').innerText;
-        const s = document.getElementById('valS').innerText;
-        const min = document.getElementById('valZ').innerText;
-        const fact = document.getElementById('valFact').value;
-
-        const text = `*LAPORAN QUALITY CONTROL ${check}*%0A` +
-            `----------------------------------%0A` +
-            `*GRADE:* ${grade}%0A` +
-            `*GSM:* ${gsm}%0A` +
-            `*No. JR:* ${jr}%0A` +
-            `*Temp/RH:* ${temp}°C / ${rh}%%0A` +
-            `----------------------------------%0A` +
-            `*AVERAGE RESULT:*%0A` +
-            `• TS (P): ${p}%0A` +
-            `• MS (Q): ${q}%0A` +
-            `• DS (R): ${r}%0A` +
-            `• TOTAL (S): ${s}%0A` +
-            `----------------------------------%0A` +
-            `*MIN TARGET (Z):* ${min}%0A` +
-            `*FACT:* ${fact}%%0A` +
-            `----------------------------------%0A` +
-            `_Dikirim otomatis via Sistem QC Nusantara_`;
-
-        window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    function getVal(id) {
+      const val = parseFloat(document.getElementById(id).value);
+      return isNaN(val) ? 0 : val;
     }
 
-    // Run initial calculation on load
-    calculate();
-</script>
+    function format1Dec(num) {
+      return isNaN(num) || num === 0 ? '-' : num.toFixed(1);
+    }
 
+    function getZValue(a, b) {
+      if (a === 'CME' && b === 110) return 10.2;
+      if (a === 'CME' && b === 125) return 12.5;
+      if (a === 'CME' && b === 135) return 13.5;
+      if (a === 'CME' && b === 150) return 15.0;
+      if (a === 'CMF' && b === 125) return 11.5;
+      if (a === 'CMF' && b === 150) return 13.9;
+      return 0;
+    }
+
+    function calculateAll() {
+      const a = document.getElementById('grade').value;
+      const b = parseInt(document.getElementById('gsm').value);
+
+      // Hitung Minimal Z
+      const z = getZValue(a, b);
+      document.getElementById('res_Z').innerText = z > 0 ? z.toFixed(1) : '-';
+
+      // Input Values (F - O)
+      const f = getVal('input_F');
+      const g = getVal('input_G');
+      const h = getVal('input_H');
+      const i = getVal('input_I');
+      const j = getVal('input_J');
+      const k = getVal('input_K');
+      const l = getVal('input_L');
+      const m = getVal('input_M');
+      const n = getVal('input_N');
+      const o = getVal('input_O');
+
+      // 1. Logika Average P = Rara-rata F, G, H
+      const countP = (f ? 1 : 0) + (g ? 1 : 0) + (h ? 1 : 0);
+      const p = countP > 0 ? (f + g + h) / countP : 0;
+      document.getElementById('res_P').innerText = format1Dec(p);
+
+      // 2. Logika Average Q = I dan J dirata-rata dulu, lalu dirata-rata dengan K, L
+      const avgIJ = (i && j) ? (i + j) / 2 : (i || j || 0);
+      let sumQ = 0, countQ = 0;
+      if (avgIJ) { sumQ += avgIJ; countQ++; }
+      if (k) { sumQ += k; countQ++; }
+      if (l) { sumQ += l; countQ++; }
+      const q = countQ > 0 ? sumQ / countQ : 0;
+      document.getElementById('res_Q').innerText = format1Dec(q);
+
+      // 3. Logika Average R = Rara-rata M, N, O
+      const countR = (m ? 1 : 0) + (n ? 1 : 0) + (o ? 1 : 0);
+      const r = countR > 0 ? (m + n + o) / countR : 0;
+      document.getElementById('res_R').innerText = format1Dec(r);
+
+      // 4. Logika Average S = Rara-rata P, Q, R
+      const countS = (p ? 1 : 0) + (q ? 1 : 0) + (r ? 1 : 0);
+      const s = countS > 0 ? (p + q + r) / countS : 0;
+      document.getElementById('res_S').innerText = format1Dec(s);
+
+      // Logika Status T, U, V (Jika < Z maka "RCL")
+      const t = (p > 0 && z > 0) ? (p < z ? 'RCL' : 'OK') : '-';
+      const u = (q > 0 && z > 0) ? (q < z ? 'RCL' : 'OK') : '-';
+      const v = (r > 0 && z > 0) ? (r < z ? 'RCL' : 'OK') : '-';
+
+      const renderStatus = (elId, val) => {
+        const el = document.getElementById(elId);
+        el.innerText = val;
+        el.className = val === 'RCL' ? 'p-2 border-r border-amber-500/20 text-rose-400 font-bold' : (val === 'OK' ? 'p-2 border-r border-amber-500/20 text-emerald-400 font-bold' : 'p-2 border-r border-amber-500/20 text-slate-400');
+      };
+
+      renderStatus('res_T', t);
+      renderStatus('res_U', u);
+      renderStatus('res_V', v);
+
+      // Logika Status W, X, Y (Jika P/Q/R < Z maka QW, jika >= Z maka Q1)
+      const w = (p > 0 && z > 0) ? (p < z ? 'QW' : 'Q1') : '-';
+      const x = (q > 0 && z > 0) ? (q < z ? 'QW' : 'Q1') : '-';
+      const y = (r > 0 && z > 0) ? (r < z ? 'QW' : 'Q1') : '-';
+
+      renderStatus('res_W', w);
+      renderStatus('res_X', x);
+      renderStatus('res_Y', y);
+    }
+
+    function shareViaWA() {
+      const grade = document.getElementById('grade').value;
+      const gsm = document.getElementById('gsm').value;
+      const noJr = document.getElementById('noJr').value || '-';
+      const check = document.getElementById('check').value;
+      const temp = document.getElementById('temp').value || '-';
+      const rh = document.getElementById('rh').value || '-';
+      const fact = document.getElementById('factValue').value || '40';
+
+      const p = document.getElementById('res_P').innerText;
+      const q = document.getElementById('res_Q').innerText;
+      const r = document.getElementById('res_R').innerText;
+      const s = document.getElementById('res_S').innerText;
+      const z = document.getElementById('res_Z').innerText;
+
+      const t = document.getElementById('res_T').innerText;
+      const u = document.getElementById('res_U').innerText;
+      const v = document.getElementById('res_V').innerText;
+      const w = document.getElementById('res_W').innerText;
+      const x = document.getElementById('res_X').innerText;
+      const y = document.getElementById('res_Y').innerText;
+
+      const text = `*LAPORAN PENGUJIANKUALITAS ${check}*%0A` +
+        `----------------------------------------%0A` +
+        `*GRADE:* ${grade} | *GSM:* ${gsm}%0A` +
+        `*NO. JR:* ${noJr}%0A` +
+        `*TEMP:* ${temp}°C | *RH:* ${rh}%%0A` +
+        `*FACT:* ${fact}%%0A` +
+        `----------------------------------------%0A` +
+        `*HASIL AVERAGE:*%0A` +
+        `• TS (P): ${p}%0A` +
+        `• MS (Q): ${q}%0A` +
+        `• DS (R): ${r}%0A` +
+        `• *TOTAL AVG (S): ${s}*%0A` +
+        `• *MINIMAL (Z): ${z}*%0A` +
+        `----------------------------------------%0A` +
+        `*STATUS:*%0A` +
+        `• TS: ${t} / ${w}%0A` +
+        `• MS: ${u} / ${x}%0A` +
+        `• DS: ${v} / ${y}%0A` +
+        `----------------------------------------`;
+
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    // Inisialisasi awal
+    calculateAll();
+  </script>
 </body>
 </html>
