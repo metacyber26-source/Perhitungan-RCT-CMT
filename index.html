@@ -3,334 +3,392 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KALKULATOR RCT & CMT</title>
+  <title>Sistem Kalkulasi Kualitas RCT - Nusantara Style</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0F172A;
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(200, 109, 81, 0.15) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(217, 119, 6, 0.12) 0px, transparent 50%);
+    }
+    .font-nusantara {
+      font-family: 'Cinzel', serif;
+    }
+    /* Motif Ukir Indonesia Subtle Overlay */
+    .batik-overlay {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z' fill='none' stroke='%200172A' stroke-width='0.5' opacity='0.05'/%3E%3C/svg%3E");
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #D97706 0%, #F59E0B 50%, #B45309 100%);
+    }
+    .terracotta-gradient {
+      background: linear-gradient(135deg, #C86D51 0%, #9A3412 100%);
+    }
+    .cell-input {
+      background-color: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(203, 213, 225, 0.2);
+      color: #F8FAFC;
+      transition: all 0.2s ease;
+    }
+    .cell-input:focus {
+      outline: none;
+      border-color: #D97706;
+      box-shadow: 0 0 8px rgba(217, 119, 6, 0.3);
+    }
+    .cell-computed {
+      background-color: rgba(15, 23, 42, 0.6);
+      font-weight: 600;
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-2">
-
-  <div class="w-full max-w-sm bg-[#131b2e] border border-slate-800 rounded-2xl p-4 shadow-2xl">
+<body class="min-h-screen text-slate-100 p-3 md:p-6 batik-overlay">
+  <div class="max-w-4xl mx-auto space-y-6">
     
-    <!-- Header Title -->
-    <div class="text-center mb-4 border-b border-slate-800 pb-2">
-      <h1 class="text-xl font-bold text-sky-400 tracking-wide">KALKULATOR RCT & CMT</h1>
-    </div>
-
-    <!-- Mode Selector & Reset -->
-    <div class="bg-[#1c263b] p-3 rounded-xl mb-3 border border-slate-700/60 flex items-center justify-between gap-2">
-      <div class="flex-1">
-        <label class="block text-[10px] text-slate-400 font-bold mb-1 uppercase tracking-wider">Pilihan Tampilan</label>
-        <select id="modeView" onchange="handleModeChange()" class="w-full bg-[#131b2e] text-white text-sm font-bold p-2 rounded-lg border border-slate-600 focus:outline-none focus:border-sky-500">
-          <option value="input_rct">Input data RCT</option>
-          <option value="input_cmt">Input data CMT</option>
-          <option value="report_rct">Upload data RCT</option>
-          <option value="report_cmt">Upload data CMT</option>
-        </select>
-      </div>
-      <button onclick="resetForm()" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-extrabold px-3 py-2 rounded-lg text-xs shadow transition-all">
-        Reset
-      </button>
-    </div>
-
-    <!-- Parameter Section -->
-    <div class="bg-[#1c263b] p-3 rounded-xl mb-3 border border-slate-700/60">
-      <h2 id="paramTitle" class="text-xs font-extrabold text-sky-400 mb-2 uppercase tracking-wider">PARAMETER RCT</h2>
-      
-      <div class="grid grid-cols-3 gap-2 mb-2">
+    <header class="relative overflow-hidden rounded-2xl bg-slate-800/80 border border-amber-600/30 p-5 md:p-6 backdrop-blur-md shadow-2xl">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative z-10">
         <div>
-          <label class="block text-[10px] text-slate-300 font-bold mb-1">GRADE</label>
-          <select id="grade" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold">
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
+            <span class="text-xs font-semibold tracking-wider text-amber-500 uppercase">Quality Control System</span>
+          </div>
+          <h1 class="text-2xl md:text-3xl font-bold font-nusantara text-amber-100 mt-1 tracking-wide">
+            KALKULATOR KUALITAS RCT
+          </h1>
+          <p class="text-xs md:text-sm text-slate-400">Analisis Presisi Material & Kertas Nusantara</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="resetForm()" class="px-3 py-2 text-xs font-medium text-slate-300 hover:text-white bg-slate-700/50 hover:bg-slate-700 rounded-lg border border-slate-600/50 transition">
+            🔄 Reset
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-4 md:p-6 backdrop-blur-md shadow-xl">
+      
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-6">
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+          <label class="block text-xs font-medium text-amber-400/90 mb-1">GRADE (A)</label>
+          <select id="grade" onchange="calculate()" class="w-full cell-input rounded-lg p-2 text-sm font-semibold cursor-pointer">
             <option value="CME">CME</option>
             <option value="CMF">CMF</option>
           </select>
         </div>
 
-        <div>
-          <label class="block text-[10px] text-slate-300 font-bold mb-1">GSM</label>
-          <select id="gsm" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold">
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+          <label class="block text-xs font-medium text-amber-400/90 mb-1">GSM (B)</label>
+          <select id="gsm" onchange="calculate()" class="w-full cell-input rounded-lg p-2 text-sm font-semibold cursor-pointer">
             <option value="110">110</option>
             <option value="125">125</option>
+            <option value="135">135</option>
             <option value="150">150</option>
           </select>
         </div>
 
-        <div>
-          <label class="block text-[10px] text-slate-300 font-bold mb-1">JR</label>
-          <input type="text" id="jr" value="763" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+          <label class="block text-xs font-medium text-amber-400/90 mb-1">JR % (C)</label>
+          <input type="number" id="jr" oninput="calculate()" placeholder="0" class="w-full cell-input rounded-lg p-2 text-sm font-semibold text-center">
+        </div>
+
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+          <label class="block text-xs font-medium text-slate-400 mb-1">Temp °C (D)</label>
+          <input type="number" id="temp" oninput="calculate()" placeholder="0" class="w-full cell-input rounded-lg p-2 text-sm text-center">
+        </div>
+
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+          <label class="block text-xs font-medium text-slate-400 mb-1">RH % (E)</label>
+          <input type="number" id="rh" oninput="calculate()" placeholder="0" class="w-full cell-input rounded-lg p-2 text-sm text-center">
+        </div>
+
+        <div class="bg-amber-950/30 p-3 rounded-xl border border-amber-600/30 flex flex-col justify-center items-center">
+          <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Nilai Min (Z)</span>
+          <span id="val_z" class="text-xl font-extrabold text-amber-300">10.2</span>
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-2">
-        <div>
-          <label class="block text-[10px] text-slate-300 font-bold mb-1">FAKTOR (F2)</label>
-          <input type="number" id="faktor" value="0.4" step="0.1" oninput="calculateAll()" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
-        </div>
+      <div class="overflow-x-auto rounded-xl border border-slate-700/80 bg-slate-900/80">
+        <table class="w-full text-center border-collapse text-xs md:text-sm">
+          <thead>
+            <tr class="bg-slate-800 text-amber-200 border-b border-slate-700">
+              <th colspan="2" class="py-3 px-2 border-r border-slate-700 font-semibold">RCT</th>
+              <th class="py-3 px-2 border-r border-slate-700 font-semibold w-1/4">TS</th>
+              <th class="py-3 px-2 border-r border-slate-700 font-semibold w-1/4">MS</th>
+              <th class="py-3 px-2 font-semibold w-1/4">DS</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            
+            <tr>
+              <td rowspan="2" class="bg-slate-800/50 font-bold border-r border-slate-700 w-16 text-slate-300">
+                TOP<br>LUAR
+              </td>
+              <td class="bg-slate-800/30 border-r border-slate-700 font-semibold text-slate-400 w-10">1</td>
+              <td rowspan="2" class="border-r border-slate-700/50 p-1.5 align-middle">
+                <input type="number" id="in_f" oninput="calculate()" placeholder="F" class="w-full h-16 cell-input rounded-lg text-center font-bold text-slate-100">
+              </td>
+              <td class="border-r border-slate-700/50 p-1">
+                <input type="number" id="in_i" oninput="calculate()" placeholder="I" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+              <td rowspan="2" class="p-1.5 align-middle">
+                <input type="number" id="in_m" oninput="calculate()" placeholder="M" class="w-full h-16 cell-input rounded-lg text-center font-bold text-slate-100">
+              </td>
+            </tr>
 
-        <div>
-          <label class="block text-[10px] text-slate-300 font-bold mb-1">TEMP</label>
-          <input type="number" id="temp" value="21.2" step="0.1" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
-        </div>
+            <tr>
+              <td class="bg-slate-800/30 border-r border-slate-700 font-semibold text-slate-400">2</td>
+              <td class="border-r border-slate-700/50 p-1">
+                <input type="number" id="in_j" oninput="calculate()" placeholder="J" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+            </tr>
 
-        <div>
-          <label class="block text-[10px] text-slate-300 font-bold mb-1">RH</label>
-          <input type="number" id="rh" value="47" class="w-full bg-[#131b2e] text-white text-xs p-2 rounded-lg border border-slate-700 font-bold text-center">
-        </div>
+            <tr>
+              <td rowspan="2" class="bg-slate-800/50 font-bold border-r border-slate-700 text-slate-300">
+                BOTT<br>OM<br>LUAR
+              </td>
+              <td class="bg-slate-800/30 border-r border-slate-700 font-semibold text-slate-400">3</td>
+              <td class="border-r border-slate-700/50 p-1">
+                <input type="number" id="in_g" oninput="calculate()" placeholder="G" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+              <td class="border-r border-slate-700/50 p-1">
+                <input type="number" id="in_k" oninput="calculate()" placeholder="K" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+              <td class="p-1">
+                <input type="number" id="in_n" oninput="calculate()" placeholder="N" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+            </tr>
+
+            <tr>
+              <td class="bg-slate-800/30 border-r border-slate-700 font-semibold text-slate-400">4</td>
+              <td class="border-r border-slate-700/50 p-1">
+                <input type="number" id="in_h" oninput="calculate()" placeholder="H" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+              <td class="border-r border-slate-700/50 p-1">
+                <input type="number" id="in_l" oninput="calculate()" placeholder="L" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+              <td class="p-1">
+                <input type="number" id="in_o" oninput="calculate()" placeholder="O" class="w-full cell-input rounded-lg py-1.5 text-center font-medium">
+              </td>
+            </tr>
+
+            <tr class="bg-emerald-900/60 border-t-2 border-emerald-600/50 text-emerald-100">
+              <td colspan="2" rowspan="2" class="font-bold border-r border-emerald-700/50 align-middle tracking-wider">
+                AVERAGE
+              </td>
+              <td class="py-2 px-1 border-r border-emerald-700/50 cell-computed" id="out_p">P: -</td>
+              <td class="py-2 px-1 border-r border-emerald-700/50 cell-computed" id="out_q">Q: -</td>
+              <td class="py-2 px-1 cell-computed" id="out_r">R: -</td>
+            </tr>
+            <tr class="bg-emerald-900/80 border-t border-emerald-700/50 text-emerald-100">
+              <td colspan="3" class="py-2.5 font-bold text-emerald-200 cell-computed text-base" id="out_s">
+                S: -
+              </td>
+            </tr>
+
+            <tr class="bg-slate-800/80 border-t-2 border-slate-700">
+              <td colspan="2" rowspan="2" class="font-bold border-r border-slate-700 align-middle text-amber-400">
+                STATUS
+              </td>
+              <td class="py-2 border-r border-slate-700 font-bold" id="out_t">-</td>
+              <td class="py-2 border-r border-slate-700 font-bold" id="out_u">-</td>
+              <td class="py-2 font-bold" id="out_v">-</td>
+            </tr>
+
+            <tr class="bg-slate-800/80 border-t border-slate-700">
+              <td class="py-2 border-r border-slate-700 font-bold" id="out_w">-</td>
+              <td class="py-2 border-r border-slate-700 font-bold" id="out_x">-</td>
+              <td class="py-2 font-bold" id="out_y">-</td>
+            </tr>
+
+          </tbody>
+        </table>
       </div>
-      
-      <!-- Hidden Min Value for Transformation -->
-      <input type="hidden" id="minValue" value="11.6">
-    </div>
 
-    <!-- Table Data Grid (Persis Seperti Gambar) -->
-    <div class="overflow-x-auto bg-white rounded-lg text-black p-1 mb-3 shadow-lg">
-      <table class="w-full border-collapse text-center text-xs font-bold border border-black">
-        <thead>
-          <tr class="bg-[#93b3e6] text-black">
-            <th colspan="2" id="thType" class="border border-black p-1.5 w-1/4">RCT</th>
-            <th class="border border-black p-1.5 w-1/4">TS</th>
-            <th class="border border-black p-1.5 w-1/4">MS</th>
-            <th class="border border-black p-1.5 w-1/4">DS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- TOP LUAR 1 & 2 -->
-          <tr>
-            <td rowspan="2" class="border border-black bg-white text-[9px] font-black leading-tight w-12">TOP<br>LUAR</td>
-            <td class="border border-black bg-white p-1 text-[10px] w-5">1</td>
-            <!-- TS 1&2 Merged -->
-            <td rowspan="2" class="border border-black p-0">
-              <input type="number" id="ts1" data-col="0" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-            <td class="border border-black p-0">
-              <input type="number" id="ms1" data-col="1" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-            <!-- DS 1&2 Merged -->
-            <td rowspan="2" class="border border-black p-0">
-              <input type="number" id="ds1" data-col="2" data-row="0" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-          </tr>
-          <tr>
-            <td class="border border-black bg-white p-1 text-[10px]">2</td>
-            <td class="border border-black p-0">
-              <input type="number" id="ms2" data-col="1" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-          </tr>
+      <div class="mt-6">
+        <button onclick="shareWhatsApp()" class="w-full py-4 rounded-xl font-bold text-white shadow-lg transition transform active:scale-[0.99] flex items-center justify-center gap-3 terracotta-gradient hover:brightness-110 border border-orange-500/30">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg>
+          <span class="tracking-wider uppercase text-sm font-extrabold">SHARE VIA WA</span>
+        </button>
+      </div>
 
-          <!-- BOTT OM LUAR 3 & 4 -->
-          <tr>
-            <td rowspan="2" class="border border-black bg-white text-[9px] font-black leading-tight">BOTT<br>OM<br>LUAR</td>
-            <td class="border border-black bg-white p-1 text-[10px]">3</td>
-            <td class="border border-black p-0">
-              <input type="number" id="ts3" data-col="0" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-            <td class="border border-black p-0">
-              <input type="number" id="ms3" data-col="1" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-            <td class="border border-black p-0">
-              <input type="number" id="ds2" data-col="2" data-row="1" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-          </tr>
-          <tr>
-            <td class="border border-black bg-white p-1 text-[10px]">4</td>
-            <td class="border border-black p-0">
-              <input type="number" id="ts4" data-col="0" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-            <td class="border border-black p-0">
-              <input type="number" id="ms4" data-col="1" data-row="3" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-            <td class="border border-black p-0">
-              <input type="number" id="ds3" data-col="2" data-row="2" onkeydown="handleEnterNavigation(event)" oninput="calculateAll()" class="cell-input w-full text-center text-xs font-bold border-none focus:outline-none bg-transparent p-1" placeholder="">
-            </td>
-          </tr>
+    </main>
 
-          <!-- AVERAGE -->
-          <tr class="bg-[#12d600] text-black font-black">
-            <td colspan="2" class="border border-black p-1.5 text-left text-[11px]">AVERAGE</td>
-            <td id="avgTS" class="border border-black p-1.5 text-xs">-</td>
-            <td id="avgMS" class="border border-black p-1.5 text-xs">-</td>
-            <td id="avgDS" class="border border-black p-1.5 text-xs">-</td>
-          </tr>
-          <tr class="bg-[#12d600] text-black font-black">
-            <td colspan="5" id="grandAVG" class="border border-black p-1.5 text-center text-sm">-</td>
-          </tr>
-
-          <!-- STATUS (Dua Baris) -->
-          <tr class="bg-[#a2f200] text-black font-black">
-            <td rowspan="2" colspan="2" class="border border-black p-1 text-left text-[11px]">STATUS</td>
-            <td class="border border-black p-1 text-xs">RCL</td>
-            <td class="border border-black p-1 text-xs">RCL</td>
-            <td class="border border-black p-1 text-xs">RCL</td>
-          </tr>
-          <tr class="bg-[#a2f200] text-black font-black">
-            <td class="border border-black p-1 text-xs">QW</td>
-            <td class="border border-black p-1 text-xs">QW</td>
-            <td class="border border-black p-1 text-xs">QW</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- WhatsApp Button -->
-    <button onclick="sendToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
-      <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-      </svg>
-      Kirim ke WA
-    </button>
-
+    <footer class="text-center text-xs text-slate-500 py-2">
+      Aplikasi Analisis Kualitas Material &copy; 2026 - Sentuhan Budaya Nusantara
+    </footer>
   </div>
 
   <script>
-    function getTransformedValue(id, isReport) {
+    // Penentuan Nilai Z berdasarkan Kombinasi A dan B
+    function getZValue(a, b) {
+      if (a === 'CME') {
+        if (b === '110') return 10.2;
+        if (b === '125') return 12.5;
+        if (b === '135') return 13.5;
+        if (b === '150') return 15.0;
+      } else if (a === 'CMF') {
+        if (b === '125') return 11.5;
+        if (b === '150') return 13.9;
+      }
+      return 0; // Default jika tidak ada kecocokan
+    }
+
+    function getNum(id) {
       const val = parseFloat(document.getElementById(id).value);
-      if (isNaN(val)) return null;
-
-      if (isReport) {
-        const minVal = parseFloat(document.getElementById('minValue').value) || 0;
-        const faktor = parseFloat(document.getElementById('faktor').value) || 0;
-        return val - ((val - minVal) * faktor);
-      }
-      return val;
+      return isNaN(val) ? null : val;
     }
 
-    function handleModeChange() {
-      const mode = document.getElementById('modeView').value;
-      const isReport = mode.startsWith('report_');
+    function calculate() {
+      const a = document.getElementById('grade').value;
+      const b = document.getElementById('gsm').value;
 
-      const cellInputs = document.querySelectorAll('.cell-input');
-      cellInputs.forEach(input => {
-        input.readOnly = isReport;
-        if (isReport) {
-          input.classList.add('bg-slate-100', 'text-slate-700', 'cursor-not-allowed');
+      // Calculate Z
+      const z = getZValue(a, b);
+      document.getElementById('val_z').innerText = z > 0 ? z.toFixed(1) : '-';
+
+      // Inputs F, G, H
+      const f = getNum('in_f');
+      const g = getNum('in_g');
+      const h = getNum('in_h');
+
+      // Inputs I, J, K, L
+      const i = getNum('in_i');
+      const j = getNum('in_j');
+      const k = getNum('in_k');
+      const l = getNum('in_l');
+
+      // Inputs M, N, O
+      const m = getNum('in_m');
+      const n = getNum('in_n');
+      const o = getNum('in_o');
+
+      // 1. Calculate P = Rara-rata F, G, H
+      let p = null;
+      if (f !== null && g !== null && h !== null) {
+        p = (f + g + h) / 3;
+        document.getElementById('out_p').innerText = 'P: ' + p.toFixed(2);
+      } else {
+        document.getElementById('out_p').innerText = 'P: -';
+      }
+
+      // 2. Calculate Q = Rara-rata I, J, K, L (I dan J dirata-rata dulu)
+      // Rumus: Avg( Avg(I, J), K, L ) -> ((I+J)/2 + K + L) / 3
+      let q = null;
+      if (i !== null && j !== null && k !== null && l !== null) {
+        const avg_ij = (i + j) / 2;
+        q = (avg_ij + k + l) / 3;
+        document.getElementById('out_q').innerText = 'Q: ' + q.toFixed(2);
+      } else {
+        document.getElementById('out_q').innerText = 'Q: -';
+      }
+
+      // 3. Calculate R = Rara-rata M, N, O
+      let r = null;
+      if (m !== null && n !== null && o !== null) {
+        r = (m + n + o) / 3;
+        document.getElementById('out_r').innerText = 'R: ' + r.toFixed(2);
+      } else {
+        document.getElementById('out_r').innerText = 'R: -';
+      }
+
+      // 4. Calculate S = Rata-rata P, Q, R
+      let s = null;
+      if (p !== null && q !== null && r !== null) {
+        s = (p + q + r) / 3;
+        document.getElementById('out_s').innerText = 'S (Rata-rata Total): ' + s.toFixed(2);
+      } else {
+        document.getElementById('out_s').innerText = 'S: -';
+      }
+
+      // Helper status style
+      function renderStatus(elemId, val, labelRcl = 'RCL', labelOk = 'OK') {
+        const el = document.getElementById(elemId);
+        if (val === null || z === 0) {
+          el.innerText = '-';
+          el.className = 'py-2 font-bold text-slate-500';
+          return;
+        }
+        if (val) { // condition met (e.g., < Z -> RCL / QW)
+          el.innerText = labelRcl;
+          el.className = 'py-2 font-bold text-rose-400 animate-pulse';
         } else {
-          input.classList.remove('bg-slate-100', 'text-slate-700', 'cursor-not-allowed');
-        }
-      });
-
-      calculateAll();
-    }
-
-    function calculateAll() {
-      const mode = document.getElementById('modeView').value;
-      const isReport = mode.startsWith('report_');
-      const type = mode.includes('rct') ? 'RCT' : 'CMT';
-
-      document.getElementById('paramTitle').innerText = `PARAMETER ${type}`;
-      document.getElementById('thType').innerText = type;
-
-      // 1. TS Avg (ts1, ts3, ts4)
-      const tsVals = ['ts1', 'ts3', 'ts4'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
-      const avgTS = tsVals.length ? (tsVals.reduce((a, b) => a + b, 0) / tsVals.length) : 0;
-
-      // 2. DS Avg (ds1, ds2, ds3)
-      const dsVals = ['ds1', 'ds2', 'ds3'].map(id => getTransformedValue(id, isReport)).filter(v => v !== null);
-      const avgDS = dsVals.length ? (dsVals.reduce((a, b) => a + b, 0) / dsVals.length) : 0;
-
-      // 3. MS Avg ((ms1 + ms2)/2, lalu ms3, ms4)
-      const m1 = getTransformedValue('ms1', isReport);
-      const m2 = getTransformedValue('ms2', isReport);
-      const m3 = getTransformedValue('ms3', isReport);
-      const m4 = getTransformedValue('ms4', isReport);
-
-      let msComponents = [];
-      if (m1 !== null && m2 !== null) msComponents.push((m1 + m2) / 2);
-      else if (m1 !== null) msComponents.push(m1);
-      else if (m2 !== null) msComponents.push(m2);
-
-      if (m3 !== null) msComponents.push(m3);
-      if (m4 !== null) msComponents.push(m4);
-
-      const avgMS = msComponents.length ? (msComponents.reduce((a, b) => a + b, 0) / msComponents.length) : 0;
-
-      // Render Display
-      document.getElementById('avgTS').innerText = avgTS ? avgTS.toFixed(2) : '-';
-      document.getElementById('avgMS').innerText = avgMS ? avgMS.toFixed(2) : '-';
-      document.getElementById('avgDS').innerText = avgDS ? avgDS.toFixed(2) : '-';
-
-      const grand = (avgTS + avgMS + avgDS) / 3;
-      document.getElementById('grandAVG').innerText = grand ? grand.toFixed(2) : '-';
-    }
-
-    function handleEnterNavigation(event) {
-      if (event.key === 'Enter' || event.keyCode === 13) {
-        event.preventDefault();
-        const currentInput = event.target;
-        const col = parseInt(currentInput.getAttribute('data-col'));
-        const row = parseInt(currentInput.getAttribute('data-row'));
-
-        let nextInput = document.querySelector(`input[data-col="${col}"][data-row="${row + 1}"]`);
-        if (!nextInput) {
-          nextInput = document.querySelector(`input[data-col="${col + 1}"][data-row="0"]`);
-        }
-
-        if (nextInput) {
-          nextInput.focus();
-          nextInput.select();
+          el.innerText = labelOk;
+          el.className = 'py-2 font-bold text-emerald-400';
         }
       }
-    }
 
-    function sendToWhatsApp() {
-      const modeSelect = document.getElementById('modeView');
-      const modeText = modeSelect.options[modeSelect.selectedIndex].text;
-      const type = modeSelect.value.includes('rct') ? 'RCT' : 'CMT';
+      // Status T, U, V (Jika < Z maka "RCL")
+      const t_cond = p !== null ? p < z : null;
+      const u_cond = q !== null ? q < z : null;
+      const v_cond = r !== null ? r < z : null;
 
-      const grade = document.getElementById('grade').value;
-      const jr = document.getElementById('jr').value || '-';
-      const temp = document.getElementById('temp').value || '-';
-      const gsm = document.getElementById('gsm').value;
-      const rh = document.getElementById('rh').value || '-';
-      const faktor = document.getElementById('faktor').value;
+      renderStatus('out_t', t_cond, 'RCL', 'OK');
+      renderStatus('out_u', u_cond, 'RCL', 'OK');
+      renderStatus('out_v', v_cond, 'RCL', 'OK');
 
-      const ts1 = document.getElementById('ts1').value || '-';
-      const ms1 = document.getElementById('ms1').value || '-';
-      const ms2 = document.getElementById('ms2').value || '-';
-      const ds1 = document.getElementById('ds1').value || '-';
+      // Status W, X, Y
+      // W: Jika P < Z maka "QW", jika P >= Z maka "Q1"
+      // X: Jika Q < Z maka "QW", jika P >= Z maka "Q1"
+      // Y: Jika R < Z maka "QW", jika P >= Z maka "Q1"
+      const w_cond = p !== null ? p < z : null;
+      const x_cond = q !== null ? q < z : null;
+      const y_cond = r !== null ? r < z : null;
 
-      const ts3 = document.getElementById('ts3').value || '-';
-      const ms3 = document.getElementById('ms3').value || '-';
-      const ds2 = document.getElementById('ds2').value || '-';
-
-      const ts4 = document.getElementById('ts4').value || '-';
-      const ms4 = document.getElementById('ms4').value || '-';
-      const ds3 = document.getElementById('ds3').value || '-';
-
-      const avgTS = document.getElementById('avgTS').innerText;
-      const avgMS = document.getElementById('avgMS').innerText;
-      const avgDS = document.getElementById('avgDS').innerText;
-      const grandAVG = document.getElementById('grandAVG').innerText;
-
-      const message = `=========================\n` +
-        `   *${type} JR:${jr}*\n` +
-        `=========================\n` +
-        `*GRADE :* ${grade} | *GSM :* ${gsm}\n` +
-        `*TEMP  :* ${temp}°C | *RH  :* ${rh}%\n` +
-        `*FAKTOR(F2) :* ${faktor}\n` +
-        `-----------------------------------------\n` +
-        `| *${type.padEnd(5)}* | *TS*   | *MS*   | *DS*   |\n` +
-        `-----------------------------------------\n` +
-        `| TOP 1 | ${ts1.padEnd(6)} | ${ms1.padEnd(6)} | ${ds1.padEnd(6)} |\n` +
-        `| TOP 2 | "      | ${ms2.padEnd(6)} | "      |\n` +
-        `| BOT 3 | ${ts3.padEnd(6)} | ${ms3.padEnd(6)} | ${ds2.padEnd(6)} |\n` +
-        `| BOT 4 | ${ts4.padEnd(6)} | ${ms4.padEnd(6)} | ${ds3.padEnd(6)} |\n` +
-        `-----------------------------------------\n` +
-        `| *AVE*  | *${avgTS.padEnd(5)}* | *${avgMS.padEnd(5)}* | *${avgDS.padEnd(5)}* |\n` +
-        `| *GRAND AVE :* *${grandAVG}*\n` +
-        `-----------------------------------------\n` +
-        `| *STATUS:* | RCL | RCL | RCL |\n` +
-        `|          | QW  | QW  | QW  |\n` +
-        `=========================`;
-
-      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+      renderStatus('out_w', w_cond, 'QW', 'Q1');
+      renderStatus('out_x', x_cond, 'QW', 'Q1');
+      renderStatus('out_y', y_cond, 'QW', 'Q1');
     }
 
     function resetForm() {
-      document.querySelectorAll('input[type="number"]').forEach(input => {
-        if (!['faktor', 'minValue', 'temp', 'rh'].includes(input.id)) input.value = '';
-      });
-      calculateAll();
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => input.value = '');
+      calculate();
     }
 
-    window.onload = handleModeChange;
+    // Fungsi Pengiriman WhatsApp (Placeholder Logika Sederhana)
+    function shareWhatsApp() {
+      const grade = document.getElementById('grade').value;
+      const gsm = document.getElementById('gsm').value;
+      const jr = document.getElementById('jr').value || '-';
+      const z = document.getElementById('val_z').innerText;
+      
+      const p = document.getElementById('out_p').innerText;
+      const q = document.getElementById('out_q').innerText;
+      const r = document.getElementById('out_r').innerText;
+      const s = document.getElementById('out_s').innerText;
+
+      const t = document.getElementById('out_t').innerText;
+      const u = document.getElementById('out_u').innerText;
+      const v = document.getElementById('out_v').innerText;
+
+      const w = document.getElementById('out_w').innerText;
+      const x = document.getElementById('out_x').innerText;
+      const y = document.getElementById('out_y').innerText;
+
+      let text = `*LAPORAN KALKULASI KUALITAS RCT*\n`;
+      text += `------------------------------------\n`;
+      text += `GRADE: ${grade} | GSM: ${gsm} | JR: ${jr}%\n`;
+      text += `NILAI MIN (Z): ${z}\n`;
+      text += `------------------------------------\n`;
+      text += `*HASIL RATA-RATA:*\n`;
+      text += `${p}\n${q}\n${r}\n${s}\n`;
+      text += `------------------------------------\n`;
+      text += `*STATUS:*\n`;
+      text += `TS  : ${t} / ${w}\n`;
+      text += `MS  : ${u} / ${x}\n`;
+      text += `DS  : ${v} / ${y}\n`;
+
+      const encodedText = encodeURIComponent(text);
+      window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+    }
+
+    // Inisialisasi awal
+    calculate();
   </script>
 </body>
 </html>
