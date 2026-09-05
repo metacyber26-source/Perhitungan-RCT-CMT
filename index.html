@@ -1,382 +1,619 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Pengujian Kertas - Nusantara Quality Control</title>
-  <style>
-    :root {
-      --batik-brown: #3d2314;
-      --batik-gold: #c59b27;
-      --batik-cream: #fbf8f3;
-      --batik-light-gold: #e6cb7a;
-      --border-color: #8c6d3f;
-      --success-green: #2e7d32;
-      --danger-red: #c62828;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Check RCT/CMT - Batik Nusantara</title>
+    <!-- html2canvas untuk konversi tabel/kartu menjadi foto/gambar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #2b1e17;
+            --bg-card: #fdfaf6;
+            --batik-accent: #8b0000;
+            --batik-gold: #d4af37;
+            --text-main: #1a1a1a;
+            --border-color: #2a2a2a;
+            --red-alert: #d9534f;
+            --red-bg: #f8d7da;
+            --green-bg: #00e600;
+        }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4efe6;
-      background-image: radial-gradient(var(--batik-light-gold) 0.75px, transparent 0.75px), radial-gradient(var(--batik-light-gold) 0.75px, #f4efe6 0.75px);
-      background-size: 30px 30px;
-      background-position: 0 0, 15px 15px;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-    .container {
-      max-width: 750px;
-      margin: 0 auto;
-      background: var(--batik-cream);
-      border: 3px solid var(--batik-gold);
-      border-radius: 8px;
-      box-shadow: 0 8px 20px rgba(61, 35, 20, 0.2);
-      overflow: hidden;
-    }
+        body {
+            background-color: var(--bg-primary);
+            /* Motif Batik Geometris Halus */
+            background-image: radial-gradient(var(--batik-gold) 0.75px, transparent 0.75px), radial-gradient(var(--batik-gold) 0.75px, #2b1e17 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            color: var(--text-main);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
 
-    .header {
-      background: linear-gradient(135deg, var(--batik-brown), #5a351e);
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-      border-bottom: 4px solid var(--batik-gold);
-      position: relative;
-    }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--bg-card);
+            border: 4px solid var(--batik-gold);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            position: relative;
+        }
 
-    .header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      letter-spacing: 1px;
-      color: var(--batik-gold);
-      text-transform: uppercase;
-    }
+        .header-title {
+            text-align: center;
+            background: linear-gradient(135deg, #8b0000, #4a0000);
+            color: #fff;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--batik-gold);
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-    .header p {
-      margin: 5px 0 0;
-      font-size: 0.85rem;
-      opacity: 0.9;
-    }
+        /* Controls / Dropdowns Header */
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
 
-    .sheet-wrapper {
-      padding: 20px;
-      overflow-x: auto;
-    }
+        select {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 8px 4px;
+            border: 2px solid var(--batik-gold);
+            border-radius: 6px;
+            background-color: #fff8dc;
+            color: #000;
+            text-align: center;
+        }
 
-    table.excel-table {
-      border-collapse: collapse;
-      width: 100%;
-      background-color: #fff;
-      border: 2px solid var(--border-color);
-    }
+        /* Tabel Utama */
+        .table-container {
+            width: 100%;
+            background-color: #fff;
+            border: 3px solid #000;
+        }
 
-    table.excel-table th, table.excel-table td {
-      border: 1px solid var(--border-color);
-      padding: 6px 8px;
-      font-size: 0.9rem;
-      text-align: center;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
 
-    table.excel-table th {
-      background-color: var(--batik-brown);
-      color: #fff;
-      font-weight: 600;
-    }
+        td, th {
+            border: 2px solid #000;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            padding: 2px;
+        }
 
-    .col-header {
-      background-color: #e2d2b4 !important;
-      color: var(--batik-brown) !important;
-      font-weight: bold;
-    }
+        /* Lebar Kolom */
+        .col-a { width: 18%; }
+        .col-b { width: 8%; }
+        .col-c { width: 24.66%; }
+        .col-d { width: 24.66%; }
+        .col-e { width: 24.66%; }
 
-    .row-header {
-      background-color: #f2e7d3;
-      font-weight: bold;
-      color: var(--batik-brown);
-    }
+        /* Font Super Besar untuk Kolom C, D, E (Ramah Lansia) */
+        .big-font {
+            font-size: 26px !important;
+            font-weight: 900 !important;
+            color: #000;
+        }
 
-    input, select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 6px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      text-align: center;
-      font-size: 0.9rem;
-      background-color: #fff;
-    }
+        /* Input Cell C5:E8 */
+        .data-input {
+            width: 100%;
+            height: 48px;
+            border: none;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 900;
+            background: transparent;
+            outline: none;
+        }
 
-    input:focus, select:focus {
-      outline: 2px solid var(--batik-gold);
-      border-color: transparent;
-    }
+        /* Header Tabel Warna */
+        .bg-cme { background-color: #00e600; font-size: 20px; font-weight: bold; }
+        .bg-rct { background-color: #a0b2d6; font-size: 18px; }
+        .bg-ave { background-color: #00e600; font-size: 18px; }
+        .bg-status { background-color: #8cbf26; font-size: 16px; }
 
-    input[readonly] {
-      background-color: #f0f0f0;
-      font-weight: bold;
-      color: #333;
-    }
+        .red-text { color: red !important; }
+        .red-cell { background-color: #ff4d4d !important; color: #ffffff !important; text-shadow: 1px 1px 2px #000; }
 
-    .merged-result {
-      background-color: #fdf3d6 !important;
-      font-weight: bold;
-      font-size: 1.1rem;
-      color: var(--batik-brown);
-    }
+        /* Meta Input Fields (JR, TEMP, GRADE, RH) */
+        .meta-input {
+            width: 90%;
+            border: none;
+            border-bottom: 2px solid #000;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            background: transparent;
+        }
 
-    .status-box {
-      font-weight: bold;
-      font-size: 1rem;
-      padding: 8px;
-      border-radius: 4px;
-    }
+        /* Tombol Aksi */
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
 
-    .status-pass {
-      background-color: #e8f5e9;
-      color: var(--success-green);
-      border: 1px solid var(--success-green);
-    }
+        .btn {
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid var(--batik-gold);
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            transition: 0.2s;
+        }
 
-    .status-fail {
-      background-color: #ffebee;
-      color: var(--danger-red);
-      border: 1px solid var(--danger-red);
-    }
+        .btn-undo { background: #d97706; }
+        .btn-reset { background: #dc2626; }
+        .btn-wa { background: #059669; }
+        .btn:active { transform: scale(0.97); }
 
-    .info-footer {
-      background-color: #f2e7d3;
-      padding: 12px 20px;
-      border-top: 1px solid var(--border-color);
-      font-size: 0.8rem;
-      color: var(--batik-brown);
-      display: flex;
-      justify-content: space-between;
-    }
-  </style>
+        /* Panel Konstanta Pojok Kiri Bawah */
+        .footer-panel {
+            margin-top: 15px;
+            padding: 8px;
+            background: #f0e6d2;
+            border: 2px solid var(--batik-gold);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .const-input {
+            width: 60px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #000;
+            border-radius: 4px;
+            padding: 2px;
+        }
+
+        /* Area Cetak Gambar untuk WA */
+        #export-card {
+            background: #fff;
+            padding: 10px;
+            border: 3px solid #000;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="header">
-    <h1>Sistem Pengujian Mutu Kertas</h1>
-    <p>Pengujian RCT, CMT & CMT (L&W)</p>
-  </div>
+    <div class="header-title">Check RCT / CMT</div>
 
-  <div class="sheet-wrapper">
-    <table class="excel-table">
-      <thead>
-        <tr>
-          <th style="width: 8%;">Cell</th>
-          <th style="width: 18%;" class="col-header">A</th>
-          <th style="width: 10%;" class="col-header">B</th>
-          <th style="width: 28%;" class="col-header">C</th>
-          <th style="width: 18%;" class="col-header">D</th>
-          <th style="width: 18%;" class="col-header">E</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Row 1 -->
-        <tr>
-          <td class="row-header">1</td>
-          <td class="row-header">CHECK</td>
-          <td></td>
-          <td>
-            <select id="cellC1" onchange="calculate()">
-              <option value="RCT">RCT</option>
-              <option value="CMT">CMT</option>
-              <option value="CMT(L&W)">CMT(L&W)</option>
-            </select>
-          </td>
-          <td class="row-header">K</td>
-          <td><input type="number" id="cellE1" value="0.4" step="0.01" oninput="calculate()"></td>
-        </tr>
+    <!-- Dropdown Kontrol Utama -->
+    <div class="control-panel">
+        <!-- C1 -->
+        <select id="cellC1" onchange="calculate()">
+            <option value="RCT">RCT</option>
+            <option value="CMT">CMT</option>
+            <option value="CMT(L&W)">CMT(L&W)</option>
+        </select>
 
-        <!-- Row 2 -->
-        <tr>
-          <td class="row-header">2</td>
-          <td class="row-header">GRADE</td>
-          <td></td>
-          <td>
-            <select id="cellC2" onchange="calculate()">
-              <option value="CME 110">CME 110</option>
-              <option value="CME 125" selected>CME 125</option>
-              <option value="CME 135">CME 135</option>
-              <option value="CME 150">CME 150</option>
-              <option value="CMF 125">CMF 125</option>
-              <option value="CMF 150">CMF 150</option>
-            </select>
-          </td>
-          <td class="row-header">Temp</td>
-          <td><input type="number" id="cellE2" placeholder="°C"></td>
-        </tr>
+        <!-- C2 -->
+        <select id="cellC2" onchange="updateBatasMinimum()">
+            <option value="CME 110">CME 110</option>
+            <option value="CME 125" selected>CME 125</option>
+            <option value="CME 135">CME 135</option>
+            <option value="CME 150">CME 150</option>
+            <option value="CMF 125">CMF 125</option>
+            <option value="CMF 150">CMF 150</option>
+        </select>
 
-        <!-- Row 3 -->
-        <tr>
-          <td class="row-header">3</td>
-          <td class="row-header">NO: JR</td>
-          <td></td>
-          <td><input type="text" id="cellC3" placeholder="No. Roll"></td>
-          <td class="row-header">RH</td>
-          <td><input type="number" id="cellE3" placeholder="%"></td>
-        </tr>
+        <!-- E1 -->
+        <select id="cellE1" onchange="switchMode()">
+            <option value="input">Input Data</option>
+            <option value="upload">Upload Data</option>
+        </select>
+    </div>
 
-        <!-- Row 4 (Table Headers) -->
-        <tr style="background-color: #f2e7d3;">
-          <td class="row-header">4</td>
-          <td colspan="2"></td>
-          <td style="font-weight: bold; color: var(--batik-brown);">TS</td>
-          <td style="font-weight: bold; color: var(--batik-brown);">MS</td>
-          <td style="font-weight: bold; color: var(--batik-brown);">DS</td>
-        </tr>
+    <!-- Area Tabel Utama yang di-capture -->
+    <div id="export-card">
+        <div class="table-container">
+            <table>
+                <colgroup>
+                    <col class="col-a">
+                    <col class="col-b">
+                    <col class="col-c">
+                    <col class="col-d">
+                    <col class="col-e">
+                </colgroup>
+                <!-- Row 1, 2, 3: Info & Banner -->
+                <tr>
+                    <td colspan="2" style="font-size:12px;">GRADE:</td>
+                    <td colspan="1"><input type="text" id="metaGrade" class="meta-input" value="e" oninput="saveMeta()"></td>
+                    <td colspan="2" id="bannerCME" class="bg-cme">CME 125</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="font-size:12px;">GSM:</td>
+                    <td colspan="1" class="big-font" id="metaGSM">125</td>
+                    <td colspan="1" style="font-size:12px;">TEMP:</td>
+                    <td colspan="1"><input type="text" id="metaTemp" class="meta-input" value="22.1" oninput="saveMeta()"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="font-size:12px;">JR:</td>
+                    <td colspan="1"><input type="text" id="metaJR" class="meta-input" value="130" oninput="saveMeta()"></td>
+                    <td colspan="1" style="font-size:12px;">RH:</td>
+                    <td colspan="1"><input type="text" id="metaRH" class="meta-input" value="46" oninput="saveMeta()"></td>
+                </tr>
 
-        <!-- Row 5 -->
-        <tr>
-          <td class="row-header">5</td>
-          <td rowspan="2" class="row-header" style="vertical-align: middle;">TOP LUAR</td>
-          <td class="row-header">1</td>
-          <td rowspan="2" style="vertical-align: middle;">
-            <input type="number" id="cellC5_6" placeholder="C5:C6" oninput="calculate()">
-          </td>
-          <td><input type="number" id="cellD5" oninput="calculate()"></td>
-          <td rowspan="2" style="vertical-align: middle;">
-            <input type="number" id="cellE5_6" placeholder="E5:E6" oninput="calculate()">
-          </td>
-        </tr>
+                <!-- Row 4: Header Kolom C, D, E -->
+                <tr>
+                    <td colspan="2" class="bg-rct" id="headerTestType">RCT</td>
+                    <td class="big-font">TS</td>
+                    <td class="big-font">MS</td>
+                    <td class="big-font">DS</td>
+                </tr>
 
-        <!-- Row 6 -->
-        <tr>
-          <td class="row-header">6</td>
-          <td class="row-header">2</td>
-          <td><input type="number" id="cellD6" oninput="calculate()"></td>
-        </tr>
+                <!-- Row 5 & 6 (Top Luar) -->
+                <tr>
+                    <td rowspan="2" style="font-size:12px;">TOP<br>LUAR</td>
+                    <td style="font-size:12px;">1</td>
+                    <td rowspan="2">
+                        <input type="number" step="0.1" id="c5" class="data-input" oninput="onInputData('c5')" onfocus="this.select()">
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" id="d5" class="data-input" oninput="onInputData('d5')" onfocus="this.select()">
+                    </td>
+                    <td rowspan="2">
+                        <input type="number" step="0.1" id="e5" class="data-input" oninput="onInputData('e5')" onfocus="this.select()">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:12px;">2</td>
+                    <td>
+                        <input type="number" step="0.1" id="d6" class="data-input" oninput="onInputData('d6')" onfocus="this.select()">
+                    </td>
+                </tr>
 
-        <!-- Row 7 -->
-        <tr>
-          <td class="row-header">7</td>
-          <td rowspan="2" class="row-header" style="vertical-align: middle;">BOTTOM LUAR</td>
-          <td class="row-header">3</td>
-          <td><input type="number" id="cellC7" oninput="calculate()"></td>
-          <td><input type="number" id="cellD7" oninput="calculate()"></td>
-          <td><input type="number" id="cellE7" oninput="calculate()"></td>
-        </tr>
+                <!-- Row 7 & 8 (Bottom Luar) -->
+                <tr>
+                    <td rowspan="2" style="font-size:12px;">BOT<br>LUAR</td>
+                    <td style="font-size:12px;">3</td>
+                    <td>
+                        <input type="number" step="0.1" id="c7" class="data-input" oninput="onInputData('c7')" onfocus="this.select()">
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" id="d7" class="data-input" oninput="onInputData('d7')" onfocus="this.select()">
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" id="e7" class="data-input" oninput="onInputData('e7')" onfocus="this.select()">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size:12px;">4</td>
+                    <td>
+                        <input type="number" step="0.1" id="c8" class="data-input" oninput="onInputData('c8')" onfocus="this.select()">
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" id="d8" class="data-input" oninput="onInputData('d8')" onfocus="this.select()">
+                    </td>
+                    <td>
+                        <input type="number" step="0.1" id="e8" class="data-input" oninput="onInputData('e8')" onfocus="this.select()">
+                    </td>
+                </tr>
 
-        <!-- Row 8 -->
-        <tr>
-          <td class="row-header">8</td>
-          <td class="row-header">4</td>
-          <td><input type="number" id="cellC8" oninput="calculate()"></td>
-          <td><input type="number" id="cellD8" oninput="calculate()"></td>
-          <td><input type="number" id="cellE8" oninput="calculate()"></td>
-        </tr>
+                <!-- Row 9 & 10: Rata-Rata (AVE) -->
+                <tr>
+                    <td rowspan="2" colspan="2" class="bg-ave">AVE</td>
+                    <td id="resC9" class="big-font">0.0</td>
+                    <td id="resD9" class="big-font">0.0</td>
+                    <td id="resE9" class="big-font">0.0</td>
+                </tr>
+                <tr>
+                    <td colspan="3" id="resC10E10" class="big-font bg-ave">0.0</td>
+                </tr>
 
-        <!-- Row 9 -->
-        <tr>
-          <td class="row-header">9</td>
-          <td colspan="2" class="row-header">AVERAGE</td>
-          <td><input type="text" id="cellC9" readonly class="merged-result"></td>
-          <td><input type="text" id="cellD9" readonly class="merged-result"></td>
-          <td><input type="text" id="cellE9" readonly class="merged-result"></td>
-        </tr>
+                <!-- Row 11 & 12: Status -->
+                <tr>
+                    <td rowspan="2" colspan="2" class="bg-status">STATUS</td>
+                    <td id="cellC11" class="big-font">Q1</td>
+                    <td id="cellD11" class="big-font">Q1</td>
+                    <td id="cellE11" class="big-font">Q1</td>
+                </tr>
+                <tr id="rowStatus12" style="display: none;">
+                    <td id="cellC12" class="big-font"></td>
+                    <td id="cellD12" class="big-font"></td>
+                    <td id="cellE12" class="big-font"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-        <!-- Row 10 -->
-        <tr>
-          <td class="row-header">10</td>
-          <td colspan="2" class="row-header">TOTAL AVERAGE</td>
-          <td colspan="3"><input type="text" id="cellC10_E10" readonly class="merged-result" style="font-size: 1.2rem;"></td>
-        </tr>
+    <!-- Tombol Aksi -->
+    <div class="button-group">
+        <button class="btn btn-undo" onclick="undo()">↺ Undo</button>
+        <button class="btn btn-reset" onclick="resetData()">🗑 Reset</button>
+        <button class="btn btn-wa" onclick="sendWhatsApp()">📱 Kirim WA</button>
+    </div>
 
-        <!-- Row 11-12 (Status) -->
-        <tr>
-          <td class="row-header">11-12</td>
-          <td colspan="2" class="row-header" style="vertical-align: middle;">STATUS</td>
-          <td colspan="3" style="vertical-align: middle;">
-            <div id="statusBox" class="status-box">-</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="info-footer">
-    <span>Batas Minimal (<span id="gradeDisplay">CME 125</span>): <strong id="minDisplay">12.5</strong></span>
-    <span>Sistem Pengujian Kertas QC</span>
-  </div>
+    <!-- Panel Konstanta (Pojok Kiri Bawah) -->
+    <div class="footer-panel">
+        <span>Konstanta Olah Data:</span>
+        <div>
+            <input type="number" id="constValue" class="const-input" value="40" onchange="saveConst()"> %
+        </div>
+    </div>
 </div>
 
 <script>
-  // Pemetaan Standar Minimal Berdasarkan Grade
-  const minStandards = {
-    "CME 110": 10.2,
-    "CME 125": 12.5,
-    "CME 135": 13.5,
-    "CME 150": 15.0,
-    "CMF 125": 11.5,
-    "CMF 150": 13.8
-  };
+    // Penentuan Batas Minimum Berdasarkan Pilihan CME/CMF
+    const minThresholds = {
+        "CME 110": 11.0,
+        "CME 125": 12.5,
+        "CME 135": 13.5,
+        "CME 150": 15.0,
+        "CMF 125": 12.5,
+        "CMF 150": 15.0
+    };
 
-  function getVal(id) {
-    const val = parseFloat(document.getElementById(id).value);
-    return isNaN(val) ? 0 : val;
-  }
+    // Urutan Navigasi Tombol Enter Dari Atas ke Bawah
+    const inputSequence = ['c5', 'd5', 'd6', 'e5', 'c7', 'd7', 'e7', 'c8', 'd8', 'e8'];
 
-  function calculate() {
-    // 1. C9 = Average(C5:C8) -> C5 dan C6 termerger di input C5_6
-    const c56 = getVal('cellC5_6');
-    const c7 = getVal('cellC7');
-    const c8 = getVal('cellC8');
-    const c9 = (c56 + c7 + c8) / 3;
-    document.getElementById('cellC9').value = c9 ? c9.toFixed(2) : '-';
+    let rawInputs = {};
+    let historyStack = [];
 
-    // 2. D9 = (((D5+D6)/2)+D7+D8)/3
-    const d5 = getVal('cellD5');
-    const d6 = getVal('cellD6');
-    const d7 = getVal('cellD7');
-    const d8 = getVal('cellD8');
-    const d9 = (((d5 + d6) / 2) + d7 + d8) / 3;
-    document.getElementById('cellD9').value = d9 ? d9.toFixed(2) : '-';
+    // Inisialisasi Aplikasi saat Pertama Kali Dimuat
+    window.onload = function() {
+        loadLocalStorage();
+        setupEnterKeyNavigation();
+        updateBatasMinimum();
+    };
 
-    // 3. E9 = Average(E5:E8) -> E5 dan E6 termerger di input E5_6
-    const e56 = getVal('cellE5_6');
-    const e7 = getVal('cellE7');
-    const e8 = getVal('cellE8');
-    const e9 = (e56 + e7 + e8) / 3;
-    document.getElementById('cellE9').value = e9 ? e9.toFixed(2) : '-';
-
-    // 4. C10:E10 = Average(C9:E9)
-    let totalAvg = 0;
-    let count = 0;
-    if (c9) { totalAvg += c9; count++; }
-    if (d9) { totalAvg += d9; count++; }
-    if (e9) { totalAvg += e9; count++; }
-
-    const finalAvg = count > 0 ? (totalAvg / count) : 0;
-    document.getElementById('cellC10_E10').value = finalAvg ? finalAvg.toFixed(2) : '-';
-
-    // 5. Evaluasi Status berdasarkan Grade
-    const selectedGrade = document.getElementById('cellC2').value;
-    const minRequirement = minStandards[selectedGrade] || 0;
-
-    document.getElementById('gradeDisplay').innerText = selectedGrade;
-    document.getElementById('minDisplay').innerText = minRequirement;
-
-    const statusBox = document.getElementById('statusBox');
-    if (finalAvg > 0) {
-      if (finalAvg >= minRequirement) {
-        statusBox.innerText = `PASSED (≥ ${minRequirement})`;
-        statusBox.className = "status-box status-pass";
-      } else {
-        statusBox.innerText = `FAILED (< ${minRequirement})`;
-        statusBox.className = "status-box status-fail";
-      }
-    } else {
-      statusBox.innerText = "-";
-      statusBox.className = "status-box";
+    function updateBatasMinimum() {
+        const c2Val = document.getElementById('cellC2').value;
+        document.getElementById('bannerCME').innerText = c2Val;
+        
+        // Ambil Nilai GSM
+        const gsmMatch = c2Val.match(/\d+/);
+        if (gsmMatch) {
+            document.getElementById('metaGSM').innerText = gsmMatch[0];
+        }
+        
+        calculate();
+        saveLocalStorage();
     }
-  }
 
-  // Jalankan kalkulasi awal
-  calculate();
+    // Urutan Enter Dari Atas Ke Bawah
+    function setupEnterKeyNavigation() {
+        inputSequence.forEach((id, index) => {
+            const el = document.getElementById(id);
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (index < inputSequence.length - 1) {
+                        document.getElementById(inputSequence[index + 1]).focus();
+                    }
+                }
+            });
+        });
+    }
+
+    function onInputData(id) {
+        // Simpan State Untuk Fungsi Undo
+        historyStack.push(JSON.stringify(rawInputs));
+        
+        const val = document.getElementById(id).value;
+        rawInputs[id] = val !== "" ? parseFloat(val) : null;
+        
+        calculate();
+        saveLocalStorage();
+    }
+
+    function switchMode() {
+        calculate();
+    }
+
+    function calculate() {
+        const mode = document.getElementById('cellE1').value; // 'input' atau 'upload'
+        const c2Val = document.getElementById('cellC2').value;
+        const minLimit = minThresholds[c2Val] || 12.5;
+        const k = parseFloat(document.getElementById('constValue').value) / 100.0;
+
+        // ganti tulisan RCT / CMT sesuai C1
+        document.getElementById('headerTestType').innerText = document.getElementById('cellC1').value;
+
+        // Ambil Data Berdasarkan Mode (Input Biasa vs Processed/Upload)
+        let processedData = {};
+        inputSequence.forEach(id => {
+            const val = rawInputs[id];
+            const inputEl = document.getElementById(id);
+
+            if (val !== undefined && val !== null && !isNaN(val)) {
+                let displayVal = val;
+
+                // Pengolahan Otomatis Jika Mode "Upload Data" & Nilai > Batas Minimal
+                if (mode === 'upload' && val > minLimit) {
+                    displayVal = val - ((val - minLimit) * k);
+                }
+
+                processedData[id] = displayVal;
+                inputEl.value = displayVal.toFixed(1);
+
+                // Aturan 2: Jika < Batas Minimum, Warna Angka Jadi Merah
+                if (displayVal < minLimit) {
+                    inputEl.classList.add('red-text');
+                } else {
+                    inputEl.classList.remove('red-text');
+                }
+            } else {
+                processedData[id] = 0;
+                inputEl.value = "";
+                inputEl.classList.remove('red-text');
+            }
+        });
+
+        // Rumus Perhitungan
+        // C5 & C6 di merger (Nilai dari c5)
+        const c5 = processedData['c5'];
+        const c7 = processedData['c7'];
+        const c8 = processedData['c8'];
+        const c9 = (c5 + c7 + c8) / 3; // Average C5:C8
+
+        // D9 = (((D5+D6)/2)+D7+D8)/3
+        const d5 = processedData['d5'];
+        const d6 = processedData['d6'];
+        const d7 = processedData['d7'];
+        const d8 = processedData['d8'];
+        const d9 = (((d5 + d6) / 2) + d7 + d8) / 3;
+
+        // E5 & E6 di merger (Nilai dari e5)
+        const e5 = processedData['e5'];
+        const e7 = processedData['e7'];
+        const e8 = processedData['e8'];
+        const e9 = (e5 + e7 + e8) / 3; // Average E5:E8
+
+        // C10:E10 = Average(C9:E9)
+        const c10_e10 = (c9 + d9 + e9) / 3;
+
+        // Tampilkan Hasil (Aturan 3: Pembulatan 1 Desimal)
+        updateResultCell('resC9', c9, minLimit);
+        updateResultCell('resD9', d9, minLimit);
+        updateResultCell('resE9', e9, minLimit);
+        updateResultCell('resC10E10', c10_e10, minLimit);
+
+        // Update Status Cell (Aturan 5 - 10)
+        updateStatusCol('C', c9, minLimit);
+        updateStatusCol('D', d9, minLimit);
+        updateStatusCol('E', e9, minLimit);
+    }
+
+    function updateResultCell(elementId, value, minLimit) {
+        const el = document.getElementById(elementId);
+        el.innerText = value.toFixed(1);
+
+        // Jika < Batas Minimal, Cell diblok warna Merah (Angka Tetap Jelas)
+        if (value < minLimit && value > 0) {
+            el.classList.add('red-cell');
+        } else {
+            el.classList.remove('red-cell');
+        }
+    }
+
+    function updateStatusCol(col, val, minLimit) {
+        const cell11 = document.getElementById(`cell${col}11`);
+        const cell12 = document.getElementById(`cell${col}12`);
+
+        if (val < minLimit) {
+            cell11.innerText = "RCL";
+            cell12.innerText = "QW";
+            document.getElementById('rowStatus12').style.display = "table-row";
+            cell11.removeAttribute('rowspan');
+        } else {
+            cell11.innerText = "Q1";
+            cell11.setAttribute('rowspan', '2');
+            document.getElementById('rowStatus12').style.display = "none";
+        }
+    }
+
+    function undo() {
+        if (historyStack.length > 0) {
+            rawInputs = JSON.parse(historyStack.pop());
+            calculate();
+            saveLocalStorage();
+        }
+    }
+
+    function resetData() {
+        if (confirm("Apakah Anda yakin ingin menghapus seluruh data input (C5:E8)?")) {
+            historyStack.push(JSON.stringify(rawInputs));
+            rawInputs = {};
+            calculate();
+            saveLocalStorage();
+        }
+    }
+
+    // Penyimpanan Lokal (Aturan 14: Data Tersimpan Permanen)
+    function saveLocalStorage() {
+        const store = {
+            rawInputs: rawInputs,
+            c1: document.getElementById('cellC1').value,
+            c2: document.getElementById('cellC2').value,
+            e1: document.getElementById('cellE1').value,
+            grade: document.getElementById('metaGrade').value,
+            jr: document.getElementById('metaJR').value,
+            temp: document.getElementById('metaTemp').value,
+            rh: document.getElementById('metaRH').value,
+            k: document.getElementById('constValue').value
+        };
+        localStorage.setItem('RCT_APP_DATA', JSON.stringify(store));
+    }
+
+    function loadLocalStorage() {
+        const saved = localStorage.getItem('RCT_APP_DATA');
+        if (saved) {
+            const data = JSON.parse(saved);
+            rawInputs = data.rawInputs || {};
+            if (data.c1) document.getElementById('cellC1').value = data.c1;
+            if (data.c2) document.getElementById('cellC2').value = data.c2;
+            if (data.e1) document.getElementById('cellE1').value = data.e1;
+            if (data.grade) document.getElementById('metaGrade').value = data.grade;
+            if (data.jr) document.getElementById('metaJR').value = data.jr;
+            if (data.temp) document.getElementById('metaTemp').value = data.temp;
+            if (data.rh) document.getElementById('metaRH').value = data.rh;
+            if (data.k) document.getElementById('constValue').value = data.k;
+        }
+    }
+
+    function saveMeta() {
+        saveLocalStorage();
+    }
+
+    function saveConst() {
+        calculate();
+        saveLocalStorage();
+    }
+
+    // Kirim Laporan Sebagai Foto via WhatsApp
+    function sendWhatsApp() {
+        const jr = document.getElementById('metaJR').value;
+        const testType = document.getElementById('cellC1').value;
+        const caption = `Laporan ${testType}, No. JR:${jr}`;
+
+        // Konversi Tabel/Halaman Menjadi Foto (PNG)
+        html2canvas(document.getElementById('export-card')).then(canvas => {
+            const imageBase64 = canvas.toDataURL("image/png");
+
+            // Unduh Gambar Otomatis
+            const a = document.createElement('a');
+            a.href = imageBase64;
+            a.download = `${testType}_JOB_${jr}.png`;
+            a.click();
+
+            // Buka WhatsApp Web / App dengan Keterangan Text
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(caption)}`;
+            window.open(waUrl, '_blank');
+        });
+    }
 </script>
 
 </body>
