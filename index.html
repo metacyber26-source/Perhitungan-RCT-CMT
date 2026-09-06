@@ -112,15 +112,14 @@
   
   <!-- TABEL A (TAMPILAN UTAMA DASHBOARD / INPUT DATA) -->
   <table class="excel-table" id="tabelA">
-    colgroup>
+    <colgroup>
       <col class="col-a"><col class="col-b"><col class="col-c"><col class="col-d"><col class="col-e">
     </colgroup>
     
-    <!-- Baris 1 -->
+    <!-- Baris 1: Dropdown Grade (B1:C1 Merged) -->
     <tr>
       <td class="text-left">GRADE:</td>
-      <td colspan="2" rowspan="3" style="vertical-align: top; padding: 5px;">
-        <!-- Merger B1:C3 Dropdown & Input -->
+      <td colspan="2">
         <select id="grade" class="input-select" onchange="updateTheme(); hitungSemua(); simpanData();">
           <option value="CME 110">CME 110</option>
           <option value="CME 125">CME 125</option>
@@ -129,28 +128,33 @@
           <option value="CMF 125">CMF 125</option>
           <option value="CMF 150">CMF 150</option>
         </select>
-        <select id="checkType" class="input-select" style="margin-top: 5px;" onchange="hitungSemua(); simpanData();">
-          <option value="RCT" selected>RCT</option>
-          <option value="CMT">CMT</option>
-          <option value="CMT L&W">CMT L&amp;W</option>
-        </select>
       </td>
       <td class="text-left">MIN:</td>
       <td id="E1">15.0</td>
     </tr>
 
-    <!-- Baris 2 -->
+    <!-- Baris 2: Dropdown Check (B2:C2 Merged) -->
     <tr>
       <td class="text-left">CHECK:</td>
+      <td colspan="2">
+        <select id="checkType" class="input-select" onchange="hitungSemua(); simpanData();">
+          <option value="RCT" selected>RCT</option>
+          <option value="CMT">CMT</option>
+          <option value="CMT L&W">CMT L&amp;W</option>
+        </select>
+      </td>
       <td class="text-left">TEMP:</td>
-      <td><input type="text" id="E2" class="input-text" style="text-align:center;" value="-" oninput="simpanData()"></td>
+      <td><input type="text" id="E2" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();"></td>
     </tr>
 
-    <!-- Baris 3 -->
+    <!-- Baris 3: Input NO:JR (B3:C3 Merged) -->
     <tr>
       <td class="text-left">NO:JR:</td>
+      <td colspan="2">
+        <input type="text" id="inputNoJr" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
+      </td>
       <td class="text-left">RH:</td>
-      <td><input type="text" id="E3" class="input-text" style="text-align:center;" value="-" oninput="simpanData()"></td>
+      <td><input type="text" id="E3" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();"></td>
     </tr>
 
     <!-- Baris 4 -->
@@ -161,24 +165,22 @@
       <td>DS</td>
     </tr>
 
-    <!-- Baris 5 -->
+    <!-- Baris 5 & 6 (TOP LUAR) -->
+    <!-- TS (C5:C6) & DS (E5:E6) Di-merger untuk Data 1 & Data 2 -->
     <tr>
       <td rowspan="2">TOP<br>LUAR</td>
       <td>1</td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="C5"></td>
+      <td rowspan="2"><input type="number" step="0.1" class="cell-num cell-input" id="C5_6"></td>
       <td><input type="number" step="0.1" class="cell-num cell-input" id="D5"></td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="E5"></td>
+      <td rowspan="2"><input type="number" step="0.1" class="cell-num cell-input" id="E5_6"></td>
     </tr>
 
-    <!-- Baris 6 -->
     <tr>
       <td>2</td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="C6"></td>
       <td><input type="number" step="0.1" class="cell-num cell-input" id="D6"></td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="E6"></td>
     </tr>
 
-    <!-- Baris 7 -->
+    <!-- Baris 7 & 8 (BOTTOM LUAR - Tetap Sendiri-Sendiri) -->
     <tr>
       <td rowspan="2">BOTTOM<br>LUAR</td>
       <td>3</td>
@@ -187,7 +189,6 @@
       <td><input type="number" step="0.1" class="cell-num cell-input" id="E7"></td>
     </tr>
 
-    <!-- Baris 8 -->
     <tr>
       <td>4</td>
       <td><input type="number" step="0.1" class="cell-num cell-input" id="C8"></td>
@@ -225,7 +226,7 @@
   <div class="area-tabel-b" id="captureArea">
     <div class="title-b">TABEL PENGOLAH DATA (TABEL B)</div>
     <table class="excel-table">
-      colgroup>
+      <colgroup>
         <col class="col-a"><col class="col-b"><col class="col-c"><col class="col-d"><col class="col-e">
       </colgroup>
       <tr>
@@ -246,18 +247,17 @@
         <td>MS</td>
         <td>DS</td>
       </tr>
+      <!-- TS & DS pada Tabel B dimerger untuk Data 1 & 2 -->
       <tr>
         <td rowspan="2">TOP<br>LUAR</td>
         <td>1</td>
-        <td id="I5">0.0</td>
+        <td rowspan="2" id="I5_6">0.0</td>
         <td id="J5">0.0</td>
-        <td id="K5">0.0</td>
+        <td rowspan="2" id="K5_6">0.0</td>
       </tr>
       <tr>
         <td>2</td>
-        <td id="I6">0.0</td>
         <td id="J6">0.0</td>
-        <td id="K6">0.0</td>
       </tr>
       <tr>
         <td rowspan="2">BOTTOM<br>LUAR</td>
@@ -291,14 +291,14 @@
 </div>
 
 <script>
-  // Database Acuan Sesuai Gambar & File Excel (P4:S10 & P16:Q22)
+  // Database Acuan Sesuai Gambar & File Excel
   const MIN_TABLE = {
     "RCT": { "CME 110": 10.2, "CME 125": 12.5, "CME 135": 13.5, "CME 150": 15.0, "CMF 125": 11.5, "CMF 150": 13.9 },
     "CMT": { "CME 110": 13.2, "CME 125": 15.0, "CME 135": 16.2, "CME 150": 18.0, "CMF 125": 14.4, "CMF 150": 17.3 }
   };
   
   const FIX_CMT_LW = { "CME 110": 6, "CME 125": 7, "CME 135": 8, "CME 150": 9, "CMF 125": 7, "CMF 150": 9 };
-  const FAC = 0.4; // Nilai B13 dari Excel
+  const FAC = 0.4;
 
   let riwayatInput = [];
 
@@ -307,11 +307,11 @@
     updateTheme();
     setupNavigasiEnter();
 
-    // Event listener untuk input
+    // Event listener untuk input angka
     const inputs = document.querySelectorAll('.cell-input');
     inputs.forEach(input => {
       input.addEventListener('focus', function() {
-        this.select(); // Timpa otomatis saat diklik
+        this.select();
         riwayatInput.push({ id: this.id, val: this.value });
       });
 
@@ -322,9 +322,9 @@
     });
   });
 
-  // Navigasi Enter / Keyboard Urut Dari Atas ke Bawah
+  // Navigasi Enter Urut
   function setupNavigasiEnter() {
-    const sequence = ['C5', 'C6', 'C7', 'C8', 'D5', 'D6', 'D7', 'D8', 'E5', 'E6', 'E7', 'E8'];
+    const sequence = ['C5_6', 'C7', 'C8', 'D5', 'D6', 'D7', 'D8', 'E5_6', 'E7', 'E8'];
     sequence.forEach((id, index) => {
       const el = document.getElementById(id);
       if (el) {
@@ -332,19 +332,21 @@
           if (e.key === 'Enter') {
             e.preventDefault();
             const nextId = sequence[index + 1] || sequence[0];
-            document.getElementById(nextId).focus();
+            const nextEl = document.getElementById(nextId);
+            if (nextEl) nextEl.focus();
           }
         });
       }
     });
   }
 
-  // Perhitungan Utama Sesuai Rumus Excel
+  // Perhitungan Utama Sesuai Rumus
   function hitungSemua() {
     const grade = document.getElementById('grade').value;
     const checkType = document.getElementById('checkType').value;
-    const temp = document.getElementById('E2').value;
-    const rh = document.getElementById('E3').value;
+    const temp = document.getElementById('E2').value || "-";
+    const rh = document.getElementById('E3').value || "-";
+    const noJr = document.getElementById('inputNoJr').value || "-";
 
     // 1. Tentukan Nilai E1 (MIN)
     let minVal = 0;
@@ -355,27 +357,26 @@
     }
     document.getElementById('E1').innerText = minVal.toFixed(1);
 
-    // 2. Set Header Tabel A & B
+    // 2. Set Header Tabel A & B secara real-time
     const headerA = checkType.substring(0, 3);
     document.getElementById('A4').innerText = headerA;
     document.getElementById('G4').innerText = headerA;
+    document.getElementById('H2').innerText = noJr;
     document.getElementById('H3').innerText = grade;
     document.getElementById('K2').innerText = temp;
     document.getElementById('K3').innerText = rh;
 
-    // 3. Ambil Nilai Q13 (FIX CMT L&W)
+    // 3. Nilai Q13 (FIX CMT L&W)
     let q13 = 0;
     if (checkType === "CMT L&W") {
       q13 = FIX_CMT_LW[grade] || 0;
     }
 
-    // 4. Proses Input & Warna Merah (C5:E8)
-    const columns = ['C', 'D', 'E'];
-    const rowInputs = [5, 6, 7, 8];
-
-    columns.forEach(col => {
-      rowInputs.forEach(r => {
-        const el = document.getElementById(col + r);
+    // 4. Highlight Under-Min untuk Input Terpisah
+    const inputsToCheck = ['C5_6', 'D5', 'D6', 'D7', 'D8', 'E5_6', 'C7', 'C8', 'E7', 'E8'];
+    inputsToCheck.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
         let val = parseFloat(el.value);
         if (!isNaN(val)) {
           if (val < minVal) {
@@ -386,12 +387,11 @@
         } else {
           el.classList.remove('under-min');
         }
-      });
+      }
     });
 
-    // 5. Perhitungan Tabel A (Average & Status)
-    let c5 = parseFloat(document.getElementById('C5').value) || 0;
-    let c6 = parseFloat(document.getElementById('C6').value) || 0;
+    // 5. Perhitungan Nilai Rata-rata Tabel A
+    let c5_6 = parseFloat(document.getElementById('C5_6').value) || 0;
     let c7 = parseFloat(document.getElementById('C7').value) || 0;
     let c8 = parseFloat(document.getElementById('C8').value) || 0;
 
@@ -400,17 +400,16 @@
     let d7 = parseFloat(document.getElementById('D7').value) || 0;
     let d8 = parseFloat(document.getElementById('D8').value) || 0;
 
-    let e5 = parseFloat(document.getElementById('E5').value) || 0;
-    let e6 = parseFloat(document.getElementById('E6').value) || 0;
+    let e5_6 = parseFloat(document.getElementById('E5_6').value) || 0;
     let e7 = parseFloat(document.getElementById('E7').value) || 0;
     let e8 = parseFloat(document.getElementById('E8').value) || 0;
 
-    // C9 = AVERAGE(C5:C8)
-    let c9 = (c5 + c6 + c7 + c8) / 4;
-    // D9 = (((D5+D6)/2)+D7+D8)/3
+    // C9 = Rata-rata TS (Data 1&2 diwakili c5_6, data 3, data 4)
+    let c9 = (c5_6 + c7 + c8) / 3;
+    // D9 = Rata-rata MS (((D5+D6)/2)+D7+D8)/3
     let d9 = (((d5 + d6) / 2) + d7 + d8) / 3;
-    // E9 = AVERAGE(E5:E8)
-    let e9 = (e5 + e6 + e7 + e8) / 4;
+    // E9 = Rata-rata DS (Data 1&2 diwakili e5_6, data 3, data 4)
+    let e9 = (e5_6 + e7 + e8) / 3;
 
     updateCellOutput('C9', c9, minVal);
     updateCellOutput('D9', d9, minVal);
@@ -425,45 +424,57 @@
     document.getElementById('D11').innerText = d9 < minVal ? "QW" : "Q1";
     document.getElementById('E11').innerText = e9 < minVal ? "QW" : "Q1";
 
-    // 6. Perhitungan Tabel B (Kirim WA) dengan Formula Koreksi FAC (0.4) & Q13
-    let mapInputToB = [
-      { input: c5, cellB: 'I5' }, { input: c6, cellB: 'I6' }, { input: c7, cellB: 'I7' }, { input: c8, cellB: 'I8' },
-      { input: d5, cellB: 'J5' }, { input: d6, cellB: 'J6' }, { input: d7, cellB: 'J7' }, { input: d8, cellB: 'J8' },
-      { input: e5, cellB: 'K5' }, { input: e6, cellB: 'K6' }, { input: e7, cellB: 'K7' }, { input: e8, cellB: 'K8' }
-    ];
-
-    mapInputToB.forEach(item => {
-      let calcB = 0;
-      let diff = item.input - q13;
+    // 6. Perhitungan Tabel B (Pengolah Data)
+    function hitungKoreksi(val) {
+      if (val === 0) return 0;
+      let diff = val - q13;
       if (diff > minVal) {
-        calcB = diff - ((diff - minVal) * FAC);
+        return diff - ((diff - minVal) * FAC);
       } else {
-        calcB = diff;
+        return diff;
       }
-      updateCellOutput(item.cellB, calcB, minVal);
-    });
+    }
 
-    // Average Tabel B (I9, J9, K9)
-    let i9 = (getVal('I5') + getVal('I6') + getVal('I7') + getVal('I8')) / 4;
-    let j9 = (getVal('J5') + getVal('J6') + getVal('J7') + getVal('J8')) / 4;
-    let k9 = (getVal('K5') + getVal('K6') + getVal('K7') + getVal('K8')) / 4;
+    let i5_6_val = hitungKoreksi(c5_6);
+    let j5_val = hitungKoreksi(d5);
+    let j6_val = hitungKoreksi(d6);
+    let i7_val = hitungKoreksi(c7);
+    let j7_val = hitungKoreksi(d7);
+    let k7_val = hitungKoreksi(e7);
+    let i8_val = hitungKoreksi(c8);
+    let j8_val = hitungKoreksi(d8);
+    let k8_val = hitungKoreksi(e8);
+    let k5_6_val = hitungKoreksi(e5_6);
+
+    updateCellOutput('I5_6', i5_6_val, minVal);
+    updateCellOutput('J5', j5_val, minVal);
+    updateCellOutput('J6', j6_val, minVal);
+    updateCellOutput('I7', i7_val, minVal);
+    updateCellOutput('J7', j7_val, minVal);
+    updateCellOutput('K7', k7_val, minVal);
+    updateCellOutput('I8', i8_val, minVal);
+    updateCellOutput('J8', j8_val, minVal);
+    updateCellOutput('K8', k8_val, minVal);
+    updateCellOutput('K5_6', k5_6_val, minVal);
+
+    // Average Tabel B
+    let i9 = (i5_6_val + i7_val + i8_val) / 3;
+    let j9 = (((j5_val + j6_val) / 2) + j7_val + j8_val) / 3;
+    let k9 = (k5_6_val + k7_val + k8_val) / 3;
 
     updateCellOutput('I9', i9, minVal);
     updateCellOutput('J9', j9, minVal);
     updateCellOutput('K9', k9, minVal);
 
-    // Status Tabel B (I11, J11, K11)
+    // Status Tabel B
     document.getElementById('I11').innerText = i9 < minVal ? "QW" : "Q1";
     document.getElementById('J11').innerText = j9 < minVal ? "QW" : "Q1";
     document.getElementById('K11').innerText = k9 < minVal ? "QW" : "Q1";
   }
 
-  function getVal(id) {
-    return parseFloat(document.getElementById(id).innerText) || 0;
-  }
-
   function updateCellOutput(cellId, val, minVal) {
     const el = document.getElementById(cellId);
+    if (!el) return;
     let formattedVal = val.toFixed(1);
     el.innerText = formattedVal;
 
@@ -484,6 +495,7 @@
     const data = {
       grade: document.getElementById('grade').value,
       checkType: document.getElementById('checkType').value,
+      noJr: document.getElementById('inputNoJr').value,
       temp: document.getElementById('E2').value,
       rh: document.getElementById('E3').value,
       inputs: {}
@@ -491,16 +503,17 @@
     document.querySelectorAll('.cell-input').forEach(el => {
       data.inputs[el.id] = el.value;
     });
-    localStorage.setItem('qc_app_data_v2', JSON.stringify(data));
+    localStorage.setItem('qc_app_data_v3', JSON.stringify(data));
   }
 
   function muatDataTersimpan() {
-    const saved = localStorage.getItem('qc_app_data_v2');
+    const saved = localStorage.getItem('qc_app_data_v3');
     if (!saved) return;
     const data = JSON.parse(saved);
 
     if (data.grade) document.getElementById('grade').value = data.grade;
     if (data.checkType) document.getElementById('checkType').value = data.checkType;
+    if (data.noJr) document.getElementById('inputNoJr').value = data.noJr;
     if (data.temp) document.getElementById('E2').value = data.temp;
     if (data.rh) document.getElementById('E3').value = data.rh;
 
@@ -526,13 +539,14 @@
   }
 
   function resetData() {
-    if (confirm("Apakah Anda yakin ingin menghapus semua input C5:E8?")) {
+    if (confirm("Apakah Anda yakin ingin menghapus semua data input?")) {
       document.querySelectorAll('.cell-input').forEach(el => {
         el.value = '';
         el.classList.remove('under-min');
       });
-      document.getElementById('E2').value = '-';
-      document.getElementById('E3').value = '-';
+      document.getElementById('inputNoJr').value = '';
+      document.getElementById('E2').value = '';
+      document.getElementById('E3').value = '';
       hitungSemua();
       simpanData();
     }
@@ -540,16 +554,16 @@
 
   function kirimWA() {
     const checkType = document.getElementById('checkType').value;
-    const noJr = document.getElementById('grade').value; // Menggunakan konteks laporan JR
+    const noJr = document.getElementById('inputNoJr').value || "-";
     const captureArea = document.getElementById('captureArea');
 
     html2canvas(captureArea, { scale: 2 }).then(canvas => {
       const link = document.createElement('a');
-      link.download = `Laporan_${checkType}.png`;
+      link.download = `Laporan_${checkType}_JR_${noJr}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
 
-      let keterangan = checkType === "RCT" ? `Laporan RCT, No. JR:` : `Laporan CMT, No. JR:`;
+      let keterangan = `Laporan ${checkType}, No. JR: ${noJr}`;
       const pesanWA = encodeURIComponent(`${keterangan}\n\n(Gambar Tabel B telah tersimpan, silakan lampirkan dari galeri HP).`);
 
       setTimeout(() => {
