@@ -15,6 +15,7 @@
       background: white;
       padding: 12px;
       border: 2px solid #000;
+      position: relative;
     }
 
     /* Layout Tabel Eksak Seperti Excel Gambar */
@@ -64,6 +65,23 @@
       border: none;
       outline: none;
       background: transparent;
+    }
+
+    /* Input FAC tersamar di dashboard */
+    .fac-container {
+      margin-top: 4px;
+      text-align: right;
+      font-size: 11px;
+      color: #888;
+    }
+    .fac-input {
+      width: 45px;
+      font-size: 11px;
+      text-align: center;
+      border: 1px dashed #ccc;
+      background: #f9f9f9;
+      color: #555;
+      border-radius: 3px;
     }
 
     /* Warna Merah Jika < Minimum (Angka Tetap Jelas Dibaca) */
@@ -166,7 +184,6 @@
     </tr>
 
     <!-- Baris 5 & 6 (TOP LUAR) -->
-    <!-- TS (C5:C6) & DS (E5:E6) Di-merger untuk Data 1 & Data 2 -->
     <tr>
       <td rowspan="2">TOP<br>LUAR</td>
       <td>1</td>
@@ -180,7 +197,7 @@
       <td><input type="number" step="0.1" class="cell-num cell-input" id="D6"></td>
     </tr>
 
-    <!-- Baris 7 & 8 (BOTTOM LUAR - Tetap Sendiri-Sendiri) -->
+    <!-- Baris 7 & 8 (BOTTOM LUAR) -->
     <tr>
       <td rowspan="2">BOTTOM<br>LUAR</td>
       <td>3</td>
@@ -216,6 +233,11 @@
     </tr>
   </table>
 
+  <!-- FAC (TERSEMBUNYI TAPI BISA DIUBAH) -->
+  <div class="fac-container">
+    FAC: <input type="number" step="0.01" id="facValue" class="fac-input" value="0.4" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
+  </div>
+
   <!-- TOMBOL UNDO & RESET -->
   <div class="btn-group">
     <button class="btn-undo" onclick="undoAksi()">↩ Undo Input</button>
@@ -247,7 +269,6 @@
         <td>MS</td>
         <td>DS</td>
       </tr>
-      <!-- TS & DS pada Tabel B dimerger untuk Data 1 & 2 -->
       <tr>
         <td rowspan="2">TOP<br>LUAR</td>
         <td>1</td>
@@ -291,14 +312,12 @@
 </div>
 
 <script>
-  // Database Acuan Sesuai Gambar & File Excel
   const MIN_TABLE = {
     "RCT": { "CME 110": 10.2, "CME 125": 12.5, "CME 135": 13.5, "CME 150": 15.0, "CMF 125": 11.5, "CMF 150": 13.9 },
     "CMT": { "CME 110": 13.2, "CME 125": 15.0, "CME 135": 16.2, "CME 150": 18.0, "CMF 125": 14.4, "CMF 150": 17.3 }
   };
   
   const FIX_CMT_LW = { "CME 110": 6, "CME 125": 7, "CME 135": 8, "CME 150": 9, "CMF 125": 7, "CMF 150": 9 };
-  const FAC = 0.4;
 
   let riwayatInput = [];
 
@@ -307,7 +326,6 @@
     updateTheme();
     setupNavigasiEnter();
 
-    // Event listener untuk input angka
     const inputs = document.querySelectorAll('.cell-input');
     inputs.forEach(input => {
       input.addEventListener('focus', function() {
@@ -322,7 +340,6 @@
     });
   });
 
-  // Navigasi Enter Urut
   function setupNavigasiEnter() {
     const sequence = ['C5_6', 'C7', 'C8', 'D5', 'D6', 'D7', 'D8', 'E5_6', 'E7', 'E8'];
     sequence.forEach((id, index) => {
@@ -340,15 +357,16 @@
     });
   }
 
-  // Perhitungan Utama Sesuai Rumus
   function hitungSemua() {
     const grade = document.getElementById('grade').value;
     const checkType = document.getElementById('checkType').value;
     const temp = document.getElementById('E2').value || "-";
     const rh = document.getElementById('E3').value || "-";
     const noJr = document.getElementById('inputNoJr').value || "-";
+    
+    // Ambil nilai FAC dinamis
+    const fac = parseFloat(document.getElementById('facValue').value) || 0.4;
 
-    // 1. Tentukan Nilai E1 (MIN)
     let minVal = 0;
     if (checkType === "RCT") {
       minVal = MIN_TABLE["RCT"][grade] || 0;
@@ -357,7 +375,6 @@
     }
     document.getElementById('E1').innerText = minVal.toFixed(1);
 
-    // 2. Set Header Tabel A & B secara real-time
     const headerA = checkType.substring(0, 3);
     document.getElementById('A4').innerText = headerA;
     document.getElementById('G4').innerText = headerA;
@@ -366,13 +383,11 @@
     document.getElementById('K2').innerText = temp;
     document.getElementById('K3').innerText = rh;
 
-    // 3. Nilai Q13 (FIX CMT L&W)
     let q13 = 0;
     if (checkType === "CMT L&W") {
       q13 = FIX_CMT_LW[grade] || 0;
     }
 
-    // 4. Highlight Under-Min untuk Input Terpisah
     const inputsToCheck = ['C5_6', 'D5', 'D6', 'D7', 'D8', 'E5_6', 'C7', 'C8', 'E7', 'E8'];
     inputsToCheck.forEach(id => {
       const el = document.getElementById(id);
@@ -390,7 +405,6 @@
       }
     });
 
-    // 5. Perhitungan Nilai Rata-rata Tabel A
     let c5_6 = parseFloat(document.getElementById('C5_6').value) || 0;
     let c7 = parseFloat(document.getElementById('C7').value) || 0;
     let c8 = parseFloat(document.getElementById('C8').value) || 0;
@@ -404,32 +418,27 @@
     let e7 = parseFloat(document.getElementById('E7').value) || 0;
     let e8 = parseFloat(document.getElementById('E8').value) || 0;
 
-    // C9 = Rata-rata TS (Data 1&2 diwakili c5_6, data 3, data 4)
     let c9 = (c5_6 + c7 + c8) / 3;
-    // D9 = Rata-rata MS (((D5+D6)/2)+D7+D8)/3
     let d9 = (((d5 + d6) / 2) + d7 + d8) / 3;
-    // E9 = Rata-rata DS (Data 1&2 diwakili e5_6, data 3, data 4)
     let e9 = (e5_6 + e7 + e8) / 3;
 
     updateCellOutput('C9', c9, minVal);
     updateCellOutput('D9', d9, minVal);
     updateCellOutput('E9', e9, minVal);
 
-    // C10 = AVERAGE(C9:E9)
     let c10 = (c9 + d9 + e9) / 3;
     document.getElementById('C10').innerText = c10.toFixed(1);
 
-    // Status C11, D11, E11
     document.getElementById('C11').innerText = c9 < minVal ? "QW" : "Q1";
     document.getElementById('D11').innerText = d9 < minVal ? "QW" : "Q1";
     document.getElementById('E11').innerText = e9 < minVal ? "QW" : "Q1";
 
-    // 6. Perhitungan Tabel B (Pengolah Data)
+    // Fungsi Koreksi menggunakan FAC dinamis
     function hitungKoreksi(val) {
       if (val === 0) return 0;
       let diff = val - q13;
       if (diff > minVal) {
-        return diff - ((diff - minVal) * FAC);
+        return diff - ((diff - minVal) * fac);
       } else {
         return diff;
       }
@@ -457,7 +466,6 @@
     updateCellOutput('K8', k8_val, minVal);
     updateCellOutput('K5_6', k5_6_val, minVal);
 
-    // Average Tabel B
     let i9 = (i5_6_val + i7_val + i8_val) / 3;
     let j9 = (((j5_val + j6_val) / 2) + j7_val + j8_val) / 3;
     let k9 = (k5_6_val + k7_val + k8_val) / 3;
@@ -466,7 +474,6 @@
     updateCellOutput('J9', j9, minVal);
     updateCellOutput('K9', k9, minVal);
 
-    // Status Tabel B
     document.getElementById('I11').innerText = i9 < minVal ? "QW" : "Q1";
     document.getElementById('J11').innerText = j9 < minVal ? "QW" : "Q1";
     document.getElementById('K11').innerText = k9 < minVal ? "QW" : "Q1";
@@ -498,6 +505,7 @@
       noJr: document.getElementById('inputNoJr').value,
       temp: document.getElementById('E2').value,
       rh: document.getElementById('E3').value,
+      fac: document.getElementById('facValue').value,
       inputs: {}
     };
     document.querySelectorAll('.cell-input').forEach(el => {
@@ -516,6 +524,7 @@
     if (data.noJr) document.getElementById('inputNoJr').value = data.noJr;
     if (data.temp) document.getElementById('E2').value = data.temp;
     if (data.rh) document.getElementById('E3').value = data.rh;
+    if (data.fac) document.getElementById('facValue').value = data.fac;
 
     if (data.inputs) {
       Object.keys(data.inputs).forEach(id => {
@@ -547,6 +556,7 @@
       document.getElementById('inputNoJr').value = '';
       document.getElementById('E2').value = '';
       document.getElementById('E3').value = '';
+      document.getElementById('facValue').value = '0.4';
       hitungSemua();
       simpanData();
     }
