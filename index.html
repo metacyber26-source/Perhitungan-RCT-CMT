@@ -3,103 +3,423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Perhitungan & WA</title>
-  <!-- Library html2canvas untuk ubah tabel B jadi gambar -->
+  <title>Aplikasi Perhitungan Quality Control</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 15px; background: #f4f6f8; }
-    .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background: #007bff; color: white; }
-    #tabelB th { background: #28a745; }
-    input { width: 90%; padding: 5px; }
-    button { background: #25D366; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background-color: #f0f2f5; padding: 10px; margin: 0; }
+    
+    /* Container Utama */
+    .app-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    /* Ukuran Teks Sangat Besar & Jelas untuk Usia 50+ */
+    h2 { text-align: center; font-size: 22px; color: #111; margin-top: 0; }
+    
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .form-group label { width: 120px; color: #222; }
+    .form-group select, .form-group input {
+      flex: 1;
+      padding: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      border: 2px solid #555;
+      border-radius: 6px;
+    }
+
+    /* Styling Tabel - Kolom C,D,E dibuat sangat lebar */
+    .table-wrapper { overflow-x: auto; margin-top: 15px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 18px; /* Teks besar */
+      font-weight: bold;
+    }
+    th, td {
+      border: 2px solid #333;
+      text-align: center;
+      padding: 8px 4px;
+    }
+    
+    /* Lebar Kolom Diatur */
+    .col-a { width: 10%; background: #e9ecef; font-size: 14px; color: #555; } /* Kolom A diperkecil */
+    .col-b { width: 25%; background: #f8f9fa; }
+    .col-c, .col-d, .col-e { width: 21.6%; } /* Kolom C, D, E Diperluas */
+
+    /* Input Data */
+    input.cell-input {
+      width: 95%;
+      height: 45px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+    }
+    input.cell-input:focus {
+      outline: 3px solid #007bff;
+      background-color: #e8f0fe;
+    }
+
+    /* Indikator Merah (< Batas Minimum) */
+    .under-min {
+      background-color: #ff4d4d !important;
+      color: #ffffff !important;
+      font-weight: 900 !important;
+    }
+
+    /* Variasi Visual Berdasarkan Grade */
+    .theme-cme110 { border-top: 8px solid #007bff; }
+    .theme-cme125 { border-top: 8px solid #28a745; }
+    .theme-cme135 { border-top: 8px solid #fd7e14; }
+    .theme-cme150 { border-top: 8px solid #6f42c1; }
+    .theme-cmf125 { border-top: 8px solid #e83e8c; }
+    .theme-cmf150 { border-top: 8px solid #20c997; }
+
+    /* Tombol Aksi - Besar & Mudah Diklik */
+    .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    .btn-undo { background-color: #ffc107; color: #000; }
+    .btn-reset { background-color: #dc3545; color: #fff; }
+    .btn-wa { background-color: #25D366; color: #fff; width: 100%; margin-top: 10px; font-size: 20px; }
+
+    /* Area Tangkapan Layar (Tabel B) */
+    #captureArea {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border: 2px solid #222;
+    }
   </style>
 </head>
 <body>
 
-  <!-- TABEL A: INPUT ORIGINAL -->
-  <div class="card">
-    <h3>Tabel A (Input Data Original)</h3>
+<div class="app-container" id="mainContainer">
+  <h2>FORM QUALITY CONTROL</h2>
+
+  <div class="form-group">
+    <label for="grade">GRADE:</label>
+    <select id="grade" onchange="updateTheme(); hitungLogika(); simpanData();">
+      <option value="CME 110">CME 110</option>
+      <option value="CME 125">CME 125</option>
+      <option value="CME 135">CME 135</option>
+      <option value="CME 150" selected>CME 150</option>
+      <option value="CMF 125">CMF 125</option>
+      <option value="CMF 150">CMF 150</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="checkType">CHECK:</label>
+    <select id="checkType" onchange="hitungLogika(); simpanData();">
+      <option value="RCT" selected>RCT</option>
+      <option value="CMT">CMT</option>
+      <option value="CMT L&W">CMT L&amp;W</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="noJr">NO. JR:</label>
+    <input type="text" id="noJr" value="0" oninput="simpanData()">
+  </div>
+
+  <div class="table-wrapper">
     <table id="tabelA">
-      <tr>
-        <th>Nama Barang</th>
-        <th>Harga Satuan (Rp)</th>
-        <th>Jumlah (Qty)</th>
-      </tr>
-      <tr>
-        <td><input type="text" class="input-nama" value="Aset Digital"></td>
-        <td><input type="number" class="input-harga" value="100000"></td>
-        <td><input type="number" class="input-qty" value="2"></td>
-      </tr>
+      <thead>
+        <tr style="background:#007bff; color:white;">
+          <th class="col-a">Cell</th>
+          <th class="col-b">Parameter</th>
+          <th class="col-c">C</th>
+          <th class="col-d">D</th>
+          <th class="col-e">E</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-a">5</td>
+          <td>Data 1</td>
+          <td><input type="number" step="0.1" class="cell-input" id="C5" data-next="C6"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="D5" data-next="D6"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="E5" data-next="E6"></td>
+        </tr>
+        <tr>
+          <td class="col-a">6</td>
+          <td>Data 2</td>
+          <td><input type="number" step="0.1" class="cell-input" id="C6" data-next="C7"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="D6" data-next="D7"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="E6" data-next="E7"></td>
+        </tr>
+        <tr>
+          <td class="col-a">7</td>
+          <td>Data 3</td>
+          <td><input type="number" step="0.1" class="cell-input" id="C7" data-next="C8"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="D7" data-next="D8"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="E7" data-next="E8"></td>
+        </tr>
+        <tr>
+          <td class="col-a">8</td>
+          <td>Data 4</td>
+          <td><input type="number" step="0.1" class="cell-input" id="C8" data-next="C5"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="D8" data-next="D5"></td>
+          <td><input type="number" step="0.1" class="cell-input" id="E8" data-next="E5"></td>
+        </tr>
+      </tbody>
     </table>
-    <button onclick="kirimKeWA()">Kirim Tabel B ke WA</button>
   </div>
 
-  <!-- TABEL B: PENGOLAH DATA (Real-time) -->
-  <div class="card">
-    <h3>Tabel B (Hasil Pengolahan)</h3>
-    <div id="areaTabelB" style="padding: 10px; background: white;">
-      <table id="tabelB">
-        <thead>
-          <tr>
-            <th>Deskripsi</th>
-            <th>Total Harga (Rp)</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="b-deskripsi">-</td>
-            <td id="b-total">0</td>
-            <td id="b-status">Proses</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="btn-group">
+    <button class="btn-undo" onclick="undoAksi()">↩ Undo</button>
+    <button class="btn-reset" onclick="resetData()">🗑 Reset</button>
   </div>
 
-  <script>
-    // Fungsi Hitung Real-time
-    function hitungData() {
-      const nama = document.querySelector('.input-nama').value;
-      const harga = parseFloat(document.querySelector('.input-harga').value) || 0;
-      const qty = parseFloat(document.querySelector('.input-qty').value) || 0;
+  <div id="captureArea">
+    <h3 style="text-align:center; margin:5px 0 10px 0;">TABEL HASIL PENGOLAHAN (TABEL B)</h3>
+    <table id="tabelB">
+      <thead>
+        <tr style="background:#28a745; color:white;">
+          <th class="col-a">Cell</th>
+          <th class="col-b">Hasil</th>
+          <th class="col-c">C</th>
+          <th class="col-d">D</th>
+          <th class="col-e">E</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-a">9</td>
+          <td>Hasil 1</td>
+          <td id="C9">0.0</td>
+          <td id="D9">0.0</td>
+          <td id="E9">0.0</td>
+        </tr>
+        <tr>
+          <td class="col-a">10</td>
+          <td>Hasil 2</td>
+          <td id="C10">0.0</td>
+          <td id="D10">0.0</td>
+          <td id="E10">0.0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      const total = harga * qty;
+  <button class="btn-wa" onclick="kirimWA()">📱 Kirim Tabel B ke WA</button>
+</div>
 
-      document.getElementById('b-deskripsi').innerText = nama;
-      document.getElementById('b-total').innerText = total.toLocaleString('id-ID');
-      document.getElementById('b-status').innerText = total > 0 ? "Selesai Hitung" : "Pending";
+<script>
+  // Batas Minimum Perhitungan (Atur Sesuai Standard)
+  const MIN_LIMIT = 15.0; 
+  let riwayatInput = [];
+
+  // 1. Inisialisasi & Event Listeners
+  document.addEventListener("DOMContentLoaded", () => {
+    muatDataTersimpan();
+    updateTheme();
+    setupNavigasiEnter();
+
+    // Event listener untuk setiap input
+    const inputs = document.querySelectorAll('.cell-input');
+    inputs.forEach(input => {
+      // Simpan state untuk Undo saat focus
+      input.addEventListener('focus', function() {
+        this.select(); // Langsung timpa saat diklik/di-input ulang
+        riwayatInput.push({ id: this.id, val: this.value });
+      });
+
+      // Hitung real-time saat diketik
+      input.addEventListener('input', () => {
+        formatInputDesimal(input);
+        hitungLogika();
+        simpanData();
+      });
+    });
+  });
+
+  // 2. Navigasi Enter / Buka Keyboard dari atas ke bawah
+  function setupNavigasiEnter() {
+    const sequence = ['C5', 'C6', 'C7', 'C8', 'D5', 'D6', 'D7', 'D8', 'E5', 'E6', 'E7', 'E8'];
+    sequence.forEach((id, index) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const nextId = sequence[index + 1] || sequence[0];
+            document.getElementById(nextId).focus();
+          }
+        });
+      }
+    });
+  }
+
+  // 3. Format Input & Cek Minimum (Cell C5:E8)
+  function formatInputDesimal(el) {
+    let val = parseFloat(el.value);
+    if (!isNaN(val)) {
+      if (val < MIN_LIMIT) {
+        el.classList.add('under-min');
+      } else {
+        el.classList.remove('under-min');
+      }
+    } else {
+      el.classList.remove('under-min');
     }
+  }
 
-    // Jalankan perhitungan setiap ada input di Tabel A
-    document.getElementById('tabelA').addEventListener('input', hitungData);
+  // 4. Logika Perhitungan Real-Time (Tabel B: C9:E10)
+  function hitungLogika() {
+    const cellsInput = ['C5','C6','C7','C8','D5','D6','D7','D8','E5','E6','E7','E8'];
     
-    // Hitung pertama kali saat halaman dimuat
-    hitungData();
+    // Contoh Logika Pengolahan: Pembulatan 1 Desimal
+    ['C', 'D', 'E'].forEach(col => {
+      let val5 = parseFloat(document.getElementById(col + '5').value) || 0;
+      let val6 = parseFloat(document.getElementById(col + '6').value) || 0;
+      let val7 = parseFloat(document.getElementById(col + '7').value) || 0;
+      let val8 = parseFloat(document.getElementById(col + '8').value) || 0;
 
-    // Fungsi Render Gambar & Buka WA
-    function kirimKeWA() {
-      const areaB = document.getElementById('areaTabelB');
+      // Formula Pengolahan Tabel B (Bisa disesuaikan dengan rumus Excel kamu)
+      let hasilBaris9 = (val5 + val6) / 2;
+      let hasilBaris10 = (val7 + val8) / 2;
 
-      html2canvas(areaB).then(canvas => {
-        // Generate Gambar PNG
-        const link = document.createElement('a');
-        link.download = 'Tabel_Hasil_Perhitungan.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+      // Set Hasil ke Baris 9 & 10 dengan 1 Desimal
+      updateCellB(col + '9', hasilBaris9);
+      updateCellB(col + '10', hasilBaris10);
+    });
+  }
 
-        // Buka WhatsApp
-        const nomorWA = "6281234567890"; // Ganti dengan nomor tujuan
-        const pesan = encodeURIComponent("Halo, berikut hasil perhitungan Tabel B (Gambar telah terunduh otomatis, silakan lampirkan):");
-        
-        setTimeout(() => {
-          window.open(`https://wa.me/${nomorWA}?text=${pesan}`, '_blank');
-        }, 1000);
+  function updateCellB(cellId, value) {
+    const el = document.getElementById(cellId);
+    let formattedVal = value.toFixed(1);
+    el.innerText = formattedVal;
+
+    // Jika nilai < MIN_LIMIT, diblok merah tapi angka tetap jelas (putih tebal)
+    if (value > 0 && value < MIN_LIMIT) {
+      el.classList.add('under-min');
+    } else {
+      el.classList.remove('under-min');
+    }
+  }
+
+  // 5. Perubahan Visual Sesuai Grade
+  function updateTheme() {
+    const grade = document.getElementById('grade').value;
+    const container = document.getElementById('mainContainer');
+    container.className = 'app-container theme-' + grade.toLowerCase().replace(' ', '');
+  }
+
+  // 6. simpanData() & muatDataTersimpan() -> LocalStorage
+  function simpanData() {
+    const data = {
+      grade: document.getElementById('grade').value,
+      checkType: document.getElementById('checkType').value,
+      noJr: document.getElementById('noJr').value,
+      inputs: {}
+    };
+    document.querySelectorAll('.cell-input').forEach(el => {
+      data.inputs[el.id] = el.value;
+    });
+    localStorage.setItem('qc_app_data', JSON.stringify(data));
+  }
+
+  function muatDataTersimpan() {
+    const saved = localStorage.getItem('qc_app_data');
+    if (!saved) return;
+    const data = JSON.parse(saved);
+    
+    if (data.grade) document.getElementById('grade').value = data.grade;
+    if (data.checkType) document.getElementById('checkType').value = data.checkType;
+    if (data.noJr) document.getElementById('noJr').value = data.noJr;
+
+    if (data.inputs) {
+      Object.keys(data.inputs).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = data.inputs[id];
+          formatInputDesimal(el);
+        }
       });
     }
-  </script>
+    hitungLogika();
+  }
+
+  // 7. Tombol Undo & Reset
+  function undoAksi() {
+    if (riwayatInput.length > 0) {
+      const lastState = riwayatInput.pop();
+      const el = document.getElementById(lastState.id);
+      if (el) {
+        el.value = lastState.val;
+        formatInputDesimal(el);
+        hitungLogika();
+        simpanData();
+      }
+    }
+  }
+
+  function resetData() {
+    if (confirm("Apakah Anda yakin ingin menghapus semua data input C5:E8?")) {
+      document.querySelectorAll('.cell-input').forEach(el => {
+        el.value = '';
+        el.classList.remove('under-min');
+      });
+      document.getElementById('noJr').value = '0';
+      hitungLogika();
+      simpanData();
+    }
+  }
+
+  // 8. Ekspor Tabel B ke Gambar & Kirim WA
+  function kirimWA() {
+    const checkType = document.getElementById('checkType').value;
+    const noJr = document.getElementById('noJr').value;
+    const captureArea = document.getElementById('captureArea');
+
+    // Buat Gambar PNG dari Tabel B
+    html2canvas(captureArea, { scale: 2 }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = `Laporan_${checkType}_JR_${noJr}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      // Buat Keterangan Pesan Otomatis
+      let keterangan = "";
+      if (checkType === "RCT") {
+        keterangan = `Laporan RCT, No. JR:${noJr}`;
+      } else {
+        keterangan = `Laporan CMT, No. JR:${noJr}`;
+      }
+
+      const pesanWA = encodeURIComponent(`${keterangan}\n\n(Gambar Tabel B telah diunduh otomatis. Silakan lampirkan gambar dari galeri HP Anda).`);
+      
+      // Buka WhatsApp
+      setTimeout(() => {
+        window.open(`https://wa.me/?text=${pesanWA}`, '_blank');
+      }, 1200);
+    });
+  }
+</script>
+
 </body>
 </html>
