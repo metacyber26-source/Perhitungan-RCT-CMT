@@ -3,263 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Input RCT & Pengolah Data WA</title>
+  <title>Aplikasi Perhitungan & WA</title>
+  <!-- Library html2canvas untuk ubah tabel B jadi gambar -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    * { box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { padding: 20px; background-color: #f4f6f8; }
-    h2 { text-align: center; margin-bottom: 20px; }
-    .container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-    .card { background: white; border: 2px solid #333; border-radius: 6px; padding: 10px; width: 480px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .header-input { background-color: #c0392b; color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 18px; margin-bottom: 10px; }
-    .header-wa { background-color: #d4ac0d; color: black; text-align: center; font-weight: bold; padding: 8px; font-size: 18px; margin-bottom: 10px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; text-align: center; font-size: 13px; }
-    th, td { border: 1px solid #333; padding: 4px; }
-    input[type="text"], input[type="number"] { width: 100%; text-align: center; border: 1px solid #ccc; padding: 4px; font-weight: bold; }
-    .bg-green { background-color: #2ecc71; color: black; font-weight: bold; }
-    .bg-gray { background-color: #eaeded; }
-    .label-cell { font-weight: bold; background-color: #f2f2f2; }
-    .btn-wa { background-color: #27ae60; color: white; border: none; padding: 10px 15px; width: 100%; font-weight: bold; font-size: 14px; cursor: pointer; border-radius: 4px; margin-top: 10px; }
-    .btn-wa:hover { background-color: #219150; }
-    .fact-box { margin-top: 15px; border: 2px solid #333; padding: 8px; background-color: #2ecc71; text-align: center; font-weight: bold; }
+    body { font-family: sans-serif; padding: 15px; background: #f4f6f8; }
+    .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #007bff; color: white; }
+    #tabelB th { background: #28a745; }
+    input { width: 90%; padding: 5px; }
+    button { background: #25D366; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
   </style>
 </head>
 <body>
 
-<h2>Sistem Kalkulator & Processing Data RCT</h2>
-
-<div class="container">
-  <!-- TABEL KIRI: INPUT RCT -->
+  <!-- TABEL A: INPUT ORIGINAL -->
   <div class="card">
-    <div class="header-input">INPUT RCT</div>
-    <table>
+    <h3>Tabel A (Input Data Original)</h3>
+    <table id="tabelA">
       <tr>
-        <td class="label-cell" width="20%">GRADE:</td>
-        <td width="30%"><input type="text" id="grade" value="CME 125" oninput="processData()"></td>
-        <td class="label-cell" width="20%">Temp</td>
-        <td width="30%"><input type="number" id="temp" value="28" oninput="processData()"></td>
+        <th>Nama Barang</th>
+        <th>Harga Satuan (Rp)</th>
+        <th>Jumlah (Qty)</th>
       </tr>
       <tr>
-        <td class="label-cell">CHECK</td>
-        <td><input type="text" id="check" value="L&W" oninput="processData()"></td>
-        <td class="label-cell">RH</td>
-        <td><input type="number" id="rh" value="65" oninput="processData()"></td>
-      </tr>
-      <tr>
-        <td class="label-cell">JR:</td>
-        <td><input type="text" id="jr" value="C" oninput="processData()"></td>
-        <td colspan="2" class="bg-gray"></td>
+        <td><input type="text" class="input-nama" value="Aset Digital"></td>
+        <td><input type="number" class="input-harga" value="100000"></td>
+        <td><input type="number" class="input-qty" value="2"></td>
       </tr>
     </table>
-
-    <table>
-      <tr class="bg-gray">
-        <th width="30%">RCT</th>
-        <th width="17.5%">TS</th>
-        <th width="17.5%">MS</th>
-        <th width="17.5%">DS</th>
-        <th width="17.5%">FACT (%)</th>
-      </tr>
-      <tr>
-        <td>TOP 1</td>
-        <td><input type="number" id="ts_1" class="in-ts" value="100" oninput="processData()"></td>
-        <td><input type="number" id="ms_1" class="in-ms" value="95" oninput="processData()"></td>
-        <td><input type="number" id="ds_1" class="in-ds" value="90" oninput="processData()"></td>
-        <td rowspan="4" class="bg-gray"><input type="number" id="fact" value="0.4" step="0.1" oninput="processData()"></td>
-      </tr>
-      <tr>
-        <td>LUAR 2</td>
-        <td><input type="number" id="ts_2" class="in-ts" value="102" oninput="processData()"></td>
-        <td><input type="number" id="ms_2" class="in-ms" value="94" oninput="processData()"></td>
-        <td><input type="number" id="ds_2" class="in-ds" value="88" oninput="processData()"></td>
-      </tr>
-      <tr>
-        <td>BOTTOM 3</td>
-        <td><input type="number" id="ts_3" class="in-ts" value="98" oninput="processData()"></td>
-        <td><input type="number" id="ms_3" class="in-ms" value="96" oninput="processData()"></td>
-        <td><input type="number" id="ds_3" class="in-ds" value="91" oninput="processData()"></td>
-      </tr>
-      <tr>
-        <td>LUAR 4</td>
-        <td><input type="number" id="ts_4" class="in-ts" value="101" oninput="processData()"></td>
-        <td><input type="number" id="ms_4" class="in-ms" value="93" oninput="processData()"></td>
-        <td><input type="number" id="ds_4" class="in-ds" value="89" oninput="processData()"></td>
-      </tr>
-      <tr class="bg-green">
-        <td>AVERAGE</td>
-        <td id="avg_ts_in">0</td>
-        <td id="avg_ms_in">0</td>
-        <td id="avg_ds_in">0</td>
-        <td>-</td>
-      </tr>
-      <tr>
-        <td class="bg-green">STATUS</td>
-        <td id="st_ts_in">-</td>
-        <td id="st_ms_in">-</td>
-        <td id="st_ds_in">-</td>
-        <td class="bg-gray"></td>
-      </tr>
-      <tr>
-        <td class="label-cell">MIN</td>
-        <td colspan="4" class="label-cell">BATAS MINIMAL: <input type="number" id="min_val" value="90" style="width: 80px;" oninput="processData()"></td>
-      </tr>
-    </table>
+    <button onclick="kirimKeWA()">Kirim Tabel B ke WA</button>
   </div>
 
-  <!-- TABEL KANAN: PENGOLAH DATA WA -->
+  <!-- TABEL B: PENGOLAH DATA (Real-time) -->
   <div class="card">
-    <div class="header-wa">UNTUK DIKIRIM VIA WA</div>
-    <table>
-      <tr>
-        <td class="label-cell" width="20%">GRADE:</td>
-        <td width="30%" id="out_grade" class="bg-gray">-</td>
-        <td class="label-cell" width="20%">TEMP:</td>
-        <td width="30%" id="out_temp" class="bg-gray">-</td>
-      </tr>
-      <tr>
-        <td class="label-cell">JR:</td>
-        <td id="out_jr" class="bg-gray">-</td>
-        <td class="label-cell">RH:</td>
-        <td id="out_rh" class="bg-gray">-</td>
-      </tr>
-    </table>
-
-    <table>
-      <tr class="bg-gray">
-        <th width="28%">RCT</th>
-        <th width="24%">TS</th>
-        <th width="24%">MS</th>
-        <th width="24%">DS</th>
-      </tr>
-      <tr>
-        <td>TOP 1</td>
-        <td id="out_ts_1">0</td>
-        <td id="out_ms_1">0</td>
-        <td id="out_ds_1">0</td>
-      </tr>
-      <tr>
-        <td>LUAR 2</td>
-        <td id="out_ts_2">0</td>
-        <td id="out_ms_2">0</td>
-        <td id="out_ds_2">0</td>
-      </tr>
-      <tr>
-        <td>BOTTOM 3</td>
-        <td id="out_ts_3">0</td>
-        <td id="out_ms_3">0</td>
-        <td id="out_ds_3">0</td>
-      </tr>
-      <tr>
-        <td>LUAR 4</td>
-        <td id="out_ts_4">0</td>
-        <td id="out_ms_4">0</td>
-        <td id="out_ds_4">0</td>
-      </tr>
-      <tr class="bg-green">
-        <td>AVERAGE</td>
-        <td id="out_avg_ts">0</td>
-        <td id="out_avg_ms">0</td>
-        <td id="out_avg_ds">0</td>
-      </tr>
-      <tr>
-        <td class="bg-green">STATUS</td>
-        <td id="out_st_ts">-</td>
-        <td id="out_st_ms">-</td>
-        <td id="out_st_ds">-</td>
-      </tr>
-    </table>
-
-    <button class="btn-wa" onclick="sendToWhatsApp()">KIRIM HASIL KE WHATSAPP</button>
+    <h3>Tabel B (Hasil Pengolahan)</h3>
+    <div id="areaTabelB" style="padding: 10px; background: white;">
+      <table id="tabelB">
+        <thead>
+          <tr>
+            <th>Deskripsi</th>
+            <th>Total Harga (Rp)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="b-deskripsi">-</td>
+            <td id="b-total">0</td>
+            <td id="b-status">Proses</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<script>
-  // Rumus pengolahan data berdasarkan formula Excel pada gambar:
-  // Formula: F9 - ((F9 - Min) * Fact)
-  function calculateProcessedValue(val, minVal, factPct) {
-    if (isNaN(val) || val === 0) return 0;
-    let factDecimal = factPct / 100;
-    let result = val - ((val - minVal) * factDecimal);
-    return result.toFixed(1); // Pembulatan 1 desimal
-  }
+  <script>
+    // Fungsi Hitung Real-time
+    function hitungData() {
+      const nama = document.querySelector('.input-nama').value;
+      const harga = parseFloat(document.querySelector('.input-harga').value) || 0;
+      const qty = parseFloat(document.querySelector('.input-qty').value) || 0;
 
-  function processData() {
-    // 1. Sinkronkan Header
-    let grade = document.getElementById('grade').value;
-    let temp = document.getElementById('temp').value;
-    let jr = document.getElementById('jr').value;
-    let rh = document.getElementById('rh').value;
+      const total = harga * qty;
 
-    document.getElementById('out_grade').innerText = grade;
-    document.getElementById('out_temp').innerText = temp;
-    document.getElementById('out_jr').innerText = jr;
-    document.getElementById('out_rh').innerText = rh;
-
-    // 2. Ambil Parameter Rumus
-    let minVal = parseFloat(document.getElementById('min_val').value) || 0;
-    let factVal = parseFloat(document.getElementById('fact').value) || 0;
-
-    // Helper untuk hitung tabel
-    let cols = ['ts', 'ms', 'ds'];
-    
-    cols.forEach(col => {
-      let sumIn = 0;
-      let sumOut = 0;
-
-      for (let i = 1; i <= 4; i++) {
-        let rawVal = parseFloat(document.getElementById(`${col}_${i}`).value) || 0;
-        sumIn += rawVal;
-
-        // Hitung nilai tabel kanan pakai rumus Excel
-        let processedVal = calculateProcessedValue(rawVal, minVal, factVal);
-        document.getElementById(`out_${col}_${i}`).innerText = processedVal;
-        sumOut += parseFloat(processedVal);
-      }
-
-      // Hitung Average Kiri
-      let avgIn = (sumIn / 4).toFixed(1);
-      document.getElementById(`avg_${col}_in`).innerText = avgIn;
-      document.getElementById(`st_${col}_in`).innerText = avgIn >= minVal ? "OK" : "NG";
-
-      // Hitung Average Kanan
-      let avgOut = (sumOut / 4).toFixed(1);
-      document.getElementById(`out_avg_${col}`).innerText = avgOut;
-      document.getElementById(`out_st_${col}`).innerText = avgOut >= minVal ? "OK" : "NG";
-    });
-  }
-
-  function sendToWhatsApp() {
-    let grade = document.getElementById('out_grade').innerText;
-    let temp = document.getElementById('out_temp').innerText;
-    let jr = document.getElementById('out_jr').innerText;
-    let rh = document.getElementById('out_rh').innerText;
-
-    let text = `*HASIL LAB RCT*\n`;
-    text += `GRADE: ${grade} | TEMP: ${temp}\n`;
-    text += `JR: ${jr} | RH: ${rh}\n\n`;
-    text += `*RCT | TS | MS | DS*\n`;
-    
-    for(let i=1; i<=4; i++) {
-      let rowName = i==1 ? "TOP 1" : i==2 ? "LUAR 2" : i==3 ? "BOTT 3" : "LUAR 4";
-      let ts = document.getElementById(`out_ts_${i}`).innerText;
-      let ms = document.getElementById(`out_ms_${i}`).innerText;
-      let ds = document.getElementById(`out_ds_${i}`).innerText;
-      text += `${rowName}: ${ts} | ${ms} | ${ds}\n`;
+      document.getElementById('b-deskripsi').innerText = nama;
+      document.getElementById('b-total').innerText = total.toLocaleString('id-ID');
+      document.getElementById('b-status').innerText = total > 0 ? "Selesai Hitung" : "Pending";
     }
 
-    let avgTs = document.getElementById('out_avg_ts').innerText;
-    let avgMs = document.getElementById('out_avg_ms').innerText;
-    let avgDs = document.getElementById('out_avg_ds').innerText;
+    // Jalankan perhitungan setiap ada input di Tabel A
+    document.getElementById('tabelA').addEventListener('input', hitungData);
+    
+    // Hitung pertama kali saat halaman dimuat
+    hitungData();
 
-    text += `\n*AVERAGE:* ${avgTs} | ${avgMs} | ${avgDs}\n`;
-    text += `*STATUS:* ${document.getElementById('out_st_ts').innerText} | ${document.getElementById('out_st_ms').innerText} | ${document.getElementById('out_st_ds').innerText}`;
+    // Fungsi Render Gambar & Buka WA
+    function kirimKeWA() {
+      const areaB = document.getElementById('areaTabelB');
 
-    let encodedText = encodeURIComponent(text);
-    window.open(`https://api.whatsapp.com/send?text=${encodedText}`, '_blank');
-  }
+      html2canvas(areaB).then(canvas => {
+        // Generate Gambar PNG
+        const link = document.createElement('a');
+        link.download = 'Tabel_Hasil_Perhitungan.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
 
-  // Jalankan kalkulasi saat pertama kali dibuka
-  window.onload = processData;
-</script>
-
+        // Buka WhatsApp
+        const nomorWA = "6281234567890"; // Ganti dengan nomor tujuan
+        const pesan = encodeURIComponent("Halo, berikut hasil perhitungan Tabel B (Gambar telah terunduh otomatis, silakan lampirkan):");
+        
+        setTimeout(() => {
+          window.open(`https://wa.me/${nomorWA}?text=${pesan}`, '_blank');
+        }, 1000);
+      });
+    }
+  </script>
 </body>
 </html>
