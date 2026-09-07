@@ -70,7 +70,7 @@
       table-layout: fixed;
       background: #fff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      border: 2,5px solid #1e293b; /* Garis tepi luar tebal */
+      border: 2.5px solid #1e293b; /* Fix typo titik desimal */
     }
 
     table.excel-table td, table.excel-table th {
@@ -240,17 +240,24 @@
         </select>
       </td>
       <td class="text-left">TEMP:</td>
-      <td><input type="text" id="E2" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();"></td>
+      <td>
+        <!-- Inputmode decimal memunculkan keyboard angka + koma/titik -->
+        <input type="text" inputmode="decimal" id="E2" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
+      </td>
     </tr>
 
     <!-- Baris 3 -->
     <tr>
       <td class="text-left">NO:JR:</td>
       <td colspan="2">
-        <input type="text" id="inputNoJr" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
+        <!-- Inputmode numeric memunculkan Numpad khusus angka -->
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="inputNoJr" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
       </td>
       <td class="text-left">RH:</td>
-      <td><input type="text" id="E3" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();"></td>
+      <td>
+        <!-- Inputmode decimal memunculkan keyboard angka + koma/titik -->
+        <input type="text" inputmode="decimal" id="E3" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
+      </td>
     </tr>
 
     <!-- Baris 4 -->
@@ -265,30 +272,30 @@
     <tr>
       <td rowspan="2">TOP<br>LUAR</td>
       <td>1</td>
-      <td rowspan="2"><input type="number" step="0.1" class="cell-num cell-input" id="C5_6"></td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="D5"></td>
-      <td rowspan="2"><input type="number" step="0.1" class="cell-num cell-input" id="E5_6"></td>
+      <td rowspan="2"><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="C5_6"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="D5"></td>
+      <td rowspan="2"><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="E5_6"></td>
     </tr>
 
     <tr>
       <td>2</td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="D6"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="D6"></td>
     </tr>
 
     <!-- Baris 7 & 8 (BOTTOM LUAR) -->
     <tr>
       <td rowspan="2">BOTTOM<br>LUAR</td>
       <td>3</td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="C7"></td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="D7"></td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="E7"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="C7"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="D7"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="E7"></td>
     </tr>
 
     <tr>
       <td>4</td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="C8"></td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="D8"></td>
-      <td><input type="number" step="0.1" class="cell-num cell-input" id="E8"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="C8"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="D8"></td>
+      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="E8"></td>
     </tr>
 
     <!-- Baris 9 & 10 (AVERAGE) -->
@@ -313,7 +320,7 @@
 
   <!-- FAC CONTAINER -->
   <div class="fac-container">
-    FAC: <input type="number" step="0.01" id="facValue" class="fac-input" value="0.4" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
+    FAC: <input type="number" step="0.01" inputmode="decimal" id="facValue" class="fac-input" value="0.4" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
   </div>
 
   <!-- TOMBOL UNDO & RESET -->
