@@ -173,7 +173,6 @@
     .btn-undo { background-color: #f59e0b; color: #fff; }
     .btn-reset { background-color: #dc2626; color: #fff; }
     
-    /* Tombol Kirim ke WA diubah stylingnya */
     .btn-wa { 
       background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); 
       color: #fff; 
@@ -197,14 +196,6 @@
       border: 2px dashed var(--primary-color);
       border-radius: 8px;
       transition: border-color 0.3s ease;
-    }
-    .title-b { 
-      text-align: center; 
-      font-size: 14px; 
-      margin: 4px 0 8px 0; 
-      font-weight: 800; 
-      color: var(--primary-color);
-      letter-spacing: 0.5px;
     }
   </style>
 </head>
@@ -334,7 +325,7 @@
     <button class="btn-reset" onclick="resetData()">🗑 Reset Data</button>
   </div>
 
-  <!-- TOMBOL KIRIM WA & COPY RINGKASAN (DIPINDAHKAN KE ATAS TABEL B) -->
+  <!-- TOMBOL KIRIM WA & COPY RINGKASAN -->
   <div class="btn-group-wa">
     <button class="btn-wa" id="btnWa" onclick="kirimWA()">📱 Kirim ke WA</button>
     <button class="btn-copy" onclick="copyRingkasanTeks()">📋 Salin Teks</button>
@@ -342,7 +333,6 @@
 
   <!-- TABEL B (PENGOLAH DATA UNTUK LAPORAN KIRIM WA) -->
   <div class="area-tabel-b" id="captureArea">
-    <div class="title-b">TABEL PENGOLAH DATA (TABEL B)</div>
     <table class="excel-table">
       <colgroup>
         <col class="col-a"><col class="col-b"><col class="col-c"><col class="col-d"><col class="col-e">
@@ -658,7 +648,6 @@
     }
   }
 
-  /* Fitur Salin Teks Ringkasan Cepat */
   function copyRingkasanTeks() {
     const checkType = document.getElementById('checkType').value;
     const noJr = document.getElementById('inputNoJr').value || "-";
@@ -680,7 +669,6 @@
     });
   }
 
-  /* Fungsi Kirim WA dengan Indikator Loading Modern */
   async function kirimWA() {
     const btnWa = document.getElementById('btnWa');
     const checkType = document.getElementById('checkType').value;
@@ -688,7 +676,6 @@
     const captureArea = document.getElementById('captureArea');
     const pesanTeks = `Laporan ${checkType}, No. JR: ${noJr}`;
 
-    // Efek visual tombol saat proses ekspor gambar
     btnWa.disabled = true;
     btnWa.innerHTML = "⏳ Memproses Gambar...";
 
