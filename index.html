@@ -141,39 +141,17 @@
     /* ==========================================
        TEMA BERDASARKAN GRADE (BUDAYA & PROFESIONAL)
        ========================================== */
-    /* CME 110: Mega Mendung (Indigo & Ocean Blue) */
-    .theme-cme110 {
-      --primary-color: #1e40af;
-      --accent-border: #2563eb;
-    }
-    /* CME 125: Batik Jati / Earthy Wood (Warm Timber) */
-    .theme-cme125 {
-      --primary-color: #854d0e;
-      --accent-border: #ca8a04;
-    }
-    /* CME 135: Batik Tembaga / Metal Brass (Copper Gold) */
-    .theme-cme135 {
-      --primary-color: #c2410c;
-      --accent-border: #ea580c;
-    }
-    /* CME 150: Batik Keraton (Emerald Elegance) */
-    .theme-cme150 {
-      --primary-color: #065f46;
-      --accent-border: #059669;
-    }
-    /* CMF 125: Batik Parang / Royal Crimson (Deep Rose Maroon) */
-    .theme-cmf125 {
-      --primary-color: #9f1239;
-      --accent-border: #e11d48;
-    }
-    /* CMF 150: Batik Obsidian / Slate Stone (Modern Dark Metal) */
-    .theme-cmf150 {
-      --primary-color: #334155;
-      --accent-border: #475569;
-    }
+    .theme-cme110 { --primary-color: #1e40af; --accent-border: #2563eb; }
+    .theme-cme125 { --primary-color: #854d0e; --accent-border: #ca8a04; }
+    .theme-cme135 { --primary-color: #c2410c; --accent-border: #ea580c; }
+    .theme-cme150 { --primary-color: #065f46; --accent-border: #059669; }
+    .theme-cmf125 { --primary-color: #9f1239; --accent-border: #e11d48; }
+    .theme-cmf150 { --primary-color: #334155; --accent-border: #475569; }
 
     /* Tombol Aksi */
     .btn-group { display: flex; gap: 10px; margin-top: 14px; }
+    .btn-group-wa { display: flex; gap: 10px; margin-top: 10px; }
+    
     button {
       flex: 1;
       padding: 12px;
@@ -184,24 +162,36 @@
       border-radius: 6px;
       transition: all 0.2s ease;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
     button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
     
     .btn-undo { background-color: #f59e0b; color: #fff; }
     .btn-reset { background-color: #dc2626; color: #fff; }
+    
+    /* Tombol Kirim ke WA diubah stylingnya */
     .btn-wa { 
       background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); 
       color: #fff; 
-      width: 100%; 
-      margin-top: 12px; 
-      font-size: 18px; 
-      padding: 14px;
+      font-size: 17px; 
+      padding: 12px;
       letter-spacing: 0.5px;
+      flex: 2;
+    }
+    .btn-copy {
+      background-color: #64748b;
+      color: #fff;
+      font-size: 14px;
+      flex: 1;
     }
 
-    /* Area Tabel B (Yang Diberikan Border Terpisah) */
+    /* Area Tabel B */
     .area-tabel-b {
-      margin-top: 22px;
+      margin-top: 16px;
       padding: 8px;
       background: #fafafa;
       border: 2px dashed var(--primary-color);
@@ -224,7 +214,7 @@
   
   <!-- HEADER BUDAYA / PROFESIONAL -->
   <div class="header-banner">
-    <span class="header-title"> QC Analysis System</span>
+    <span class="header-title">QC Analysis System</span>
     <span class="grade-badge" id="gradeBadge">CME 150</span>
   </div>
 
@@ -344,6 +334,12 @@
     <button class="btn-reset" onclick="resetData()">🗑 Reset Data</button>
   </div>
 
+  <!-- TOMBOL KIRIM WA & COPY RINGKASAN (DIPINDAHKAN KE ATAS TABEL B) -->
+  <div class="btn-group-wa">
+    <button class="btn-wa" id="btnWa" onclick="kirimWA()">📱 Kirim ke WA</button>
+    <button class="btn-copy" onclick="copyRingkasanTeks()">📋 Salin Teks</button>
+  </div>
+
   <!-- TABEL B (PENGOLAH DATA UNTUK LAPORAN KIRIM WA) -->
   <div class="area-tabel-b" id="captureArea">
     <div class="title-b">TABEL PENGOLAH DATA (TABEL B)</div>
@@ -408,7 +404,6 @@
     </table>
   </div>
 
-  <button class="btn-wa" onclick="kirimWA()">📱 Kirim Tabel B ke WA</button>
 </div>
 
 <script>
@@ -663,12 +658,39 @@
     }
   }
 
-  /* Fungsi Kirim WA Langsung Berbagi Berkas Gambar + Teks Keterangan */
+  /* Fitur Salin Teks Ringkasan Cepat */
+  function copyRingkasanTeks() {
+    const checkType = document.getElementById('checkType').value;
+    const noJr = document.getElementById('inputNoJr').value || "-";
+    const grade = document.getElementById('grade').value;
+    const ts = document.getElementById('I9').innerText;
+    const ms = document.getElementById('J9').innerText;
+    const ds = document.getElementById('K9').innerText;
+    
+    const statusTs = document.getElementById('I11').innerText;
+    const statusMs = document.getElementById('J11').innerText;
+    const statusDs = document.getElementById('K11').innerText;
+
+    const ringkasan = `*LAPORAN QC HASIL KOREKSI*\n• Check: ${checkType}\n• No. JR: ${noJr}\n• Grade: ${grade}\n-------------------\n• TS: ${ts} (${statusTs})\n• MS: ${ms} (${statusMs})\n• DS: ${ds} (${statusDs})`;
+
+    navigator.clipboard.writeText(ringkasan).then(() => {
+      alert("Ringkasan data berhasil disalin ke clipboard!");
+    }).catch(() => {
+      alert("Gagal menyalin teks.");
+    });
+  }
+
+  /* Fungsi Kirim WA dengan Indikator Loading Modern */
   async function kirimWA() {
+    const btnWa = document.getElementById('btnWa');
     const checkType = document.getElementById('checkType').value;
     const noJr = document.getElementById('inputNoJr').value || "-";
     const captureArea = document.getElementById('captureArea');
     const pesanTeks = `Laporan ${checkType}, No. JR: ${noJr}`;
+
+    // Efek visual tombol saat proses ekspor gambar
+    btnWa.disabled = true;
+    btnWa.innerHTML = "⏳ Memproses Gambar...";
 
     try {
       const canvas = await html2canvas(captureArea, { scale: 2 });
@@ -676,6 +698,7 @@
       canvas.toBlob(async (blob) => {
         if (!blob) {
           alert("Gagal memproses gambar.");
+          resetBtnWa();
           return;
         }
 
@@ -700,9 +723,16 @@
           const urlWA = `https://wa.me/?text=${encodeURIComponent(pesanTeks)}`;
           window.open(urlWA, '_blank');
         }
+        resetBtnWa();
       }, 'image/png');
     } catch (e) {
       alert("Terjadi kesalahan saat memproses gambar.");
+      resetBtnWa();
+    }
+
+    function resetBtnWa() {
+      btnWa.disabled = false;
+      btnWa.innerHTML = "📱 Kirim ke WA";
     }
   }
 </script>
