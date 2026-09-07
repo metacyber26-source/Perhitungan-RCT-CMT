@@ -63,17 +63,18 @@
       letter-spacing: 0.5px;
     }
 
-    /* Layout Tabel Eksak Seperti Excel Gambar */
+    /* Layout Tabel Excel - Garis Tipis di Dalam & Tebal di Luar */
     table.excel-table {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
       background: #fff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 2,5px solid #1e293b; /* Garis tepi luar tebal */
     }
 
     table.excel-table td, table.excel-table th {
-      border: 2px solid #1e293b;
+      border: 1px solid #1e293b; /* Garis dalam tipis */
       text-align: center;
       vertical-align: middle;
       font-weight: 700;
@@ -82,7 +83,7 @@
       color: #0f172a;
     }
 
-    /* Lebar Kolom Diatur: Kolom C, D, E diperluas */
+    /* Lebar Kolom */
     .col-a { width: 18%; }
     .col-b { width: 8%; }
     .col-c { width: 24.6%; }
@@ -114,7 +115,7 @@
       background: transparent;
     }
 
-    /* Input FAC tersamar di dashboard */
+    /* Input FAC tersamar */
     .fac-container {
       margin-top: 6px;
       text-align: right;
@@ -131,16 +132,14 @@
       border-radius: 3px;
     }
 
-    /* Warna Merah Jika < Minimum (Angka Tetap Jelas Dibaca) */
+    /* Warna Tulisan Merah Jika < Minimum atau STATUS QW */
     .under-min {
-      background-color: #ef4444 !important;
-      color: #ffffff !important;
+      color: #dc2626 !important;
       font-weight: 900 !important;
+      background-color: transparent !important;
     }
 
-    /* ==========================================
-       TEMA BERDASARKAN GRADE (BUDAYA & PROFESIONAL)
-       ========================================== */
+    /* Tema Grade */
     .theme-cme110 { --primary-color: #1e40af; --accent-border: #2563eb; }
     .theme-cme125 { --primary-color: #854d0e; --accent-border: #ca8a04; }
     .theme-cme135 { --primary-color: #c2410c; --accent-border: #ea580c; }
@@ -188,14 +187,12 @@
       flex: 1;
     }
 
-    /* Area Tabel B */
+    /* Area Tabel B Polosan */
     .area-tabel-b {
       margin-top: 16px;
-      padding: 8px;
-      background: #fafafa;
-      border: 2px dashed var(--primary-color);
-      border-radius: 8px;
-      transition: border-color 0.3s ease;
+      padding: 4px;
+      background: #ffffff;
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -215,7 +212,7 @@
       <col class="col-a"><col class="col-b"><col class="col-c"><col class="col-d"><col class="col-e">
     </colgroup>
     
-    <!-- Baris 1: Dropdown Grade (B1:C1 Merged) -->
+    <!-- Baris 1 -->
     <tr>
       <td class="text-left">GRADE:</td>
       <td colspan="2">
@@ -232,7 +229,7 @@
       <td id="E1">15.0</td>
     </tr>
 
-    <!-- Baris 2: Dropdown Check (B2:C2 Merged) -->
+    <!-- Baris 2 -->
     <tr>
       <td class="text-left">CHECK:</td>
       <td colspan="2">
@@ -246,7 +243,7 @@
       <td><input type="text" id="E2" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();"></td>
     </tr>
 
-    <!-- Baris 3: Input NO:JR (B3:C3 Merged) -->
+    <!-- Baris 3 -->
     <tr>
       <td class="text-left">NO:JR:</td>
       <td colspan="2">
@@ -314,7 +311,7 @@
     </tr>
   </table>
 
-  <!-- FAC (TERSEMBUNYI TAPI BISA DIUBAH) -->
+  <!-- FAC CONTAINER -->
   <div class="fac-container">
     FAC: <input type="number" step="0.01" id="facValue" class="fac-input" value="0.4" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
   </div>
@@ -331,7 +328,7 @@
     <button class="btn-copy" onclick="copyRingkasanTeks()">📋 Salin Teks</button>
   </div>
 
-  <!-- TABEL B (PENGOLAH DATA UNTUK LAPORAN KIRIM WA) -->
+  <!-- TABEL B (POLOSAN TANPA JUDUL ATAS) -->
   <div class="area-tabel-b" id="captureArea">
     <table class="excel-table">
       <colgroup>
@@ -513,9 +510,9 @@
     let c10 = (c9 + d9 + e9) / 3;
     document.getElementById('C10').innerText = c10.toFixed(1);
 
-    document.getElementById('C11').innerText = c9 < minVal ? "QW" : "Q1";
-    document.getElementById('D11').innerText = d9 < minVal ? "QW" : "Q1";
-    document.getElementById('E11').innerText = e9 < minVal ? "QW" : "Q1";
+    updateStatusCell('C11', c9 < minVal);
+    updateStatusCell('D11', d9 < minVal);
+    updateStatusCell('E11', e9 < minVal);
 
     function hitungKoreksi(val) {
       if (val === 0) return 0;
@@ -557,9 +554,9 @@
     updateCellOutput('J9', j9, minVal);
     updateCellOutput('K9', k9, minVal);
 
-    document.getElementById('I11').innerText = i9 < minVal ? "QW" : "Q1";
-    document.getElementById('J11').innerText = j9 < minVal ? "QW" : "Q1";
-    document.getElementById('K11').innerText = k9 < minVal ? "QW" : "Q1";
+    updateStatusCell('I11', i9 < minVal);
+    updateStatusCell('J11', j9 < minVal);
+    updateStatusCell('K11', k9 < minVal);
   }
 
   function updateCellOutput(cellId, val, minVal) {
@@ -571,6 +568,18 @@
     if (val > 0 && val < minVal) {
       el.classList.add('under-min');
     } else {
+      el.classList.remove('under-min');
+    }
+  }
+
+  function updateStatusCell(cellId, isQw) {
+    const el = document.getElementById(cellId);
+    if (!el) return;
+    if (isQw) {
+      el.innerText = "QW";
+      el.classList.add('under-min');
+    } else {
+      el.innerText = "Q1";
       el.classList.remove('under-min');
     }
   }
