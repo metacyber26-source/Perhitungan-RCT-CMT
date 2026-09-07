@@ -364,7 +364,6 @@
     const rh = document.getElementById('E3').value || "-";
     const noJr = document.getElementById('inputNoJr').value || "-";
     
-    // Ambil nilai FAC dinamis
     const fac = parseFloat(document.getElementById('facValue').value) || 0.4;
 
     let minVal = 0;
@@ -433,7 +432,6 @@
     document.getElementById('D11').innerText = d9 < minVal ? "QW" : "Q1";
     document.getElementById('E11').innerText = e9 < minVal ? "QW" : "Q1";
 
-    // Fungsi Koreksi menggunakan FAC dinamis
     function hitungKoreksi(val) {
       if (val === 0) return 0;
       let diff = val - q13;
@@ -562,24 +560,50 @@
     }
   }
 
-  function kirimWA() {
+  /* Fungsi Kirim WA Langsung Berbagi Berkas Gambar + Teks Keterangan */
+  async function kirimWA() {
     const checkType = document.getElementById('checkType').value;
     const noJr = document.getElementById('inputNoJr').value || "-";
     const captureArea = document.getElementById('captureArea');
+    const pesanTeks = `Laporan ${checkType}, No. JR: ${noJr}`;
 
-    html2canvas(captureArea, { scale: 2 }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = `Laporan_${checkType}_JR_${noJr}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+    try {
+      const canvas = await html2canvas(captureArea, { scale: 2 });
+      
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          alert("Gagal memproses gambar.");
+          return;
+        }
 
-      let keterangan = `Laporan ${checkType}, No. JR: ${noJr}`;
-      const pesanWA = encodeURIComponent(`${keterangan}\n\n(Gambar Tabel B telah tersimpan, silakan lampirkan dari galeri HP).`);
+        const fileName = `Laporan_${checkType}_JR_${noJr}.png`;
+        const file = new File([blob], fileName, { type: 'image/png' });
 
-      setTimeout(() => {
-        window.open(`https://wa.me/?text=${pesanWA}`, '_blank');
-      }, 1000);
-    });
+        // Fitur Direct Share (Sangat cocok untuk HP Android / iOS)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              text: pesanTeks,
+              files: [file]
+            });
+          } catch (err) {
+            // Jika pengguna membatalkan dialog share
+            console.log("Berbagi dibatalkan atau tidak didukung:", err);
+          }
+        } else {
+          // Cadangan jika browser browser HP/Desktop tidak mendukung Direct File Share
+          const link = document.createElement('a');
+          link.download = fileName;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+
+          const urlWA = `https://wa.me/?text=${encodeURIComponent(pesanTeks)}`;
+          window.open(urlWA, '_blank');
+        }
+      }, 'image/png');
+    } catch (e) {
+      alert("Terjadi kesalahan saat memproses gambar.");
+    }
   }
 </script>
 
