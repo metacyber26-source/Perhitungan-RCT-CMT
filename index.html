@@ -70,17 +70,22 @@
       table-layout: fixed;
       background: #fff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      border: 2.5px solid #1e293b; /* Fix typo titik desimal */
+      border: 2.5px solid #1e293b;
     }
 
     table.excel-table td, table.excel-table th {
-      border: 1px solid #1e293b; /* Garis dalam tipis */
+      border: 1px solid #1e293b;
       text-align: center;
       vertical-align: middle;
       font-weight: 700;
       font-size: 17px;
       padding: 4px;
       color: #0f172a;
+    }
+
+    /* Class Tambahan Garis Bawah Tebal Antara Input Data ke-4 dan Average */
+    .border-bottom-thick {
+      border-bottom: 3px solid #1e293b !important;
     }
 
     /* Lebar Kolom */
@@ -241,7 +246,6 @@
       </td>
       <td class="text-left">TEMP:</td>
       <td>
-        <!-- Inputmode decimal memunculkan keyboard angka + koma/titik -->
         <input type="text" inputmode="decimal" id="E2" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
       </td>
     </tr>
@@ -250,12 +254,10 @@
     <tr>
       <td class="text-left">NO:JR:</td>
       <td colspan="2">
-        <!-- Inputmode numeric memunculkan Numpad khusus angka -->
         <input type="text" inputmode="numeric" pattern="[0-9]*" id="inputNoJr" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
       </td>
       <td class="text-left">RH:</td>
       <td>
-        <!-- Inputmode decimal memunculkan keyboard angka + koma/titik -->
         <input type="text" inputmode="decimal" id="E3" class="input-text" style="text-align:center;" placeholder="-" onfocus="this.select()" oninput="hitungSemua(); simpanData();">
       </td>
     </tr>
@@ -291,11 +293,12 @@
       <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="E7"></td>
     </tr>
 
+    <!-- Baris Input Data Ke-4 Diberi Garis Bawah Tebal -->
     <tr>
-      <td>4</td>
-      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="C8"></td>
-      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="D8"></td>
-      <td><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="E8"></td>
+      <td class="border-bottom-thick">4</td>
+      <td class="border-bottom-thick"><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="C8"></td>
+      <td class="border-bottom-thick"><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="D8"></td>
+      <td class="border-bottom-thick"><input type="number" step="0.1" inputmode="decimal" class="cell-num cell-input" id="E8"></td>
     </tr>
 
     <!-- Baris 9 & 10 (AVERAGE) -->
@@ -377,11 +380,12 @@
         <td id="J7">0.0</td>
         <td id="K7">0.0</td>
       </tr>
+      <!-- Baris Input Data Ke-4 Tabel B Diberi Garis Bawah Tebal -->
       <tr>
-        <td>4</td>
-        <td id="I8">0.0</td>
-        <td id="J8">0.0</td>
-        <td id="K8">0.0</td>
+        <td class="border-bottom-thick">4</td>
+        <td class="border-bottom-thick" id="I8">0.0</td>
+        <td class="border-bottom-thick" id="J8">0.0</td>
+        <td class="border-bottom-thick" id="K8">0.0</td>
       </tr>
       <tr>
         <td colspan="2">AVERAGE</td>
@@ -691,6 +695,13 @@
     const noJr = document.getElementById('inputNoJr').value || "-";
     const captureArea = document.getElementById('captureArea');
     const pesanTeks = `Laporan ${checkType}, No. JR: ${noJr}`;
+
+    // Otomatis salin teks pesan ke clipboard agar aman ditempel jika Web Share API tidak menyertakan teks
+    try {
+      await navigator.clipboard.writeText(pesanTeks);
+    } catch (err) {
+      console.log("Gagal menyalin ke clipboard secara otomatis");
+    }
 
     btnWa.disabled = true;
     btnWa.innerHTML = "⏳ Memproses Gambar...";
